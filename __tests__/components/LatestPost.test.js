@@ -1,5 +1,5 @@
 import renderer from 'react-test-renderer';
-import LatestPost from '../../components/LatestPost';
+import LatestPost from '@/components/LatestPost';
 
 it('renders correctly', () => {
     const tree = renderer

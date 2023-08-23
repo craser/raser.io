@@ -1,0 +1,11 @@
+.toggledemo {
+    border: 5px solid aqua;
+}
+
+.on {
+    background-color: chartreuse;
+}
+
+.off {
+    background-color: crimson;
+}

@@ -1,7 +1,7 @@
-
-import { useEffect, useState } from 'react';
-import { Post } from './Post';
+import {Fragment, useEffect, useState} from 'react';
+import {Post} from './Post';
 import PostDao from '../model/PostDao';
+import ToggleDemo from "@/components/ToggleDemo";
 
 export const LatestPost = () => {
 
@@ -16,15 +16,11 @@ export const LatestPost = () => {
             }));
     });
 
-    async function fetchLatestPost() {
-        return {
-            title: 'DUMMY_TITLE',
-            body: 'DUMMY_BODY & WHATNOT'
-        };
-    }
+    return (
+        <Fragment>
+            <Post post={post}/>
+            <ToggleDemo />
+        </Fragment>
+    )
 
-    // fetch latest post from MySQL database
-    // return latest post
-
-    return <Post post={post} />;
 }
