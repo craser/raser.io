@@ -1,11 +1,22 @@
+@import url('https://fonts.googleapis.com/css?family=Lato|Merriweather');
+
+/*
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+ */
 
 :root {
+  --font-title: 'Merriweather';
+  --font-main: 'Lato';
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --theme-color-pop: #e88c49;
+  --theme-color-subtext: #555;
+  --theme-color-border: #555;
+  --theme-color-content-text-bg: #fff;
+  --theme-color-title: #000;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -16,12 +27,16 @@
   }
 }
 
+
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  font-family: var(--font-main), HelveticaNeue-condensed, sans-serif;
+  background-image: url(/img/gold-rush-desktop.jpg);
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+body a {
+  color: var(--theme-color-pop);
+  text-decoration: none;
 }

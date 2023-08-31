@@ -1,0 +1,65 @@
+.header {
+
+}
+
+.titleBanner {
+    font: bold 80px var(--font-title), sans-serif;
+    color: black;
+    letter-spacing: -10px;
+    line-height: 120px;
+    margin: 0;
+    padding: 0;
+    padding: 5px;
+
+
+    line-height: 120px;
+    letter-spacing: -10px;
+    margin: 0;
+    padding: 0;
+}
+
+.titleBanner a {
+    color: black;
+    text-decoration: none;
+}
+
+/* The UL that holds the navigation links */
+.sitenav {
+    text-align: right;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+}
+
+.sitenav li {
+    display: inline;
+    list-style-type: none;
+    text-transform: lowercase;
+}
+
+.sitenav a {
+    color: #000;
+    padding: 3px 0.5em 3px 0.5em;
+    margin: 3px;
+    border: 0;
+}
+
+.sitenav a:hover {
+    color: #e88c49;
+}
+
+.content {
+    font-family: HelveticaNeue-condensed, sans-serif;
+    color: #222;
+    margin: 0px;
+    margin-left: auto;
+
+
+    /* background: url(../img/gold-rush-desktop.jpg); */
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    width: 630px;
+    margin-right: 100px;
+}
+

@@ -1,13 +1,21 @@
 import styles from './Post.module.css';
 import {PostLink} from "@/components/PostLink";
+import PostMetaInfo from "@/components/PostMetaInfo";
 
 export const Post = (props) => {
-    let post = props.post;
+    let { post, showBody } = props;
     return (
         <div className={styles.entry}>
-            <h2><PostLink post={post}>{post.title}</PostLink></h2>
-            <p className="text-xl text-center">{post.intro}</p>
-            <p className="text-xl text-center">{post.body}</p>
+            <h2 className={styles.title}><PostLink post={post}>{post.Title}</PostLink></h2>
+            <PostMetaInfo post={post} />
+            <div dangerouslySetInnerHTML={{ __html: post.Intro }}/>
+            {(showBody)
+                ? <div dangerouslySetInnerHTML={{__html: post.Body}}/>
+                : null
+            }
+            <div className={styles.entryfooter}>
+                • • •
+            </div>
         </div>
     )
 }

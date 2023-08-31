@@ -1,16 +1,12 @@
 import Image from 'next/image'
 //import { Inter } from 'next/font/google'
-import {LatestPost} from '@/components/LatestPost';
+import LogEntries from '@/components/LogEntries';
 import FrontPageLayout from "@/components/templates/FrontPageLayout";
-
-//const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
     return (
-        <main className={`flex min-h-screen flex-col items-center justify-between p-24`}>
-            <FrontPageLayout
-                content={<LatestPost />}
-            />
-        </main>
+        <FrontPageLayout
+            content={<LogEntries pageSize={10}/>}
+        />
     )
 }

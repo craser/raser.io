@@ -9,6 +9,6 @@ import Link from "next/link";
  */
 export const PostLink = (props) => {
     return (
-        <Link href={'posts/' + props.post.id}>{props.children}</Link>
+        <Link href={'archive/' + props.post.Entry_ID}>{props.children}</Link>
     );
 };

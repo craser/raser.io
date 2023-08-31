@@ -1,7 +1,6 @@
 import {Fragment, useEffect, useState} from 'react';
 import {Post} from './Post';
 import PostDao from '../model/PostDao';
-import ToggleDemo from "@/components/ToggleDemo";
 
 export const LatestPost = () => {
 
@@ -19,7 +18,6 @@ export const LatestPost = () => {
     return (
         <Fragment>
             <Post post={post}/>
-            <ToggleDemo />
         </Fragment>
     )
 
