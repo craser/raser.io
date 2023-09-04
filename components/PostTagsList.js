@@ -2,8 +2,9 @@ import TagLink from "@/components/TagLink";
 
 export default function PostTagsList(props) {
     let { post, className } = props;
-    let { tags } = post;
-    tags = ['ranger', 'danger']; // FIXME: DO NOT COMMIT TO CODE REPOSITORY!
+    let tags = (post && post.tags && post.tags.length)
+        ? post.tags
+        : [];
 
     if (tags && tags.length) {
         return (

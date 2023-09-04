@@ -1,6 +1,7 @@
 import {Fragment, useEffect, useState} from 'react';
 import {Post} from './Post';
 import PostDao from '../model/PostDao';
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function LogEntries(props) {
     const [entries, setEntries] = useState([]);
@@ -16,12 +17,12 @@ export default function LogEntries(props) {
     if (entries.length) {
         return (
             <Fragment>
-                {entries.map(e => <Post key={e.Entry_ID} post={e} />)}
+                {entries.map(e => <Post key={e.Entry_ID} post={e}/>)}
             </Fragment>
         );
     } else {
         return (
-            <Fragment>Loading...</Fragment>
+            <LoadingSpinner/>
         );
     }
 

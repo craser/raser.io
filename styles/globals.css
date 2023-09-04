@@ -9,14 +9,13 @@
 :root {
   --font-title: 'Merriweather';
   --font-main: 'Lato';
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
   --theme-color-pop: #e88c49;
   --theme-color-subtext: #555;
   --theme-color-border: #555;
   --theme-color-content-text-bg: #fff;
   --theme-color-title: #000;
+  --theme-color-link: #456;
+  --theme-color-link-underline: var(--theme-color-pop);
 }
 
 @media (prefers-color-scheme: dark) {
