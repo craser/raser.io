@@ -1,5 +1,5 @@
-import {Fragment, useEffect, useState} from 'react';
-import {Post} from './Post';
+import { Fragment, useEffect, useState } from 'react';
+import { Post } from './Post';
 import PostDao from '../model/PostDao';
 
 export const LatestPost = () => {
@@ -13,7 +13,7 @@ export const LatestPost = () => {
                 title: 'ERROR FETCHING LATEST',
                 body: e.toString()
             }));
-    });
+    }, []);
 
     return (
         <Fragment>

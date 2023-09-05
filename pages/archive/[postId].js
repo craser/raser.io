@@ -1,7 +1,7 @@
-import {useEffect, useState, useContext} from "react";
-import {useRouter} from "next/router";
+import { useEffect, useState, useContext } from "react";
+import { useRouter } from "next/router";
 import PostDao from '/model/PostDao';
-import {Post} from "@/components/Post";
+import { Post } from "@/components/Post";
 import FrontPageLayout from "@/components/templates/FrontPageLayout";
 
 export default function SinglePost(props, pageProps) {
@@ -13,7 +13,7 @@ export default function SinglePost(props, pageProps) {
         console.debug(`Fetching entry for ${postId}`);
         new PostDao().getPostById(postId)
             .then(post => setPost(post));
-    });
+    }, []);
 
     return (
         <FrontPageLayout

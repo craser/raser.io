@@ -12,7 +12,7 @@ export default function LogEntries(props) {
             .then(entries => entries.slice(0, pageSize))
             .then(entries => setEntries(entries))
             .catch((e) => console.error(e));
-    });
+    }, []);
 
     if (entries.length) {
         return (
