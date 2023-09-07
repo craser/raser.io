@@ -1,3 +1,6 @@
+import CachingPostDao from "./CachingPostDao";
+import RawPostDao from "./RawPostDao";
+
 /**
  * TODO: This is a temporary solution to get data from the Firebase database.
  *
@@ -7,40 +10,21 @@
  */
 
 export default class PostDao {
-    #URL = 'https://dmg-react-db-default-rtdb.firebaseio.com';
+    #dao = null;
 
     constructor() {
+        this.#dao = new CachingPostDao(new RawPostDao());
     }
 
     async getLatestPost() {
-        let url = `${this.#URL}/entries.json?orderBy="Entry_ID"&limitToLast=1`;
-        return fetch(url).then(response => response.json())
-            .then(data => {
-                return data[Object.keys(data)[0]];
-            });
+        return this.#dao.getLatestPost();
     }
 
     async getPostById(id) {
-        id = encodeURIComponent(id);
-        let url = `${this.#URL}/entries.json?orderBy="Entry_ID"&equalTo=${id}`;
-        return fetch(url).then(response => response.json())
-            .then(data => {
-                return data[Object.keys(data)[0]];
-            });
+        return this.#dao.getPostById(id);
     }
 
-    /**
-     * TODO: This is totally bogus. Limits to most recent 10 entries.
-     * @returns {Promise<any>}
-     */
     async getEntries() {
-        let url = `${this.#URL}/entries.json?orderBy="Entry_ID"&limitToLast=10`;
-        return fetch(url).then(response => response.json())
-            .then(data => {
-                let posts = Object.keys(data).map(key => data[key]);
-                posts.sort((a, b) => b.Entry_ID - a.Entry_ID);
-                return posts;
-            });
+        return this.#dao.getEntries();
     }
-
 }

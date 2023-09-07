@@ -1,23 +1,18 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import PostDao from '/model/PostDao';
 import { Post } from "@/components/Post";
 import FrontPageLayout from "@/components/templates/FrontPageLayout";
+import LogEntry from "@/components/LogEntry";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
-export default function SinglePost(props, pageProps) {
+export default function SinglePost(props) {
     const router = useRouter();
     const postId = router.query.postId;
-    const [post, setPost] = useState(null);
 
-    useEffect(() => {
-        console.debug(`Fetching entry for ${postId}`);
-        new PostDao().getPostById(postId)
-            .then(post => setPost(post));
-    }, []);
-
-    return (
-        <FrontPageLayout
-            content={<Post post={post}/>}
-        />
-    );
+    if (!postId) {
+        return <LoadingSpinner />
+    } else {
+        return <LogEntry postId={postId}/>;
+    }
 }
