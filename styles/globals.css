@@ -9,22 +9,23 @@
 :root {
   --font-title: 'Merriweather';
   --font-main: 'Lato';
+  --theme-color-text: #000;
   --theme-color-pop: #e88c49;
   --theme-color-subtext: #555;
   --theme-color-border: #555;
   --theme-color-content-text-bg: #fff;
-  --theme-color-title: #000;
+  --theme-color-title: var(--theme-color-text);
   --theme-color-link: #456;
   --theme-color-link-underline: var(--theme-color-pop);
 }
 
-@media (prefers-color-scheme: dark) {
+/*@media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+}*/
 
 
 body {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import PostDao from "@/model/PostDao";
 import FrontPageLayout from "@/components/templates/FrontPageLayout";
 import { Post } from "@/components/Post";
