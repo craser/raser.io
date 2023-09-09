@@ -1,4 +1,4 @@
-import styles from "@/components/templates/FrontPageLayout.module.css";
+import styles from "@/components/templates/FrontPageLayout.module.scss";
 import Link from "next/link";
 
 export default function HeaderNavigationOptions(props) {

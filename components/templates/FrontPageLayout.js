@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styles from './FrontPageLayout.module.css'
+import styles from './FrontPageLayout.module.scss'
 import HeaderNavigationOptions from "@/components/templates/HeaderNavigationOptions";
 import EntryCacheContext from "@/components/context/EntryCacheContext";
 
