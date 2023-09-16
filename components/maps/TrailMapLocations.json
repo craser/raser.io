@@ -1,0 +1,1494 @@
+{
+  "bounds": {
+    "n": 39.23324,
+    "s": 33.558372,
+    "e": -116.90152,
+    "w": -120.44467
+  },
+  "locations": [
+    {
+      "location": { "lat": 34.332413, "lon": -119.41 },
+      "fileName": "coast-flyer-two.gpx"
+    },
+    {
+      "location": { "lat": 34.253548, "lon": -119.26695 },
+      "fileName": "coast-flyer.gpx"
+    },
+    {
+      "location": { "lat": 34.219784, "lon": -118.7867 },
+      "fileName": "20070210-Alberson.gpx"
+    },
+    {
+      "location": { "lat": 33.892113, "lon": -118.4189 },
+      "fileName": "20070217-Malaga-Cove.gpx"
+    },
+    {
+      "location": { "lat": 34.268467, "lon": -118.65732 },
+      "fileName": "20070304-Santa-Susana.gpx"
+    },
+    {
+      "location": { "lat": 34.179893, "lon": -118.734055 },
+      "fileName": "20070308-Palo-Comado.gpx"
+    },
+    {
+      "location": { "lat": 33.866142, "lon": -118.40398 },
+      "fileName": "20070317-Palos-Verdes.gpx"
+    },
+    {
+      "location": { "lat": 34.52182, "lon": -118.46157 },
+      "fileName": "Spunky-Canyon.gpx"
+    },
+    {
+      "location": { "lat": 34.219616, "lon": -118.80777 },
+      "fileName": "20070528-Alberson-Loop.gpx"
+    },
+    {
+      "location": { "lat": 34.20218, "lon": -118.76977 },
+      "fileName": "20070602-Simi-Westlake.gpx"
+    },
+    {
+      "location": { "lat": 34.216595, "lon": -118.79632 },
+      "fileName": "20070611-Boulderdash.gpx"
+    },
+    {
+      "location": { "lat": 34.179985, "lon": -118.72864 },
+      "fileName": "20070621-Chesebro-Ridge.gpx"
+    },
+    {
+      "location": { "lat": 34.17997, "lon": -118.73122 },
+      "fileName": "20070625-Chesebro-Modelo.gpx"
+    },
+    {
+      "location": { "lat": 34.20221, "lon": -118.85139 },
+      "fileName": "20070826-Simi-Newbury-Loop.gpx"
+    },
+    {
+      "location": { "lat": 34.181786, "lon": -118.73661 },
+      "fileName": "20070909-Chesebro-Captains-Run.gpx"
+    },
+    {
+      "location": { "lat": 34.219864, "lon": -118.77948 },
+      "fileName": "20070915-Alberson.gpx"
+    },
+    {
+      "location": { "lat": 34.219624, "lon": -118.8018 },
+      "fileName": "20070929-Long-Canyon.gpx"
+    },
+    {
+      "location": { "lat": 34.180725, "lon": -118.73657 },
+      "fileName": "20071003-Palo-Comado.gpx"
+    },
+    {
+      "location": { "lat": 34.19266, "lon": -118.769875 },
+      "fileName": "20071006-Long-Cyn-Chesebro.gpx"
+    },
+    {
+      "location": { "lat": 34.29369, "lon": -118.6575 },
+      "fileName": "20071014-las-llajas-rocky-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.29178, "lon": -118.72104 },
+      "fileName": "20071020-simi-valley-road-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.130234, "lon": -119.0007 },
+      "fileName": "20071027-sycamore-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.657204, "lon": -120.1008 },
+      "fileName": "20071103-solvang-prelude.gpx"
+    },
+    {
+      "location": { "lat": 34.124207, "lon": -117.700424 },
+      "fileName": "20071110-tour-de-foothills.gpx"
+    },
+    {
+      "location": { "lat": 34.28305, "lon": -118.65899 },
+      "fileName": "20071118-rocky-peak-chumash.gpx"
+    },
+    {
+      "location": { "lat": 34.28306, "lon": -118.65901 },
+      "fileName": "20071121-rocky-peak-chumash.gpx"
+    },
+    {
+      "location": { "lat": 34.28301, "lon": -118.65905 },
+      "fileName": "20071222-rocky-peak-chumash.gpx"
+    },
+    {
+      "location": { "lat": 34.303066, "lon": -118.64598 },
+      "fileName": "20071224-devils-canyon.gpx"
+    },
+    {
+      "location": { "lat": 34.180714, "lon": -118.735275 },
+      "fileName": "20071229-chesebro.gpx"
+    },
+    {
+      "location": { "lat": 34.283073, "lon": -118.65907 },
+      "fileName": "20080119-rocky-peak-chumash.gpx"
+    },
+    {
+      "location": { "lat": 34.283096, "lon": -118.648056 },
+      "fileName": "20080202-johnson-chumash.gpx"
+    },
+    {
+      "location": { "lat": 34.283077, "lon": -118.64809 },
+      "fileName": "20080209-johnson-chumash.gpx"
+    },
+    {
+      "location": { "lat": 34.18068, "lon": -118.73581 },
+      "fileName": "20080217-chesebro.gpx"
+    },
+    {
+      "location": { "lat": 34.216667, "lon": -118.79256 },
+      "fileName": "20080223-alberson-simi-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.20559, "lon": -118.772934 },
+      "fileName": "20080301-china-flat-traverse.gpx"
+    },
+    {
+      "location": { "lat": 34.18521, "lon": -118.73658 },
+      "fileName": "20080309-chesebro.gpx"
+    },
+    {
+      "location": { "lat": 34.18795, "lon": -118.75214 },
+      "fileName": "20080312-chesebro-alberson.gpx"
+    },
+    {
+      "location": { "lat": 34.1857, "lon": -118.73802 },
+      "fileName": "20080322-bell-canyon.gpx"
+    },
+    {
+      "location": { "lat": 34.29177, "lon": -118.721054 },
+      "fileName": "20080331-simi-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.280876, "lon": -118.64799 },
+      "fileName": "20080413-rocky-peak-johnson.gpx"
+    },
+    {
+      "location": { "lat": 35.517666, "lon": -120.44467 },
+      "fileName": "20080426-wildflower.gpx"
+    },
+    {
+      "location": { "lat": 34.19987, "lon": -118.76727 },
+      "fileName": "20080510-alberson-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.182606, "lon": -118.752304 },
+      "fileName": "20080927-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.18071, "lon": -118.73657 },
+      "fileName": "20080920-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.220512, "lon": -118.9057 },
+      "fileName": "20080829-wildwood-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.227364, "lon": -118.89334 },
+      "fileName": "20080827-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.224983, "lon": -118.903015 },
+      "fileName": "20080716-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.28307, "lon": -118.658966 },
+      "fileName": "20080714-rocky-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.22049, "lon": -118.90292 },
+      "fileName": "20080611-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.214252, "lon": -118.90606 },
+      "fileName": "20080524-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.227314, "lon": -118.893295 },
+      "fileName": "20080530-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.224827, "lon": -118.80489 },
+      "fileName": "20081109-long-ranch.gpx"
+    },
+    {
+      "location": { "lat": 34.283062, "lon": -118.65893 },
+      "fileName": "20080423-rocky-peak-chumash.gpx"
+    },
+    {
+      "location": { "lat": 34.182922, "lon": -118.732544 },
+      "fileName": "20090110-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.220505, "lon": -118.9057 },
+      "fileName": "20090118-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.278778, "lon": -118.65367 },
+      "fileName": "20090124-offtrail.gpx"
+    },
+    {
+      "location": { "lat": 34.219612, "lon": -118.80353 },
+      "fileName": "20090314-long-ranch.gpx"
+    },
+    {
+      "location": { "lat": 34.22501, "lon": -118.90292 },
+      "fileName": "20090312-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.13173, "lon": -119.000725 },
+      "fileName": "20090425-sycamore.gpx"
+    },
+    {
+      "location": { "lat": 34.168976, "lon": -118.89107 },
+      "fileName": "20090429-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.227505, "lon": -118.890076 },
+      "fileName": "20090427-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.17028, "lon": -118.90054 },
+      "fileName": "20090504-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.182224, "lon": -118.752144 },
+      "fileName": "20090525-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.170303, "lon": -118.90054 },
+      "fileName": "20090522-rosewood-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.170273, "lon": -118.90051 },
+      "fileName": "20090604-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.180763, "lon": -118.73581 },
+      "fileName": "20090621-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.17033, "lon": -118.90054 },
+      "fileName": "20090629-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.170277, "lon": -118.90054 },
+      "fileName": "20090625-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.13968, "lon": -118.98027 },
+      "fileName": "20090709-sycamore.gpx"
+    },
+    {
+      "location": { "lat": 34.22741, "lon": -118.89325 },
+      "fileName": "20090720-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.163307, "lon": -118.9137 },
+      "fileName": "20090713-los-robles-trail.gpx"
+    },
+    {
+      "location": { "lat": 34.130978, "lon": -118.9948 },
+      "fileName": "20090730-sycamore.gpx"
+    },
+    {
+      "location": { "lat": 34.13099, "lon": -118.994835 },
+      "fileName": "20090803-sycamore.gpx"
+    },
+    {
+      "location": { "lat": 34.170273, "lon": -118.90051 },
+      "fileName": "20090921-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.170265, "lon": -118.90053 },
+      "fileName": "20090914-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.175697, "lon": -118.7285 },
+      "fileName": "200909010-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.29534, "lon": -118.64223 },
+      "fileName": "20091029-simi-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.121185, "lon": -118.803986 },
+      "fileName": "20100528-tour-of-california-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.12097, "lon": -118.93225 },
+      "fileName": "20110221-mishe-mokwa.gpx"
+    },
+    {
+      "location": { "lat": 34.265915, "lon": -118.632126 },
+      "fileName": "20110702-mystery-stagecoach-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.267544, "lon": -118.627655 },
+      "fileName": "Chatsworth-View-Loop.gpx"
+    },
+    {
+      "location": { "lat": 34.219643, "lon": -118.788315 },
+      "fileName": "20141105-albertson.gpx"
+    },
+    {
+      "location": { "lat": 34.225304, "lon": -118.806305 },
+      "fileName": "long-canyon-short-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.186615, "lon": -118.73955 },
+      "fileName": "20111022-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.284645, "lon": -118.63126 },
+      "fileName": "20111127-rocky-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.299526, "lon": -118.66063 },
+      "fileName": "20111210-chumash.gpx"
+    },
+    {
+      "location": { "lat": 34.293457, "lon": -118.66135 },
+      "fileName": "20111218-chumash-simi.gpx"
+    },
+    {
+      "location": { "lat": 34.22543, "lon": -118.806335 },
+      "fileName": "20110915-long-ranch-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.17028, "lon": -118.90053 },
+      "fileName": "20111224-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.29958, "lon": -118.660614 },
+      "fileName": "20111227-chumash.gpx"
+    },
+    {
+      "location": { "lat": 34.13123, "lon": -119.00075 },
+      "fileName": "20111230-sycamore.gpx"
+    },
+    {
+      "location": { "lat": 34.22814, "lon": -118.79501 },
+      "fileName": "20120209-long-canyon.gpx"
+    },
+    {
+      "location": { "lat": 34.225266, "lon": -118.801346 },
+      "fileName": "long-canyon-climb.gpx"
+    },
+    {
+      "location": { "lat": 34.182297, "lon": -118.7507 },
+      "fileName": "20120220-cheseboro-dead-cow.gpx"
+    },
+    {
+      "location": { "lat": 34.289173, "lon": -118.65877 },
+      "fileName": "20120223-chumash-hummingbird.gpx"
+    },
+    {
+      "location": { "lat": 34.227386, "lon": -118.893234 },
+      "fileName": "20120224-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.105385, "lon": -118.79136 },
+      "fileName": "20120302-rock-store.gpx"
+    },
+    {
+      "location": { "lat": 34.22091, "lon": -118.904915 },
+      "fileName": "20120527-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.2223, "lon": -118.908905 },
+      "fileName": "20120603-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.30822, "lon": -118.66005 },
+      "fileName": "20120610-rocky-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.11834, "lon": -118.81598 },
+      "fileName": "possible-route.gpx"
+    },
+    {
+      "location": { "lat": 34.30307, "lon": -118.69575 },
+      "fileName": "20120701-tapo-cyn-marr-ranch.gpx"
+    },
+    {
+      "location": { "lat": 34.306664, "lon": -118.685684 },
+      "fileName": "20120704-chivo-marr.gpx"
+    },
+    {
+      "location": { "lat": 34.28132, "lon": -118.63017 },
+      "fileName": "20120708-rocky-peak-bonus.gpx"
+    },
+    {
+      "location": { "lat": 34.14198, "lon": -118.81613 },
+      "fileName": "20120709-lunch-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.094933, "lon": -118.761566 },
+      "fileName": "20120718-bulldog.gpx"
+    },
+    {
+      "location": { "lat": 34.180744, "lon": -118.7366 },
+      "fileName": "20120722-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.130836, "lon": -118.81206 },
+      "fileName": "20120731-pentachaeta.gpx"
+    },
+    {
+      "location": { "lat": 34.130753, "lon": -118.814514 },
+      "fileName": "20120801-pentachaeta.gpx"
+    },
+    {
+      "location": { "lat": 34.13075, "lon": -118.8157 },
+      "fileName": "20120802-pentachaeta.gpx"
+    },
+    {
+      "location": { "lat": 34.09563, "lon": -118.87165 },
+      "fileName": "20120802-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.1373, "lon": -118.68461 },
+      "fileName": "1026385_bark-park-full-counterclockwise-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.082825, "lon": -118.85309 },
+      "fileName": "20130326-mulholland-to-buzzards-roost.gpx"
+    },
+    {
+      "location": { "lat": 34.26876, "lon": -118.793564 },
+      "fileName": "20130307-mt-mccoy.gpx"
+    },
+    {
+      "location": { "lat": 34.095715, "lon": -118.8725 },
+      "fileName": "20120809-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.284683, "lon": -118.63017 },
+      "fileName": "20120812-johnson-rocky-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.11634, "lon": -118.92608 },
+      "fileName": "20120815-sandstone-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.099678, "lon": -118.89177 },
+      "fileName": "20120819-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.095062, "lon": -118.75969 },
+      "fileName": "20120824-bulldog.gpx"
+    },
+    {
+      "location": { "lat": 34.13604, "lon": -118.68527 },
+      "fileName": "20120909-millenium-loop-ccw-bail.gpx"
+    },
+    {
+      "location": { "lat": 34.08146, "lon": -118.831665 },
+      "fileName": "20120912-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.075836, "lon": -118.804565 },
+      "fileName": "20120917-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.078743, "lon": -118.778564 },
+      "fileName": "20120920-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.093044, "lon": -118.75963 },
+      "fileName": "20120924-bulldog.gpx"
+    },
+    {
+      "location": { "lat": 34.08222, "lon": -118.85211 },
+      "fileName": "20120930-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.106583, "lon": -118.80356 },
+      "fileName": "20121014-backbone-bulldog-bail.gpx"
+    },
+    {
+      "location": { "lat": 34.16749, "lon": -118.88532 },
+      "fileName": "20121023-los-robles.gpx"
+    },
+    {
+      "location": { "lat": 34.25811, "lon": -118.72507 },
+      "fileName": "20121222-black-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.284637, "lon": -118.63019 },
+      "fileName": "20121228-rocky-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.31034, "lon": -118.671265 },
+      "fileName": "20130113-chivo-marr-ranch-rusty-tractor.gpx"
+    },
+    {
+      "location": { "lat": 34.09503, "lon": -118.76433 },
+      "fileName": "20130120-bulldog.gpx"
+    },
+    {
+      "location": { "lat": 34.10284, "lon": -118.89457 },
+      "fileName": "20130210-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.15248, "lon": -118.85204 },
+      "fileName": "20130221-triunfo-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.07895, "lon": -118.77537 },
+      "fileName": "20130327-latigo-to-coral.gpx"
+    },
+    {
+      "location": { "lat": 34.09032, "lon": -118.763565 },
+      "fileName": "20130408-bulldog-castro-crest.gpx"
+    },
+    {
+      "location": { "lat": 34.250427, "lon": -118.752045 },
+      "fileName": "20130411-runkle.gpx"
+    },
+    {
+      "location": { "lat": 34.1703, "lon": -118.90049 },
+      "fileName": "20130415-rosewood-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.29279, "lon": -118.64758 },
+      "fileName": "20130420-johnson-las-llajas.gpx"
+    },
+    {
+      "location": { "lat": 34.243942, "lon": -118.76383 },
+      "fileName": "20130424-runkle-albertson.gpx"
+    },
+    {
+      "location": { "lat": 34.25183, "lon": -118.67382 },
+      "fileName": "20130505-black-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.068977, "lon": -118.82141 },
+      "fileName": "20130516-zuma-ridge.gpx"
+    },
+    {
+      "location": { "lat": 34.255234, "lon": -118.65852 },
+      "fileName": "20130522-wildlife-sage-ranch.gpx"
+    },
+    {
+      "location": { "lat": 34.28218, "lon": -118.63019 },
+      "fileName": "20130524-johnson.gpx"
+    },
+    {
+      "location": { "lat": 34.282887, "lon": -118.63017 },
+      "fileName": "20130612-johnson.gpx"
+    },
+    {
+      "location": { "lat": 34.06898, "lon": -118.82181 },
+      "fileName": "20130616-zuma-ridge.gpx"
+    },
+    {
+      "location": { "lat": 34.13126, "lon": -119.00075 },
+      "fileName": "20130618-sycamore.gpx"
+    },
+    {
+      "location": { "lat": 34.092846, "lon": -118.86946 },
+      "fileName": "20130627-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.2538, "lon": -118.74792 },
+      "fileName": "20130708-runkle-arness.gpx"
+    },
+    {
+      "location": { "lat": 34.09249, "lon": -118.71226 },
+      "fileName": "20130714-malibu-creek.gpx"
+    },
+    {
+      "location": { "lat": 34.0934, "lon": -118.87068 },
+      "fileName": "20130716-backbone-encinal-etz.gpx"
+    },
+    {
+      "location": { "lat": 34.10865, "lon": -118.90874 },
+      "fileName": "20130719-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.282898, "lon": -118.63018 },
+      "fileName": "20130729-johnson.gpx"
+    },
+    {
+      "location": { "lat": 34.086582, "lon": -118.741745 },
+      "fileName": "20130803-mesa-peak-mtwy.gpx"
+    },
+    {
+      "location": { "lat": 34.09997, "lon": -118.89221 },
+      "fileName": "20130805-encinal-circle-x.gpx"
+    },
+    {
+      "location": { "lat": 34.18644, "lon": -118.71754 },
+      "fileName": "20130801-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.17034, "lon": -118.900536 },
+      "fileName": "20130808-rosewood-space-mountain.gpx"
+    },
+    {
+      "location": { "lat": 34.23233, "lon": -118.821175 },
+      "fileName": "20130823-sunset-hills.gpx"
+    },
+    {
+      "location": { "lat": 34.22656, "lon": -118.80202 },
+      "fileName": "20130828-challenger-albertson-woodridge.gpx"
+    },
+    {
+      "location": { "lat": 34.111034, "lon": -118.81236 },
+      "fileName": "20130903-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.226692, "lon": -118.7908 },
+      "fileName": "20130909-bus-canyon.gpx"
+    },
+    {
+      "location": { "lat": 34.15247, "lon": -118.853546 },
+      "fileName": "20130226-white-horse-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.160675, "lon": -118.86632 },
+      "fileName": "20130225-triunfo-los-robles.gpx"
+    },
+    {
+      "location": { "lat": 34.28795, "lon": -118.73714 },
+      "fileName": "20130912-simi-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.239037, "lon": -118.7693 },
+      "fileName": "20130915-runkle-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.28292, "lon": -118.63017 },
+      "fileName": "20130922-johnson-rocky-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.157722, "lon": -118.84951 },
+      "fileName": "20130925-triunfo.gpx"
+    },
+    {
+      "location": { "lat": 34.154594, "lon": -118.85311 },
+      "fileName": "20131002-triunfo-bridgegate-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.28219, "lon": -118.69118 },
+      "fileName": "20131008-big-simi-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.305183, "lon": -118.6871 },
+      "fileName": "20131010-chivo-marr.gpx"
+    },
+    {
+      "location": { "lat": 34.269455, "lon": -118.7924 },
+      "fileName": "20131011-switchies.gpx"
+    },
+    {
+      "location": { "lat": 34.23477, "lon": -118.78929 },
+      "fileName": "20131023-canyon-view.gpx"
+    },
+    {
+      "location": { "lat": 34.31196, "lon": -118.69891 },
+      "fileName": "20131013-tapo-marr.gpx"
+    },
+    {
+      "location": { "lat": 34.28292, "lon": -118.63017 },
+      "fileName": "20131017-johnson.gpx"
+    },
+    {
+      "location": { "lat": 34.12803, "lon": -118.82284 },
+      "fileName": "20131030-westlake.gpx"
+    },
+    {
+      "location": { "lat": 34.186966, "lon": -118.721176 },
+      "fileName": "20131107-cheeseboro-night-ride.gpx"
+    },
+    {
+      "location": { "lat": 34.148426, "lon": -118.89026 },
+      "fileName": "20131108-hidden-valley.gpx"
+    },
+    {
+      "location": { "lat": 34.313133, "lon": -118.700226 },
+      "fileName": "20131123-tapo-chivo.gpx"
+    },
+    {
+      "location": { "lat": 34.30314, "lon": -118.71672 },
+      "fileName": "20131125-tapo-exploring.gpx"
+    },
+    {
+      "location": { "lat": 34.27126, "lon": -118.79112 },
+      "fileName": "20131114-mccoy-backside.gpx"
+    },
+    {
+      "location": { "lat": 34.231514, "lon": -118.80477 },
+      "fileName": "20131112-cyn-view-woodridge.gpx"
+    },
+    {
+      "location": { "lat": 34.216927, "lon": -118.94162 },
+      "fileName": "20131201-hill-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.267418, "lon": -118.719826 },
+      "fileName": "20131207-cool-weather-wandering.gpx"
+    },
+    {
+      "location": { "lat": 34.270264, "lon": -118.73877 },
+      "fileName": "20131212-simi-sunset.gpx"
+    },
+    {
+      "location": { "lat": 34.078064, "lon": -118.91939 },
+      "fileName": "20131230-decker-yerba.gpx"
+    },
+    {
+      "location": { "lat": 34.22996, "lon": -118.82123 },
+      "fileName": "20140102-woodridge.gpx"
+    },
+    {
+      "location": { "lat": 34.229984, "lon": -118.82117 },
+      "fileName": "20140105-reservoir-woodridge.gpx"
+    },
+    {
+      "location": { "lat": 34.12457, "lon": -118.74619 },
+      "fileName": "20131220-agoura-lasvirgines-mulholland.gpx"
+    },
+    {
+      "location": { "lat": 34.188316, "lon": -118.70327 },
+      "fileName": "20140109-bell-canyon.gpx"
+    },
+    {
+      "location": { "lat": 34.111073, "lon": -118.81261 },
+      "fileName": "20140111-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.209034, "lon": -118.91763 },
+      "fileName": "20140216-camarillo-potrero.gpx"
+    },
+    {
+      "location": { "lat": 34.1212, "lon": -118.803986 },
+      "fileName": "20140310-rock-store-.gpx"
+    },
+    {
+      "location": { "lat": 34.11901, "lon": -118.86508 },
+      "fileName": "20140312-westlake-yerba.gpx"
+    },
+    {
+      "location": { "lat": 34.086143, "lon": -118.74179 },
+      "fileName": "20140324-mesa-peak.gpx"
+    },
+    {
+      "location": { "lat": 34.115917, "lon": -118.861725 },
+      "fileName": "20140402-westlake.gpx"
+    },
+    {
+      "location": { "lat": 34.105278, "lon": -118.79343 },
+      "fileName": "20140403-rock-store.gpx"
+    },
+    {
+      "location": { "lat": 34.187153, "lon": -118.68401 },
+      "fileName": "20140404-escorpion.gpx"
+    },
+    {
+      "location": { "lat": 34.220787, "lon": -118.79152 },
+      "fileName": "20140408-baby-heads.gpx"
+    },
+    {
+      "location": { "lat": 34.198624, "lon": -118.77381 },
+      "fileName": "20120606-dead-cow.gpx"
+    },
+    {
+      "location": { "lat": 34.13923, "lon": -118.7616 },
+      "fileName": "20140415-access-roads.gpx"
+    },
+    {
+      "location": { "lat": 34.133537, "lon": -118.73714 },
+      "fileName": "20140417-heartbreak-hill.gpx"
+    },
+    {
+      "location": { "lat": 34.305145, "lon": -118.68695 },
+      "fileName": "20140423-chivo.gpx"
+    },
+    {
+      "location": { "lat": 34.22982, "lon": -118.806335 },
+      "fileName": "20140504-ridgeline-woodridge.gpx"
+    },
+    {
+      "location": { "lat": 34.198288, "lon": -118.775085 },
+      "fileName": "20140506-dead-cow.gpx"
+    },
+    {
+      "location": { "lat": 34.210907, "lon": -118.80257 },
+      "fileName": "20140507-long-cyn-oak-park.gpx"
+    },
+    {
+      "location": { "lat": 34.198082, "lon": -118.79277 },
+      "fileName": "20140512-sandstone-meadows-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.253693, "lon": -118.67253 },
+      "fileName": "20140515-black-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.089775, "lon": -118.85838 },
+      "fileName": "20140519-backbone-climbing.gpx"
+    },
+    {
+      "location": { "lat": 34.321934, "lon": -118.84334 },
+      "fileName": "20140521-happy-camp-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.068962, "lon": -118.821884 },
+      "fileName": "20140522-zuma-ridge.gpx"
+    },
+    {
+      "location": { "lat": 34.24948, "lon": -118.793274 },
+      "fileName": "20140602-mccoy-long-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.204025, "lon": -118.769226 },
+      "fileName": "20140605-dead-cow-china-flat.gpx"
+    },
+    {
+      "location": { "lat": 34.22471, "lon": -118.81395 },
+      "fileName": "20140606-woodridge-long-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.105373, "lon": -118.79108 },
+      "fileName": "20140613-rock-store.gpx"
+    },
+    {
+      "location": { "lat": 34.270226, "lon": -118.73191 },
+      "fileName": "20140618-bike-path.gpx"
+    },
+    {
+      "location": { "lat": 34.17021, "lon": -118.900505 },
+      "fileName": "20140621-rosewood-space-mtn.gpx"
+    },
+    {
+      "location": { "lat": 34.26987, "lon": -118.78964 },
+      "fileName": "20140630-mccoy.gpx"
+    },
+    {
+      "location": { "lat": 34.09664, "lon": -118.87899 },
+      "fileName": "20140701-backbone.gpx"
+    },
+    {
+      "location": { "lat": 34.068035, "lon": -118.905396 },
+      "fileName": "20140706-mulholland.gpx"
+    },
+    {
+      "location": { "lat": 34.09269, "lon": -118.67509 },
+      "fileName": "20140710-stunt.gpx"
+    },
+    {
+      "location": { "lat": 34.083427, "lon": -118.67375 },
+      "fileName": "20140715-piuma.gpx"
+    },
+    {
+      "location": { "lat": 34.09871, "lon": -118.8905 },
+      "fileName": "20140717-top-of-the-world.gpx"
+    },
+    {
+      "location": { "lat": 34.18834, "lon": -118.7339 },
+      "fileName": "20140717-triple-threat-climb.gpx"
+    },
+    {
+      "location": { "lat": 34.05751, "lon": -118.74642 },
+      "fileName": "20140720-corral-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.22458, "lon": -118.81569 },
+      "fileName": "20140721-woodridge.gpx"
+    },
+    {
+      "location": { "lat": 34.085785, "lon": -118.73723 },
+      "fileName": "20140723-bulldog-mesa-peak-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.123245, "lon": -118.854065 },
+      "fileName": "20140728-westlake.gpx"
+    },
+    {
+      "location": { "lat": 34.2565, "lon": -118.681564 },
+      "fileName": "20140806-black-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.068253, "lon": -118.933914 },
+      "fileName": "20140810-deer-creek-decker.gpx"
+    },
+    {
+      "location": { "lat": 34.11535, "lon": -118.86195 },
+      "fileName": "20140819-westlake.gpx"
+    },
+    {
+      "location": { "lat": 34.17193, "lon": -118.80026 },
+      "fileName": "20140910-westlake-kanan.gpx"
+    },
+    {
+      "location": { "lat": 34.269165, "lon": -118.7896 },
+      "fileName": "20140913-mccoy-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.269886, "lon": -118.78961 },
+      "fileName": "20140917-mccoy.gpx"
+    },
+    {
+      "location": { "lat": 34.259666, "lon": -118.76665 },
+      "fileName": "20140919-madera-tr-loop-and-bike-path.gpx"
+    },
+    {
+      "location": { "lat": 34.28704, "lon": -118.72116 },
+      "fileName": "20140922-simi-road-trail-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.268658, "lon": -118.79321 },
+      "fileName": "20140923-mccoy-technique.gpx"
+    },
+    {
+      "location": { "lat": 34.08387, "lon": -118.956245 },
+      "fileName": "20140924-deer-creek-yerba.gpx"
+    },
+    {
+      "location": { "lat": 34.22999, "lon": -118.82297 },
+      "fileName": "20140925-woodridge.gpx"
+    },
+    {
+      "location": { "lat": 34.294296, "lon": -118.74722 },
+      "fileName": "20140930-ditch-rd-big-sky.gpx"
+    },
+    {
+      "location": { "lat": 34.124638, "lon": -118.7412 },
+      "fileName": "20140930-mulholland-recovery.gpx"
+    },
+    {
+      "location": { "lat": 34.12122, "lon": -118.80397 },
+      "fileName": "20141007-rock-store-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.124626, "lon": -118.7413 },
+      "fileName": "20141009-lv-mully-cornell.gpx"
+    },
+    {
+      "location": { "lat": 34.21069, "lon": -118.79508 },
+      "fileName": "20141012-miller-ranch-dead-cow.gpx"
+    },
+    {
+      "location": { "lat": 34.12122, "lon": -118.80396 },
+      "fileName": "20141015-rock-store-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.210953, "lon": -118.930504 },
+      "fileName": "20141018-wildwood.gpx"
+    },
+    {
+      "location": { "lat": 34.11949, "lon": -118.71565 },
+      "fileName": "20141020-liberty-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.108604, "lon": -118.77973 },
+      "fileName": "20141022-rock-store-repeats.gpx"
+    },
+    {
+      "location": { "lat": 34.131966, "lon": -118.748795 },
+      "fileName": "20140627-easy-wandering.gpx"
+    },
+    {
+      "location": { "lat": 34.269875, "lon": -118.78965 },
+      "fileName": "20141024-mccoy.gpx"
+    },
+    {
+      "location": { "lat": 34.217896, "lon": -118.79196 },
+      "fileName": "20141028-albertson.gpx"
+    },
+    {
+      "location": { "lat": 34.09784, "lon": -118.7466 },
+      "fileName": "20141030-bulldog.gpx"
+    },
+    {
+      "location": { "lat": 34.22014, "lon": -118.81236 },
+      "fileName": "20141101-woodridge-albertson.gpx"
+    },
+    {
+      "location": { "lat": 34.293037, "lon": -118.76091 },
+      "fileName": "20141106-big-sky.gpx"
+    },
+    {
+      "location": { "lat": 34.292374, "lon": -118.76083 },
+      "fileName": "20120117-big-sky.gpx"
+    },
+    {
+      "location": { "lat": 34.219627, "lon": -118.78839 },
+      "fileName": "20141110-albertson.gpx"
+    },
+    {
+      "location": { "lat": 34.18689, "lon": -118.72109 },
+      "fileName": "20141112-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 34.27565, "lon": -118.7912 },
+      "fileName": "20141113-simi-wandering.gpx"
+    },
+    {
+      "location": { "lat": 34.09433, "lon": -118.746826 },
+      "fileName": "20141116-bulldog.gpx"
+    },
+    {
+      "location": { "lat": 34.22017, "lon": -118.81236 },
+      "fileName": "20141120-woodridge.gpx"
+    },
+    {
+      "location": { "lat": 34.282925, "lon": -118.63019 },
+      "fileName": "20141123-johnson.gpx"
+    },
+    {
+      "location": { "lat": 34.225296, "lon": -118.806274 },
+      "fileName": "20141125-shakeout.gpx"
+    },
+    {
+      "location": { "lat": 34.278366, "lon": -118.65047 },
+      "fileName": "20150126-hummingbird.gpx"
+    },
+    {
+      "location": { "lat": 34.275192, "lon": -118.78401 },
+      "fileName": "20150207-test-ride.gpx"
+    },
+    {
+      "location": { "lat": 34.08348, "lon": -118.67345 },
+      "fileName": "20150208-piuma.gpx"
+    },
+    {
+      "location": { "lat": 34.12468, "lon": -118.74159 },
+      "fileName": "20150323-las-virgenes.gpx"
+    },
+    {
+      "location": { "lat": 34.22461, "lon": -118.81251 },
+      "fileName": "20150414-long-cyn-loop.gpx"
+    },
+    {
+      "location": { "lat": 34.292854, "lon": -118.761086 },
+      "fileName": "20150421-big-sky.gpx"
+    },
+    {
+      "location": { "lat": 34.292843, "lon": -118.76109 },
+      "fileName": "20150427-big-sky.gpx"
+    },
+    {
+      "location": { "lat": 34.202705, "lon": -118.80258 },
+      "fileName": "20150507-hidden-meadows.gpx"
+    },
+    {
+      "location": { "lat": 34.282906, "lon": -118.630196 },
+      "fileName": "20150531-johnson.gpx"
+    },
+    {
+      "location": { "lat": 34.11885, "lon": -118.81064 },
+      "fileName": "20150709-lobo.gpx"
+    },
+    {
+      "location": { "lat": 34.116287, "lon": -118.70909 },
+      "fileName": "20150710-colossus.gpx"
+    },
+    {
+      "location": { "lat": 34.123566, "lon": -118.707886 },
+      "fileName": "20150714-dog-park.gpx"
+    },
+    {
+      "location": { "lat": 34.146713, "lon": -118.75047 },
+      "fileName": "20150716-cheeseboro-liberty.gpx"
+    },
+    {
+      "location": { "lat": 34.13603, "lon": -118.69657 },
+      "fileName": "20150722-dog-park.gpx"
+    },
+    {
+      "location": { "lat": 34.15467, "lon": -118.85333 },
+      "fileName": "20150722-triunfo.gpx"
+    },
+    {
+      "location": { "lat": 33.827477, "lon": -117.7603 },
+      "fileName": "20150803-coachwhip.gpx"
+    },
+    {
+      "location": { "lat": 33.83709, "lon": -117.73874 },
+      "fileName": "20150805-weir-canyon.gpx"
+    },
+    {
+      "location": { "lat": 33.831482, "lon": -117.75837 },
+      "fileName": "20150806-santiago-weir.gpx"
+    },
+    {
+      "location": { "lat": 34.224762, "lon": -116.90152 },
+      "fileName": "big-bear-xc.gpx"
+    },
+    {
+      "location": { "lat": 34.27349, "lon": -116.90746 },
+      "fileName": "big-bear-cougar-bertha.gpx"
+    },
+    {
+      "location": { "lat": 34.22439, "lon": -118.292984 },
+      "fileName": "la-tuna.gpx"
+    },
+    {
+      "location": { "lat": 34.27558, "lon": -118.127075 },
+      "fileName": "strawberry-peak.gpx"
+    },
+    {
+      "location": { "lat": 33.837067, "lon": -117.738716 },
+      "fileName": "20150818-weir.gpx"
+    },
+    {
+      "location": { "lat": 33.837067, "lon": -117.73871 },
+      "fileName": "20150904-weir-cyn.gpx"
+    },
+    {
+      "location": { "lat": 34.274017, "lon": -116.96276 },
+      "fileName": "big-bear-hannah.gpx"
+    },
+    {
+      "location": { "lat": 34.120293, "lon": -118.740585 },
+      "fileName": "20150911-grasslands-malibu-paramount.gpx"
+    },
+    {
+      "location": { "lat": 33.820217, "lon": -117.76907 },
+      "fileName": "20150717-santiago-oaks.gpx"
+    },
+    {
+      "location": { "lat": 34.12887, "lon": -118.762985 },
+      "fileName": "20150916-paramount.gpx"
+    },
+    {
+      "location": { "lat": 33.80604, "lon": -117.76288 },
+      "fileName": "20150915-muddy-irvine.gpx"
+    },
+    {
+      "location": { "lat": 33.8135, "lon": -117.76189 },
+      "fileName": "oc-classic-oaks.gpx"
+    },
+    {
+      "location": { "lat": 33.813644, "lon": -117.76187 },
+      "fileName": "20150919-oaks-pre-ride.gpx"
+    },
+    {
+      "location": { "lat": 33.83708, "lon": -117.738785 },
+      "fileName": "20150922-weir.gpx"
+    },
+    {
+      "location": { "lat": 33.812664, "lon": -117.76071 },
+      "fileName": "20150926-oaks-race.gpx"
+    },
+    {
+      "location": { "lat": 33.558372, "lon": -117.5605 },
+      "fileName": "20151024-caspers-pre-ride.gpx"
+    },
+    {
+      "location": { "lat": 33.815426, "lon": -117.77048 },
+      "fileName": "20151030-oaks-chutes.gpx"
+    },
+    {
+      "location": { "lat": 34.18081, "lon": -118.723526 },
+      "fileName": "20151110-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 33.558464, "lon": -117.56052 },
+      "fileName": "20151114-caspers-race.gpx"
+    },
+    {
+      "location": { "lat": 33.559105, "lon": -117.73398 },
+      "fileName": "20151125-aliso.gpx"
+    },
+    {
+      "location": { "lat": 34.179928, "lon": -118.73123 },
+      "fileName": "20151203-cheeseboro.gpx"
+    },
+    {
+      "location": { "lat": 33.860615, "lon": -117.77142 },
+      "fileName": "20160114-bike-path.gpx"
+    },
+    {
+      "location": { "lat": 33.86059, "lon": -117.76431 },
+      "fileName": "20160121-bike-path.gpx"
+    },
+    {
+      "location": { "lat": 33.81122, "lon": -117.76964 },
+      "fileName": "20160220-santiago-oaks-chutes.gpx"
+    },
+    {
+      "location": { "lat": 33.673027, "lon": -117.65914 },
+      "fileName": "20160221-whiting-ranch.gpx"
+    },
+    {
+      "location": { "lat": 33.806873, "lon": -117.7621 },
+      "fileName": "20160223.gpx"
+    },
+    {
+      "location": { "lat": 33.813457, "lon": -117.767044 },
+      "fileName": "20151226.gpx"
+    },
+    {
+      "location": { "lat": 33.570305, "lon": -117.74875 },
+      "fileName": "20160227-aliso.gpx"
+    },
+    {
+      "location": { "lat": 33.82625, "lon": -117.748566 },
+      "fileName": "20160228-weir.gpx"
+    },
+    {
+      "location": { "lat": 34.16756, "lon": -118.718376 },
+      "fileName": "20160328.gpx"
+    },
+    {
+      "location": { "lat": 34.167572, "lon": -118.72335 },
+      "fileName": "20160322.gpx"
+    },
+    {
+      "location": { "lat": 34.094986, "lon": -118.75492 },
+      "fileName": "20160330.gpx"
+    },
+    {
+      "location": { "lat": 34.167694, "lon": -118.71832 },
+      "fileName": "20160418-final-aliso-training-ride.gpx"
+    },
+    {
+      "location": { "lat": 33.8152, "lon": -117.77052 },
+      "fileName": "20160414-postbulldog-recovery.gpx"
+    },
+    {
+      "location": { "lat": 34.09526, "lon": -118.75768 },
+      "fileName": "20160413-once-more-up-bulldog.gpx"
+    },
+    {
+      "location": { "lat": 34.167675, "lon": -118.71835 },
+      "fileName": "20160411-morning-cheeseboro-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.562416, "lon": -117.735016 },
+      "fileName": "20160423-aliso-race.gpx"
+    },
+    {
+      "location": { "lat": 34.0943, "lon": -118.74686 },
+      "fileName": "20160502-bulldog.gpx"
+    },
+    {
+      "location": { "lat": 33.823837, "lon": -117.75754 },
+      "fileName": "20160518-peralta-goat-barham.gpx"
+    },
+    {
+      "location": { "lat": 34.14211, "lon": -118.689606 },
+      "fileName": "20160427-millenium--de-anza.gpx"
+    },
+    {
+      "location": { "lat": 34.120163, "lon": -118.73942 },
+      "fileName": "20160425-dirt-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.81009, "lon": -117.76964 },
+      "fileName": "20160516-santiago-oaks.gpx"
+    },
+    {
+      "location": { "lat": 33.819984, "lon": -117.75755 },
+      "fileName": "20160514-weir-connector-oaks-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.824554, "lon": -117.857086 },
+      "fileName": "20160512-quick-workout.gpx"
+    },
+    {
+      "location": { "lat": 33.82624, "lon": -117.748566 },
+      "fileName": "20160511-deer-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.833725, "lon": -117.74402 },
+      "fileName": "20160508-trying-to-find-the-flow.gpx"
+    },
+    {
+      "location": { "lat": 33.867363, "lon": -117.69433 },
+      "fileName": "20160523-coal-cyn-trailhead.gpx"
+    },
+    {
+      "location": { "lat": 33.8463, "lon": -118.05771 },
+      "fileName": "20160525-cerritos-bike-path.gpx"
+    },
+    {
+      "location": { "lat": 33.811134, "lon": -117.76962 },
+      "fileName": "20160528-chutes-clean.gpx"
+    },
+    {
+      "location": { "lat": 33.813297, "lon": -117.7695 },
+      "fileName": "20160605-non-dot-baseline-lap.gpx"
+    },
+    {
+      "location": { "lat": 33.89434, "lon": -117.947914 },
+      "fileName": "20161012-fullerton-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.860863, "lon": -117.69687 },
+      "fileName": "coal-canyon.gpx"
+    },
+    {
+      "location": { "lat": 33.798435, "lon": -117.79414 },
+      "fileName": "modena.gpx"
+    },
+    {
+      "location": { "lat": 33.894493, "lon": -117.9474 },
+      "fileName": "fullerton-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.894493, "lon": -117.95419 },
+      "fileName": "fullerton-variation.gpx"
+    },
+    {
+      "location": { "lat": 33.62204, "lon": -117.78669 },
+      "fileName": "Laguna_Loop.gpx"
+    },
+    {
+      "location": { "lat": 33.591934, "lon": -117.80421 },
+      "fileName": "Rattlesnake_No_Name_Ridge.gpx"
+    },
+    {
+      "location": { "lat": 33.590004, "lon": -117.79448 },
+      "fileName": "Second_Visit_to_Crystal_Cove.gpx"
+    },
+    {
+      "location": { "lat": 33.810772, "lon": -118.0739 },
+      "fileName": "20170407-intervals.gpx"
+    },
+    {
+      "location": { "lat": 33.801575, "lon": -117.768616 },
+      "fileName": "Afternoon_Wandering_Checking_out_New_Stuff.gpx"
+    },
+    {
+      "location": { "lat": 33.80389, "lon": -117.76315 },
+      "fileName": "20170505-santiago.gpx"
+    },
+    {
+      "location": { "lat": 33.82366, "lon": -117.76251 },
+      "fileName": "Quick_Oaks_Ride.gpx"
+    },
+    {
+      "location": { "lat": 34.18844, "lon": -118.21036 },
+      "fileName": "20170612-glendale-sports-complex.gpx"
+    },
+    {
+      "location": { "lat": 34.20568, "lon": -118.16452 },
+      "fileName": "20170614-fern-el-prieto.gpx"
+    },
+    {
+      "location": { "lat": 33.912704, "lon": -117.70906 },
+      "fileName": "20170704-chino-hills.gpx"
+    },
+    {
+      "location": { "lat": 33.915947, "lon": -117.78406 },
+      "fileName": "20160625-chino-hills.gpx"
+    },
+    {
+      "location": { "lat": 33.76718, "lon": -117.70698 },
+      "fileName": "oth.gpx"
+    },
+    {
+      "location": { "lat": 33.77112, "lon": -117.705826 },
+      "fileName": "20170815-over-the-hump.gpx"
+    },
+    {
+      "location": { "lat": 33.847713, "lon": -117.81835 },
+      "fileName": "20171221-climbing-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.823906, "lon": -117.75641 },
+      "fileName": "20171230-oaks.gpx"
+    },
+    {
+      "location": { "lat": 33.84459, "lon": -117.73915 },
+      "fileName": "20180630-horse-trails-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.83499, "lon": -117.79219 },
+      "fileName": "20180703-dirt-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.929245, "lon": -117.765 },
+      "fileName": "20180831-chino-hills-lollipop.gpx"
+    },
+    {
+      "location": { "lat": 39.23324, "lon": -120.15154 },
+      "fileName": "2nd_Tahoe_Trail_course_inspection_.gpx"
+    },
+    {
+      "location": { "lat": 33.985184, "lon": -117.92129 },
+      "fileName": "20181022-schabarum.gpx"
+    },
+    {
+      "location": { "lat": 33.98519, "lon": -117.92134 },
+      "fileName": "20181108-schabarum.gpx"
+    },
+    {
+      "location": { "lat": 34.023666, "lon": -117.88512 },
+      "fileName": "20181208-lemon-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.92013, "lon": -117.75976 },
+      "fileName": "20181228-chsp-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.838215, "lon": -117.80693 },
+      "fileName": "20181231-back-yard.gpx"
+    },
+    {
+      "location": { "lat": 34.02362, "lon": -117.88103 },
+      "fileName": "20190215-lunch.gpx"
+    },
+    {
+      "location": { "lat": 33.80516, "lon": -117.84626 },
+      "fileName": "20190319-path-loop.gpx"
+    },
+    {
+      "location": { "lat": 33.73719, "lon": -117.68523 },
+      "fileName": "2019 OCMTB Limestone Lap 1_May.gpx"
+    },
+    {
+      "location": { "lat": 33.73716, "lon": -117.68504 },
+      "fileName": "20190504-limestone-canyon.gpx"
+    },
+    {
+      "location": { "lat": 33.827732, "lon": -117.79669 },
+      "fileName": "20190524-coachwhip-pr.gpx"
+    },
+    {
+      "location": { "lat": 33.769928, "lon": -117.70891 },
+      "fileName": "20190723-over-the-hump.gpx"
+    },
+    {
+      "location": { "lat": 33.76686, "lon": -117.70698 },
+      "fileName": "20190730-oth-8.gpx"
+    },
+    {
+      "location": { "lat": 33.770885, "lon": -117.707855 },
+      "fileName": "20210720-oth1.gpx"
+    },
+    {
+      "location": { "lat": 33.770874, "lon": -117.7079 },
+      "fileName": "20210727-oth2.gpx"
+    },
+    {
+      "location": { "lat": 33.770493, "lon": -117.707855 },
+      "fileName": "20210803-oth3.gpx"
+    },
+    {
+      "location": { "lat": 33.77041, "lon": -117.70788 },
+      "fileName": "20210810-oth4.gpx"
+    },
+    {
+      "location": { "lat": 33.771667, "lon": -117.70792 },
+      "fileName": "20210817-oth5.gpx"
+    },
+    {
+      "location": { "lat": 33.77085, "lon": -117.708015 },
+      "fileName": "20210831-oth7.gpx"
+    },
+    {
+      "location": { "lat": 33.77123, "lon": -117.709625 },
+      "fileName": "20210907-oth8.gpx"
+    }
+  ]
+}

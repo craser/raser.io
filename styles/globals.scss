@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css?family=Lato|Merriweather');
+
+/*
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ */
+
+:root {
+    --font-title: 'Merriweather';
+    --font-main: 'Lato';
+    --theme-color-text: #000;
+    --theme-color-pop: #e88c49;
+    --theme-color-subtext: #555;
+    --theme-color-border: #555;
+    --theme-color-content-text-bg: #fff;
+    --theme-color-title: var(--theme-color-text);
+    --theme-color-link: #456;
+    --theme-color-link-underline: var(--theme-color-pop);
+}
+
+/*@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}*/
+
+// Adapted from: https://gist.github.com/brod-ie/6266959
+$screen-breakpoint: 1024px; // under = small, >= then large
+$screen-small-max: ($screen-breakpoint - 1);
+
+// respond()
+// ------------
+@mixin respond($media) {
+    @if $media == small {
+        @media (max-width: $screen-small-max) {
+            @content
+        }
+    } @else if $media == large {
+        @media (min-width: $screen-breakpoint) {
+            @content
+        }
+    }
+}
+
+body {
+    font-family: var(--font-main), HelveticaNeue-condensed, sans-serif;
+    background-image: url(/img/gold-rush-desktop.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    margin: 0;
+}
+
+body a {
+    color: var(--theme-color-pop);
+    text-decoration: none;
+}
