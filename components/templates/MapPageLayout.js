@@ -13,7 +13,7 @@ export default function MapPageLayout(props) {
                 <HeaderNavigationOptions/>
             </header>
             <main className={styles.content}>
-                {props.content}
+                {props.children}
             </main>
         </div>
     )

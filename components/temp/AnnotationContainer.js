@@ -1,6 +1,7 @@
 import Annotation from "@/components/temp/Annotation";
 import AnnotationEntry from "@/components/temp/AnnotationEntry";
 import { useState } from "react";
+import AnnotationList from "@/components/temp/AnnotationList";
 
 export default function AnnotationContainer(props) {
     let [ annotations, setAnnotations ] = useState([]);
@@ -21,7 +22,7 @@ export default function AnnotationContainer(props) {
 
     return (
         <div>
-            {annotations && annotations.map((a, i) => <Annotation key={`${a}_${i}`} name={a}/>)}
+            <AnnotationList annotations={annotations} />
             <AnnotationEntry addAnnotation={addAnnotation} removeAnnotation={removeAnnotation}/>
         </div>
     );

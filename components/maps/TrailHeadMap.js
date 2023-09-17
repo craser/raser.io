@@ -22,6 +22,12 @@ export default function TrailHeadMap() {
     let [mapApiLoaded, setMapApiLoaded] = useState(false);
     let [dmgMap, setDmgMap] = useState(null);
     let [expandedTrails, setExpandedTrails] = useState([]);
+    let [marks, setMarks] = useState([]);
+    console.log('RENDERING', { expandedTrails });
+
+    function expandTrail(t) {
+        setExpandedTrails(expandedTrails.concat(t));
+    }
 
     function getCenter(bounds) {
         return {
@@ -32,12 +38,19 @@ export default function TrailHeadMap() {
 
     function renderData() {
         dmgMap.zoomToBounds(bounds);
-        locations.forEach(l => dmgMap.markLocation(l, (e) => {
-            console.log({ click: l, e: e });
-            let trails = expandedTrails;
-            trails.push(l);
-            setExpandedTrails(trails);
-        }));
+        let marks = locations.map(l => {
+            let mark = dmgMap.markLocation(l);
+            mark.addListener('click', function() {
+                this.dmgOnClick(l);
+            });
+            mark.dmgOnClick = expandTrail; // init
+            return mark;
+        });
+        setMarks(marks);
+    }
+
+    function assignMarkClickHandlers() {
+        marks.forEach(m => m.dmgOnClick = expandTrail);
     }
 
     function checkDataAndApiLoaded() {
@@ -66,6 +79,8 @@ export default function TrailHeadMap() {
     }, []);
 
     useEffect(checkDataAndApiLoaded, [mapApiLoaded, dataLoaded]);
+
+    assignMarkClickHandlers(); // keep things up-to-date
 
     return (
         <Fragment>
