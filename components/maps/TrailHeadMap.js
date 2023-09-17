@@ -1,49 +1,73 @@
 import GoogleMapReact from 'google-map-react';
 import styles from './TrailHeadMap.module.scss'
 import { useEffect, useState } from "react";
-import LoadingSpinner from "@/components/LoadingSpinner";
+const DmgMap = require('/blog/maps/map');
 
-const LOCATIONS = require('./TrailMapLocations.json');
-
-const TrailHeadMarker = ({ text }) => <div className={styles.trailheadMarker}/>;
+const LOCATIONS = require('./TrailMapLocations.json'); // FIXME: Load from BACK END
 
 export default function TrailHeadMap() {
+    const GOOGLE_MAPS_API_KEY = "AIzaSyBOUra7aNY509z2Z8mitJjK4FUpU_oOy1A";
+    const DEFAULT_CENTER = {
+        "lat": 36.395806,
+        "lng": -118.673095
+    };
+    const DEFAULT_ZOOM = 7;
 
-    let locations = LOCATIONS.locations;
-    let options = {
-        center: getCenter(LOCATIONS.bounds),
-        zoom: 11
-    }
+    let [dataLoaded, setDataLoaded] = useState(false);
+    let [locations, setLocations] = useState([]);
+    let [bounds, setBounds] = useState({});
+    let [mapApiLoaded, setMapApiLoaded] = useState(false);
+    let [dmgMap, setDmgMap] = useState(null);
 
     function getCenter(bounds) {
         return {
-            lat: locations[0].location.lat,
-            lng: locations[0].location.lon
+            lat: (bounds.n + bounds.s) / 2,
+            lng: (bounds.e + bounds.w) / 2
         };
-
-        let parsed = {};
-        Object.keys(bounds).forEach(k => {
-            parsed[k] = parseFloat(bounds[k]);
-        })
-        //return { lat: 10.99835602, lng: 77.01502627 };
-        let x = (parsed.e + parsed.w) / 2;
-        let y = (parsed.n + parsed.s) / 2;
-        let center = { lat: y, lng: x };
-        return center;
     }
 
+    function renderData() {
+        dmgMap.zoomToBounds(bounds);
+        locations.forEach(l => dmgMap.markLocation(l.location));
+    }
+
+    function checkDataAndApiLoaded() {
+        if (dataLoaded && mapApiLoaded) {
+            console.info("Data & API loaded.", { dataLoaded, mapApiLoaded });
+            renderData();
+        } else {
+            console.info("Data & API not yet loaded.", { dataLoaded, mapApiLoaded });
+        }
+    }
+
+    function onGoogleApiLoaded({ map, maps }) {
+        console.log({ map, maps });
+        setDmgMap(new DmgMap(map, maps));
+        setMapApiLoaded(true);
+    }
+
+    useEffect(() => {
+        setDataLoaded(false);
+        setTimeout(() => {
+            console.log({center: getCenter(LOCATIONS.bounds)});
+            setBounds(LOCATIONS.bounds);
+            setLocations(LOCATIONS.locations);
+            setDataLoaded(true);
+        }, 1000);
+    }, []);
+
+    useEffect(checkDataAndApiLoaded, [mapApiLoaded, dataLoaded]);
+
     return (
+        // Setting container dimensions explicitly - required by GoogleMapReact.
         <div className={styles.trailheadmap} style={{ height: '100%', width: '100%' }}>
             <GoogleMapReact
-                bootstrapURLKeys={{ key: "AIzaSyBOUra7aNY509z2Z8mitJjK4FUpU_oOy1A" }}
-                defaultCenter={options.center}
-                defaultZoom={options.zoom}
-            >
-                <TrailHeadMarker
-                    lat={options.center.lat}
-                    lng={options.center.lng}
-                />
-            </GoogleMapReact>
+                bootstrapURLKeys={{ key: GOOGLE_MAPS_API_KEY }}
+                defaultCenter={DEFAULT_CENTER}
+                defaultZoom={DEFAULT_ZOOM}
+                yesIWantToUseGoogleMapApiInternals
+                onGoogleApiLoaded={onGoogleApiLoaded}
+            />
         </div>
     );
 }

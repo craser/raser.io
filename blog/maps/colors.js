@@ -1,4 +1,4 @@
-Colors = (function() {
+let Colors = (function() {
 	var colors = [
 	    "#FF0000", // DEFAULT: RED
 	    "#9F5F9F", // Blue Violet
@@ -24,17 +24,17 @@ Colors = (function() {
 	    "#38B0DE", // Summer Sky
 	    "#CC3299", // Violet Red
 	];
-	
+
 	var i = 0;
-	
-	function getColor(n) { 
-	    return colors[(n || 0) % colors.length]; 
+
+	function getColor(n) {
+	    return colors[(n || 0) % colors.length];
 	}
-	
-	function getNextColor() { 
-		i++; 
-		i = i % colors.length; 
-		return getColor(i); 
+
+	function getNextColor() {
+		i++;
+		i = i % colors.length;
+		return getColor(i);
 	}
 
 	return {
