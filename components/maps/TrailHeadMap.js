@@ -5,14 +5,9 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 
 const LOCATIONS = require('./TrailMapLocations.json');
 
-const TrailHeadMarker = ({}) => <div className={styles.trailheadMarker}/>;
+const TrailHeadMarker = ({ text }) => <div className={styles.trailheadMarker}/>;
 
 export default function TrailHeadMap() {
-    const DEFAULT_OPTIONS = {
-        // {lat: -118.673095, lng: 36.395806} // breaks
-        center: { lat: 10.99835602, lng: 77.01502627 }, // works. WTF.
-        zoom: 11
-    };
 
     let locations = LOCATIONS.locations;
     let options = {
@@ -44,13 +39,10 @@ export default function TrailHeadMap() {
                 defaultCenter={options.center}
                 defaultZoom={options.zoom}
             >
-                {locations.slice(0, 10).map(l =>
-                    <TrailHeadMarker
-                        key={l.fileName}
-                        lat={l.location.lat}
-                        lng={l.location.lon}
-                    />
-                )}
+                <TrailHeadMarker
+                    lat={options.center.lat}
+                    lng={options.center.lng}
+                />
             </GoogleMapReact>
         </div>
     );
