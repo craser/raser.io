@@ -9,14 +9,16 @@ function DmgMap(map, maps) {
 	    map.fitBounds(new maps.LatLngBounds(sw, ne));
 	};
 
-	this.markLocation = function(p) {
+	this.markLocation = function(l, onClick) {
+		let p = l.location;
 		var loc = new maps.LatLng(p.lat, p.lon);
 		var mark = new maps.Marker({
 			position: loc,
-			clickable: false,
+			clickable: true,
 			dragable: false
 		});
 		mark.setMap(map);
+		mark.addListener('click', onClick);
 		return mark;
 	};
 }

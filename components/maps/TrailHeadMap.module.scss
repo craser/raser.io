@@ -10,3 +10,11 @@
     background-color: fuchsia;
     border-radius: 50%;
 }
+
+.sidebar {
+    position: absolute;
+    width: 30%;
+    background-color: fuchsia;
+    z-index: 1;
+    right: 0;
+}
