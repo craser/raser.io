@@ -1,11 +1,9 @@
 import GoogleMapReact from 'google-map-react';
 import styles from './TrailHeadMap.module.scss'
 import { Fragment, useEffect, useState } from "react";
-import { createPortal } from 'react-dom';
-import TrailHeadCards from "@/components/maps/TrailHeadCards";
+import TrailHeadCard from "@/components/maps/TrailHeadCard";
 
 const DmgMap = require('/blog/maps/map');
-
 const JSON_DATA = require('./TrailMapLocations.json'); // FIXME: Load from BACK END
 
 export default function TrailHeadMap() {
@@ -25,8 +23,12 @@ export default function TrailHeadMap() {
     let [marks, setMarks] = useState([]);
     console.log('RENDERING', { expandedTrails });
 
-    function expandTrail(t) {
+    function showTrailCard(t) {
         setExpandedTrails(expandedTrails.concat(t));
+    }
+
+    function hideTrailCard(trail) {
+        setExpandedTrails(expandedTrails.filter(t => t.fileName != trail.fileName));
     }
 
     function getCenter(bounds) {
@@ -43,14 +45,14 @@ export default function TrailHeadMap() {
             mark.addListener('click', function() {
                 this.dmgOnClick(l);
             });
-            mark.dmgOnClick = expandTrail; // init
+            mark.dmgOnClick = showTrailCard; // init
             return mark;
         });
         setMarks(marks);
     }
 
     function assignMarkClickHandlers() {
-        marks.forEach(m => m.dmgOnClick = expandTrail);
+        marks.forEach(m => m.dmgOnClick = showTrailCard);
     }
 
     function checkDataAndApiLoaded() {
@@ -85,7 +87,13 @@ export default function TrailHeadMap() {
     return (
         <Fragment>
             <div className={styles.sidebar}>
-                <TrailHeadCards trails={expandedTrails} />
+                {expandedTrails.map(t => (
+                    <TrailHeadCard
+                        key={t.fileName}
+                        trail={t}
+                        hideTrailCard={() => hideTrailCard(t)}
+                    />
+                ))}
             </div>
             <div className={styles.trailheadmap} style={{ height: '100%', width: '100%' }}>
                 <GoogleMapReact

@@ -52,9 +52,14 @@ body {
     background-attachment: fixed;
     background-repeat: no-repeat;
     margin: 0;
-}
 
-body a {
-    color: var(--theme-color-pop);
-    text-decoration: none;
+    &> div#__next {
+        height: 100vh;
+        overflow: auto;
+    }
+
+    a {
+        color: var(--theme-color-pop);
+        text-decoration: none;
+    }
 }

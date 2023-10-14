@@ -18,38 +18,42 @@ function cleanFetch() {
 }
 
 export default class RawPostDao {
-    #URL = 'https://dmg-react-db-02-default-rtdb.firebaseio.com/';
+    #URL = 'http://localhost:8081/entries';
 
     constructor() {
     }
 
     async getLatestPost() {
-        let url = `${this.#URL}/entries.json?orderBy="Entry_ID"&limitToLast=1`;
-        return cleanFetch(url).then(response => response.json())
-            .then(data => {
-                return data[Object.keys(data)[0]];
-            });
+        let url = `${this.#URL}/latest`;
+        return cleanFetch(url).then(response => response.json());
     }
 
     async getPostById(id) {
         id = encodeURIComponent(id);
-        let url = `${this.#URL}/entries.json?orderBy="Entry_ID"&equalTo=${id}`;
-        return cleanFetch(url).then(response => response.json())
-            .then(data => {
-                return data[Object.keys(data)[0]];
-            });
+        let url = `${this.#URL}/${id}`;
+        return cleanFetch(url).then(response => response.json());
+    }
+
+    async getNextPost(id) {
+        id = encodeURIComponent(id);
+        let url = `${this.#URL}/${id}/next`
+        return cleanFetch(url).then(response => response.json());
+    }
+
+    async getPrevPost(id) {
+        id = encodeURIComponent(id);
+        let url = `${this.#URL}/${id}/prev`
+        return cleanFetch(url).then(response => response.json());
     }
 
     /**
      * TODO: This is totally bogus. Limits to most recent 10 entries.
      * @returns {Promise<any>}
      */
-    async getEntries() {
-        let url = `${this.#URL}/entries.json?orderBy="Entry_ID"&limitToLast=10`;
+    async getEntries(page = 0) {
+        let url = `${this.#URL}/latest/${page}`;
         return cleanFetch(url).then(response => response.json())
-            .then(data => {
-                let posts = Object.keys(data).map(key => data[key]);
-                posts.sort((a, b) => b.Entry_ID - a.Entry_ID);
+            .then(posts => {
                 return posts;
             });
     }

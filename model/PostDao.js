@@ -24,6 +24,14 @@ export default class PostDao {
         return this.#dao.getPostById(id);
     }
 
+    async getNextPost(id) {
+        return this.#dao.getNextPost(id);
+    }
+
+    async getPrevPost(id) {
+        return this.#dao.getPrevPost(id);
+    }
+
     async getEntries() {
         return this.#dao.getEntries();
     }

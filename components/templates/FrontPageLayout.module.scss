@@ -28,24 +28,24 @@
     text-align: right;
     vertical-align: middle;
     margin: 0;
-    padding: 0;
-}
+    padding: 0.5rem 1rem 1rem 1rem;
 
-.sitenav li {
-    display: inline;
-    list-style-type: none;
-    text-transform: lowercase;
-}
+    li {
+        display: inline;
+        list-style-type: none;
+        text-transform: lowercase;
+    }
 
-.sitenav a {
-    color: #000;
-    padding: 3px 0.5em 3px 0.5em;
-    margin: 3px;
-    border: 0;
-}
+    a {
+        color: #000;
+        padding: 3px 0.5em 3px 0.5em;
+        margin: 3px;
+        border: 0;
 
-.sitenav a:hover {
-    color: #e88c49;
+        &:hover {
+            color: #e88c49;
+        }
+    }
 }
 
 .content {

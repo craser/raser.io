@@ -1,0 +1,7 @@
+{
+  "api": {
+    "endpoints": {
+      "postcards": "http://localhost:8081/attachments/postcards"
+    }
+  }
+}

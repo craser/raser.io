@@ -8,6 +8,7 @@ export default function LogEntries(props) {
     let pageSize = props.pageSize;
 
     useEffect(() => {
+        console.log('useEffect firing!');
         new PostDao().getEntries()
             .then(entries => entries.slice(0, pageSize))
             .then(entries => setEntries(entries))

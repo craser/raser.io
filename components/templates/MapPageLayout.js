@@ -1,7 +1,6 @@
 import Link from "next/link";
 import styles from './MapPageLayout.module.scss'
 import HeaderNavigationOptions from "@/components/templates/HeaderNavigationOptions";
-import EntryCacheContext from "@/components/context/EntryCacheContext";
 
 export default function MapPageLayout(props) {
     return (

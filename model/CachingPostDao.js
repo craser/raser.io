@@ -60,6 +60,18 @@ export default class CachingPostDao {
         }
     }
 
+
+
+    async getNextPost(id) {
+        // TODO: Implement caching
+        return this.#dao.getNextPost(id);
+    }
+
+    async getPrevPost(id) {
+        // TODO: Implement caching
+        return this.#dao.getPrevPost(id);
+    }
+
     async getEntries() {
         let cacheEntry = this.#cache['entries'];
         if (!cacheEntry || (Date.now() - cacheEntry.timestamp) > this.#MAX_CACHE_AGE) {
