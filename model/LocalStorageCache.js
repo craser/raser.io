@@ -1,9 +1,11 @@
-let INITIAL_CACHE = {
-    next: {}, // prevId -> nextId
-    prev: {}, // nextId -> prevId
-    latest: null, // latest post
-    recentEntries: null, // most recent posts
-};
+function LruList({ post, nextPostId, prevPostId, next }) {
+    this.id = post.entryId;
+    this.post = post;
+    this.nextPostId = nextPostId;
+    this.prevPostId = prevPostId;
+    this.next = next;
+}
+
 /**
  * Implements an object cache backed by browser's local storage. If used
  * in an environment where localStorage is NOT available, it will still
@@ -14,69 +16,111 @@ let INITIAL_CACHE = {
  * TODO: Actually flush to localStorage...
  */
 export default class LocalStorageCache {
+    size = 0;
     #CACHE_NAME = 'raserio-cache';
-    cache = INITIAL_CACHE;
+    lruById = {};
+    lruTop = null;
+    lruTail = null;
+    recentEntries = null;
+    latestEntry = null;
+    maxSize = 20;
 
-    constructor() {
+
+    constructor({ maxSize }) {
         try {
-            if (localStorage) {
+            if (typeof localStorage != 'undefined') {
                 const json = localStorage.getItem(this.#CACHE_NAME);
                 this.cache = JSON.parse(json) || INITIAL_CACHE;
             }
+            this.maxSize = maxSize;
         } catch (e) {
             console.error('Error initializing new cache.', e);
         }
     }
 
     store() {
-        if (localStorage) {
-            localStorage.setItem(this.#CACHE_NAME, cache);
+        if (typeof localStorage != 'undefined') {
+            localStorage.setItem(this.#CACHE_NAME, this.cache);
         }
     }
 
+    remove(post) {
+        if (post.entryId in this.lruById) {
+            let entry = this.lruById[post.entryId];
+            delete this.lruById[post.entryId];
+            Object.assign(entry, entry.next);
+            this.size--;
+        }
+    }
+
+    removeOldest() {
+
+    }
+
     getById(entryId) {
-        return this.cache[entryId];
+        return (entryId in this.lruById)
+            ? this.lruById[entryId].post
+            : null;
     }
 
     setById(post) {
-        this.cache[post.entryId] = post;
+        const newEntry = new LruList({ post, next: this.lruTop });
+        if (post.entryId in this.lruById) {
+            const entry = this.lruById[post.entryId];
+            Object.assign(entry, entry.next);
+        } else {
+            this.size++;
+        }
+        this.lruTop = newEntry;
+        this.lruTail = this.lruTail || newEntry;
+        this.lruById[post.entryId] = newEntry;
     }
 
-    setNext(prevId, post) {
+    setNext(post, nextPost) {
         this.setById(post);
-        this.cache.next[prevId] = post.entryId;
+        this.setById(nextPost);
+        this.lruById[post.entryId].nextPostId = nextPost.entryId;
+        this.lruById[nextPost.entryId].prevPostId = post.entryId;
     }
 
-    getNext(prevId) {
-        let entryId = this.cache.next[prevId];
-        let post = entryId && this.getById(entryId);
-        return post;
+    getNext(p) {
+        const id = p.entryId || p;
+        const entry = this.lruById[id];
+        const nextPost = entry
+            ? this.getById(entry.nextPostId)
+            : null;
+        return nextPost;
     }
 
-    setPrev(nextId, post) {
-        this.setById(post)
-        this.cache.prev[nextId] = post.entryId;
+    setPrev(post, prevPost) {
+        this.setById(post);
+        this.setById(prevPost);
+        this.lruById[post.entryId].prevPostId = prevPost.entryId;
+        this.lruById[prevPost.entryId].nextPostId = post.entryId;
     }
 
-    getPrev(nextId) {
-        let entryId = this.cache.prev[nextId];
-        let post = entryId && this.getById(entryId);
-        return post;
+    getPrev(p) {
+        const id = p.entryId || p;
+        const entry  = this.lruById[id];
+        const prevPost = entry
+            ? this.getById(entry.prevPostId)
+            : null;
+        return prevPost;
     }
 
     getLatestPost() {
-        return this.cache.latest;
+        return this.latestEntry;
     }
 
     setLatestPost(post) {
-        this.cache.latest = post;
+        this.latestEntry = post;
     }
 
     getRecentEntries() {
-        return this.cache.recentEntries;
+        return this.recentEntries;
     }
 
     setRecentEntries(posts) {
-        this.cache.recentEntries = posts;
+        this.recentEntries = posts;
     }
 }

@@ -4,7 +4,7 @@ import PostMetaInfo from "@/components/PostMetaInfo";
 import PostTitleImage from "@/components/PostTitleImage";
 
 export const Post = ({ post, showBody }) => {
-    return (
+     return (
         <div className={styles.entry}>
             <h2 className={styles.title}><PostLink post={post}>{post.title}</PostLink></h2>
             <PostMetaInfo post={post}/>

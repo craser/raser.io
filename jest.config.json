@@ -1,0 +1,7 @@
+{
+  "collectCoverage": true,
+  "moduleFileExtensions": ["js"],
+  "modulePaths": [
+    "<rootDir>"
+  ]
+}
