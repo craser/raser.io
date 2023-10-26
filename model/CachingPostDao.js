@@ -5,56 +5,47 @@ import LocalStorageCache from "@/model/LocalStorageCache";
 
 export default class CachingPostDao {
     #dao = null;
-    #newCache;
-    #MAX_CACHE_AGE = 1000 * 60 * 60 * 3; // 3 hours
+    #cache;
 
     constructor(dao) {
         this.#dao = dao;
-        this.#newCache = new LocalStorageCache();
+        this.#cache = new LocalStorageCache();
     }
 
     async getLatestPost() {
-        let post = this.#newCache.getLatestPost()
-        if (!post) {
-            post = await this.#dao.getLatestPost();
-            this.#newCache.setLatestPost(post);
-        }
+        let post = await this.#dao.getLatestPost();
         return post;
     }
 
     async getPostById(id) {
-        let post = this.#newCache.getById(id);
+        let post = this.#cache.getById(id);
         if (!post) {
-            post = this.#dao.getPostById(id);
-            this.#newCache.setById(post);
+            post = await this.#dao.getPostById(id);
+            this.#cache.setById(post);
         }
         return post;
     }
 
     async getNextPost(id) {
-        let post = this.#newCache.getNext(id);
+        let post = this.#cache.getNext(id);
         if (!post) {
-            post = this.#dao.getNextPost(id);
-            this.#newCache.setNext(id, post);
+            post = await this.#dao.getNextPost(id);
+            this.#cache.setNext(id, post);
         }
         return post;
     }
 
     async getPrevPost(id) {
-        let post = this.#newCache.getPrev(id);
+        let post = this.#cache.getPrev(id);
         if (!post) {
-            post = this.#dao.getPrevPost(id);
-            this.#newCache.setPrev(id, post);
+            post = await this.#dao.getPrevPost(id);
+            this.#cache.setPrev(id, post);
         }
         return post;
     }
 
     async getEntries() {
-        let posts = this.#newCache.getRecentEntries();
-        if (!posts) {
-            let posts = this.#dao.getEntries();
-            this.#newCache.setRecentEntries(posts);
-        }
+        let posts = await this.#dao.getEntries();
         return posts;
     }
 }
