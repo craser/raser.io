@@ -14,6 +14,7 @@ export default class PostDao {
 
     constructor() {
         this.#dao = new CachingPostDao(new RawPostDao());
+        //this.#dao = new RawPostDao();
     }
 
     async getLatestPost() {
@@ -24,12 +25,12 @@ export default class PostDao {
         return this.#dao.getPostById(id);
     }
 
-    async getNextPost(id) {
-        return this.#dao.getNextPost(id);
+    async getNextPost(post) {
+        return this.#dao.getNextPost(post);
     }
 
-    async getPrevPost(id) {
-        return this.#dao.getPrevPost(id);
+    async getPrevPost(post) {
+        return this.#dao.getPrevPost(post);
     }
 
     async getEntries() {

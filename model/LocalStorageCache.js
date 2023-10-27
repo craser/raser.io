@@ -124,11 +124,11 @@ export default class LocalStorageCache {
         }
     }
 
-    setNext(post, nextPost) {
-        this.setById(post);
-        this.setById(nextPost);
-        this.lruById[post.entryId].nextPostId = nextPost.entryId;
-        this.lruById[nextPost.entryId].prevPostId = post.entryId;
+    setNext(prev, next) {
+        this.setById(prev);
+        this.setById(next);
+        this.lruById[prev.entryId].nextPostId = next.entryId;
+        this.lruById[next.entryId].prevPostId = prev.entryId;
     }
 
     getNext(p) {
@@ -139,11 +139,11 @@ export default class LocalStorageCache {
         });
     }
 
-    setPrev(post, prevPost) {
-        this.setById(post);
-        this.setById(prevPost);
-        this.lruById[post.entryId].prevPostId = prevPost.entryId;
-        this.lruById[prevPost.entryId].nextPostId = post.entryId;
+    setPrev(next, prev) {
+        this.setById(next);
+        this.setById(prev);
+        this.lruById[next.entryId].prevPostId = prev.entryId;
+        this.lruById[prev.entryId].nextPostId = next.entryId;
     }
 
     getPrev(p) {

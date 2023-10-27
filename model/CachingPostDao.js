@@ -26,13 +26,15 @@ export default class CachingPostDao {
         return post;
     }
 
-    async getNextPost(id) {
-        let post = this.#cache.getNext(id);
-        if (!post) {
-            post = await this.#dao.getNextPost(id);
-            this.#cache.setNext(id, post);
+    async getNextPost(prev) {
+        let next = this.#cache.getNext(prev);
+        console.debug({ message: 'CachingPostDao', cached: next });
+        if (!next) {
+            next = await this.#dao.getNextPost(prev);
+            console.debug({ message: 'CachingPostDao', fetched: next});
+            this.#cache.setNext(prev, next);
         }
-        return post;
+        return next;
     }
 
     async getPrevPost(id) {

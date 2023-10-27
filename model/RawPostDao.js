@@ -34,13 +34,15 @@ export default class RawPostDao {
         return cleanFetch(url).then(response => response.json());
     }
 
-    async getNextPost(id) {
+    async getNextPost(p) {
+        let id = p.entryId || p;
         id = encodeURIComponent(id);
         let url = `${this.#URL}/${id}/next`
         return cleanFetch(url).then(response => response.json());
     }
 
-    async getPrevPost(id) {
+    async getPrevPost(p) {
+        let id = p.entryId || p;
         id = encodeURIComponent(id);
         let url = `${this.#URL}/${id}/prev`
         return cleanFetch(url).then(response => response.json());
