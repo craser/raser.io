@@ -1,5 +1,8 @@
 import styles from "@/components/templates/FrontPageLayout.module.scss";
 import Link from "next/link";
+import AuthRecognized from "@/components/auth/AuthRecognized";
+import AuthGuest from "@/components/auth/AuthGuest";
+import LoginButton from "@/components/auth/LoginButton";
 
 export default function HeaderNavigationOptions(props) {
     return (
@@ -13,7 +16,12 @@ export default function HeaderNavigationOptions(props) {
             <li className="rss-link">
                 <Link href={"rss/monkeyfeed.xml"}>RSS</Link>
             </li>
-            <li className={"usernav"}>EMPTY USER NAV</li>
+            <AuthGuest>
+                <LoginButton />
+            </AuthGuest>
+            <AuthRecognized>
+                <li className={"usernav"}>EMPTY USER NAV</li>
+            </AuthRecognized>
         </ul>
     );
 }
