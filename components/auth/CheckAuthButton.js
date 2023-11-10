@@ -1,7 +1,9 @@
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
 
-export default function AuthRecognized({ children }) {
+export default function LoginButton() {
     const authContext = useAuthenticationContext();
-    return <>{authContext.isLoggedIn() ? null : children}</>
-}
 
+    return (
+        <button onClick={() => authContext.check()}>Check Auth</button>
+    )
+}

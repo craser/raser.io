@@ -1,8 +1,9 @@
 import styles from "@/components/templates/FrontPageLayout.module.scss";
 import Link from "next/link";
-import AuthRecognized from "@/components/auth/AuthRecognized";
+import AuthLoggedIn from "@/components/auth/AuthLoggedIn";
 import AuthGuest from "@/components/auth/AuthGuest";
 import LoginButton from "@/components/auth/LoginButton";
+import CheckAuthButton from "@/components/auth/CheckAuthButton";
 
 export default function HeaderNavigationOptions(props) {
     return (
@@ -19,9 +20,9 @@ export default function HeaderNavigationOptions(props) {
             <AuthGuest>
                 <LoginButton />
             </AuthGuest>
-            <AuthRecognized>
-                <li className={"usernav"}>EMPTY USER NAV</li>
-            </AuthRecognized>
+            <AuthLoggedIn>
+                <CheckAuthButton />
+            </AuthLoggedIn>
         </ul>
     );
 }

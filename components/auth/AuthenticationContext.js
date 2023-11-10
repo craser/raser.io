@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AuthenticationManager from "@/lib/api/AuthenticationManager";
-import Cookies from 'js-cookie';
 import LoginModal from "@/components/auth/LoginModal";
 
 const AuthContextObj = createContext({})
@@ -9,18 +8,12 @@ export function useAuthenticationContext() {
     return useContext(AuthContextObj);
 }
 
-export default function AuthenticationContext({ children }) {
+export default function AuthenticationContext({ showLoginModal, children }) {
 
-    const [userName, setUserName] = useState(null);
+    const [user, setUser] = useState(null);
+    const [authToken, setAuthToken] = useState(null);
     const [authManager, setAuthManager] = useState(new AuthenticationManager());
-    const [recognized, setRecognized] = useState(false);
-    const [loginVisible, setLoginVisible] = useState(false);
-
-    useEffect(() => {
-        const name = Cookies.get('raserio-user');
-        console.log(`user name: ${name}`);
-        setRecognized(!!name);
-    }, [])
+    const [loginVisible, setLoginVisible] = useState(showLoginModal);
 
     function showLogin() {
         setLoginVisible(true);
@@ -30,20 +23,34 @@ export default function AuthenticationContext({ children }) {
         setLoginVisible(false);
     }
 
-    function authenticate() {
-        authManager.mock_login();
-        hideLogin();
-        setRecognized(true);
+    function login(user, pass) {
+        return authManager.login(user, pass)
+            .then(auth => {
+                console.log('login successful', auth);
+                setUser(user);
+                setAuthToken(auth.token);
+                hideLogin();
+            })
     }
 
-    function isRecognized() {
-        return recognized;
+    function check() {
+        return authManager.check(user, authToken)
+            .then(success => {
+                console.log('auth check successful', success);
+            })
+            .catch(error => {
+                console.log('auth check failed', error);
+            })
+    }
+
+    function isLoggedIn() {
+        return !!user;
     }
 
     return (
         <>
-            {loginVisible ? <LoginModal authenticate={authenticate} hideLogin={hideLogin}/> : null}
-            <AuthContextObj.Provider value={{ showLogin, authenticate, isRecognized }}>
+            {loginVisible ? <LoginModal login={login} hideLogin={hideLogin}/> : null}
+            <AuthContextObj.Provider value={{ showLogin, login, check, isLoggedIn }}>
                 {children}
             </AuthContextObj.Provider>
         </>
