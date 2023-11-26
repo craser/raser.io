@@ -1,8 +1,10 @@
 import Home from '../index'
-import AuthenticationContext, { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
+import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
 
 export default function LoginPage() {
     const authContext = useAuthenticationContext();
-    authContext.showLogin();
+    if (!authContext.isLoggedIn()) {
+        authContext.showLogin();
+    }
     return <Home />
 }

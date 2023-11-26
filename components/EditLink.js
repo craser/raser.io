@@ -7,8 +7,8 @@ import Link from "next/link";
  * @returns {JSX.Element}
  * @constructor
  */
-export const PostLink = ({ post, children }) => {
+export default function EditLink({ post, children }) {
     return (
-        <Link href={'/archive/' + post.entryId}>{children}</Link>
+        <Link href={'/edit/' + post.entryId}>{children}</Link>
     );
 };

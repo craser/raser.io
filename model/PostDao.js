@@ -13,8 +13,8 @@ export default class PostDao {
     #dao = null;
 
     constructor() {
-        this.#dao = new CachingPostDao(new RawPostDao());
-        //this.#dao = new RawPostDao();
+        //this.#dao = new CachingPostDao(new RawPostDao());
+        this.#dao = new RawPostDao();
     }
 
     async getLatestPost() {
@@ -35,5 +35,13 @@ export default class PostDao {
 
     async getEntries() {
         return this.#dao.getEntries();
+    }
+
+    async createPost(post) {
+        return this.#dao.createPost(post);
+    }
+
+    async updatePost(post) {
+        return this.#dao.updatePost(post);
     }
 }

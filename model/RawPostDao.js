@@ -60,4 +60,26 @@ export default class RawPostDao {
             });
     }
 
+    async createPost(post) {
+        let url = `${this.$URL}/entries/create`
+        return cleanFetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(post)
+        }).then(response => response.json());
+    }
+
+    async updatePost(post) {
+        let url = `${this.$URL}/entries/update`
+        return cleanFetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(post)
+        }).then(response => response.json());
+    }
+
 }
