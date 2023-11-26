@@ -60,8 +60,8 @@ export default class RawPostDao {
             });
     }
 
-    async createPost(post) {
-        let url = `${this.$URL}/entries/create`
+    async createPost(post, authToken) {
+        let url = `${this.#URL}/create`
         return cleanFetch(url, {
             method: 'POST',
             headers: {
@@ -71,8 +71,8 @@ export default class RawPostDao {
         }).then(response => response.json());
     }
 
-    async updatePost(post) {
-        let url = `${this.$URL}/entries/update`
+    async updatePost(post, authToken) {
+        let url = `${this.#URL}/update?${new URLSearchParams({ auth: authToken })}`
         return cleanFetch(url, {
             method: 'POST',
             headers: {

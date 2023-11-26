@@ -23,6 +23,10 @@ export default function AuthenticationContext({ showLoginModal, children }) {
         setLoginVisible(false);
     }
 
+    function getAuthToken() {
+        return authToken;
+    }
+
     function login(user, pass) {
         return authManager.login(user, pass)
             .then(auth => {
@@ -50,7 +54,7 @@ export default function AuthenticationContext({ showLoginModal, children }) {
     return (
         <>
             {loginVisible ? <LoginModal login={login} hideLogin={hideLogin}/> : null}
-            <AuthContextObj.Provider value={{ showLogin, login, check, isLoggedIn }}>
+            <AuthContextObj.Provider value={{ showLogin, login, check, isLoggedIn, getAuthToken }}>
                 {children}
             </AuthContextObj.Provider>
         </>

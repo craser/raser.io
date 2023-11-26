@@ -41,7 +41,7 @@ export default class PostDao {
         return this.#dao.createPost(post);
     }
 
-    async updatePost(post) {
-        return this.#dao.updatePost(post);
+    async updatePost(post, authToken) {
+        return this.#dao.updatePost(post, authToken);
     }
 }
