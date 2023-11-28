@@ -2,7 +2,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import AuthenticationManager from "@/lib/api/AuthenticationManager";
 import LoginModal from "@/components/auth/LoginModal";
 
-const AuthContextObj = createContext({})
+const AuthContextObj = createContext({
+    showLogin: () => false,
+    login: () => false,
+    check: () => false,
+    isLoggedIn: () => false,
+    getAuthToken: () => null
+})
 
 export function useAuthenticationContext() {
     return useContext(AuthContextObj);

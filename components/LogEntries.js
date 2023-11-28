@@ -18,7 +18,7 @@ export default function LogEntries(props) {
     if (entries.length) {
         return (
             <Fragment>
-                {entries.map(e => <Post key={e.Entry_ID} post={e}/>)}
+                {entries.map(e => <Post key={e.entryId} post={e}/>)}
             </Fragment>
         );
     } else {
