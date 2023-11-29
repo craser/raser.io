@@ -16,10 +16,22 @@ export function useAuthenticationContext() {
 
 export default function AuthenticationContext({ showLoginModal, children }) {
 
-    const [user, setUser] = useState(null);
-    const [authToken, setAuthToken] = useState(null);
+    const [user, setUserState] = useState(null);
+    const [authToken, setAuthTokenState] = useState(false);
     const [authManager, setAuthManager] = useState(new AuthenticationManager());
     const [loginVisible, setLoginVisible] = useState(showLoginModal);
+
+    useEffect(() => {
+        if (isCsr()) {
+            setUserState(window.localStorage.getItem('rio.user'));
+            setAuthTokenState(window.localStorage.getItem('rio.auth'));
+        }
+    });
+
+    function isCsr() {
+        const csr = `${typeof window}` !== 'undefined';
+        return csr;
+    }
 
     function showLogin() {
         setLoginVisible(true);
@@ -31,6 +43,16 @@ export default function AuthenticationContext({ showLoginModal, children }) {
 
     function getAuthToken() {
         return authToken;
+    }
+
+    function setUser(email) {
+        setUserState(email);
+        window.localStorage.setItem('rio.user', email);
+    }
+
+    function setAuthToken(token) {
+        setAuthTokenState(token);
+        window.localStorage.setItem('rio.auth', token);
     }
 
     function login(user, pass) {
