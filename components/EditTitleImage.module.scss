@@ -1,0 +1,32 @@
+.dropzone {
+    background-color: orange;
+    position: relative;
+    left: -15px;
+    width: 630px;
+    min-height: 240px;
+    z-index: 0;
+
+    &:hover {
+        background-color: #0074D9;
+    }
+
+    .titleimg {
+        left: 0;
+        top: 0;
+        width: 630px;
+        z-index: 1;
+    }
+
+    .verbiageContainer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: #008800;
+        z-index: 2;
+    }
+}
+
+
+
