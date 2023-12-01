@@ -1,4 +1,4 @@
-import Dropzone from 'react-dropzone'
+import { useDropzone } from 'react-dropzone'
 import styles from './EditTitleImage.module.scss'
 import { useCallback, useState } from "react";
 
@@ -13,20 +13,23 @@ export default function EditTitleImage({ post }) {
         });
         reader.readAsDataURL(acceptedFiles[0]);
     }, [])
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
     console.log({ styles });
     console.log({ imgDataUrl });
     return (
-        <Dropzone onDrop={onDrop}>
-            {({ getRootProps, getInputProps }) => (
-                <section className={styles.dropzone}>
-                    {imgDataUrl && <img src={imgDataUrl} className={styles.titleimg}/>}
-                    <div {...getRootProps()} className={styles.verbiageContainer}>
+        <section className={styles.dropzone}>
+            {imgDataUrl &&
+                <img src={imgDataUrl} className={styles.titleimg}/>
+            }
+            <div {...getRootProps()} className={styles.verbiageContainer}>
+                {(isDragActive || !imgDataUrl) &&
+                    <>
                         <input {...getInputProps()} />
-                        <p>Drag & drop some files here, or click to select files</p>
-                    </div>
-                </section>
-            )}
-        </Dropzone>
+                        <div className={styles.verbiage}><p>drop</p></div>
+                    </>
+                }
+            </div>
+        </section>
     );
 }
