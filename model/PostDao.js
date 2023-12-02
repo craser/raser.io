@@ -44,4 +44,8 @@ export default class PostDao {
     async updatePost(post, authToken) {
         return this.#dao.updatePost(post, authToken);
     }
+
+    async setTitleImage(post, titleImage, authToken) {
+        return this.#dao.setTitleImage(post, titleImage, authToken);
+    }
 }

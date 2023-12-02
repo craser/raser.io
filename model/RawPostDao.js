@@ -82,4 +82,8 @@ export default class RawPostDao {
         }).then(response => response.json());
     }
 
+    async setTitleImage(post, titleImage, authToken) {
+        return post;
+    }
+
 }

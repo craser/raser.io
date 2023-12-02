@@ -13,8 +13,11 @@ export default function EditPostPage({ postId }) {
     const [postDao, setPostDao] = useState(new PostDao());
     const [post, setPost] = useState(null);
 
-    const savePost = (post) => {
-        postDao.updatePost(post, getAuthToken())
+    const savePost = (post, titleImage) => {
+        console.info({ msg: 'updating post', post })
+        let authToken = getAuthToken();
+        postDao.updatePost(post, authToken)
+            .then(postDao.setTitleImage(post, titleImage, authToken))
             .then(post => setPost(post));
     };
 
