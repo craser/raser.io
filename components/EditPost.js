@@ -24,8 +24,6 @@ export const EditPost = ({ post, savePost }) => {
     }
 
     function onTitleImageDrop(file) {
-        // FIXME: DO NOT COMMIT TO CODE REPOSITORY! VERY ROUGH CODE!
-        console.log({ file });
         post.imageFileName = file.name;
         post.imageFileType = 1; // image
         setTitleImage(file);

@@ -5,8 +5,8 @@ import LoginModal from "@/components/auth/LoginModal";
 const AuthContextObj = createContext({
     login: () => false,
     isLoggedIn: () => false,
-    getEmail: () => null,
-    getAuthToken: () => null
+    getAuthToken: () => null,
+    getEmail: () => null
 })
 
 export function useAuthenticationContext() {
@@ -25,7 +25,7 @@ export default function AuthenticationContext({ children }) {
             setEmailState(window.localStorage.getItem('rio.user'));
             setAuthTokenState(window.localStorage.getItem('rio.auth'));
         }
-    });
+    }, []);
 
     function isCsr() {
         const csr = `${typeof window}` !== 'undefined';
@@ -59,6 +59,7 @@ export default function AuthenticationContext({ children }) {
     }
 
     function login(user, pass) {
+        console.debug('AuthenticationContext.login()', user, pass);
         return authManager.login(user, pass)
             .then(auth => {
                 console.log('login successful', auth);
