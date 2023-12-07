@@ -14,7 +14,10 @@ export default function SinglePostPage({ postId }) {
     useEffect(() => {
         console.debug(`Fetching entry for ${postId}`);
         postDao.getPostById(postId)
-            .then(post => setPost(post))
+            .then(post => {
+                setPost(post);
+                return post;
+            })
             .then(post => {
                 postDao.getNextPost(post)
                     .then(setNext);
@@ -37,7 +40,7 @@ export default function SinglePostPage({ postId }) {
             <FrontPageLayout content={
                 <Fragment>
                     <Post post={post}/>
-                    <NextPrevPostLinks nextPost={nextPost} prevPost={prevPost}/>
+                    <NextPrevPostLinks nextPost={next} prevPost={prev}/>
                 </Fragment>
             }/>
         );

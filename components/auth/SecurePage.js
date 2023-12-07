@@ -1,15 +1,16 @@
-import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
-import FrontPageLayout from "@/components/templates/FrontPageLayout";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoginModal from "@/components/auth/LoginModal";
+import AuthLoggedIn from "@/components/auth/AuthLoggedIn";
+import AuthGuest from "@/components/auth/AuthGuest";
 
 export default function SecurePage({ children }) {
-    const { isLoggedIn, showLogin } = useAuthenticationContext();
-    if (!isLoggedIn()) {
-        showLogin();
-        return <FrontPageLayout content={
-            <LoadingSpinner />
-        }/>
-    } else {
-        return <>{children}</>
-    }
+    return (
+        <>
+            <AuthGuest>
+                <LoginModal />
+            </AuthGuest>
+            <AuthLoggedIn>
+                {children}
+            </AuthLoggedIn>
+        </>
+    )
 }

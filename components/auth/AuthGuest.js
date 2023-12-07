@@ -1,7 +1,7 @@
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
 
-export default function AuthRecognized({ children }) {
-    const authContext = useAuthenticationContext();
-    return <>{authContext.isLoggedIn() ? null : children}</>
+export default function AuthGuest({ children }) {
+    const { isLoggedIn } = useAuthenticationContext();
+    return <>{isLoggedIn ? null : children}</>
 }
 
