@@ -8,7 +8,9 @@ import Link from "next/link";
  * @constructor
  */
 export const PostLink = ({ post, children }) => {
-    return (
-        <Link href={'/archive/' + post.entryId}>{children}</Link>
-    );
+    if (!post) {
+        return <span>{children}</span>
+    } else {
+        return <Link href={'/archive/' + post.entryId}>{children}</Link>
+    }
 };
