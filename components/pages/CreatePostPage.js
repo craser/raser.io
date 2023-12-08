@@ -15,10 +15,8 @@ export default function CreatePostPage() {
 
     const savePost = (post, titleImage) => {
         console.info({ msg: 'publishing post', post })
-        let email = getEmail();
         let authToken = getAuthToken();
-        postDao.publishPost(post, )
-        postDao.updatePost(post, authToken)
+        postDao.publishPost(post, authToken)
             .then(post => postDao.setTitleImage(post, titleImage, authToken))
             .then(post => setPost(post));
     };
@@ -37,15 +35,11 @@ export default function CreatePostPage() {
 
     if (!post) {
         return (
-            <FrontPageLayout content={
-                <LoadingSpinner/>
-            }/>
+            <LoadingSpinner/>
         );
     } else {
         return (
-            <FrontPageLayout content={
-                <EditPost post={post} savePost={savePost}/>
-            }/>
+            <EditPost post={post} savePost={savePost}/>
         );
     }
 }

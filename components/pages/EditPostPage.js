@@ -34,15 +34,11 @@ export default function EditPostPage({ postId }) {
 
     if (!post) {
         return (
-            <FrontPageLayout content={
-                <LoadingSpinner/>
-            }/>
+            <LoadingSpinner/>
         );
     } else {
         return (
-            <FrontPageLayout content={
-                <EditPost post={post} savePost={savePost}/>
-            }/>
+            <EditPost post={post} savePost={savePost}/>
         );
     }
 }
