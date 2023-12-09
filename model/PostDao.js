@@ -88,14 +88,17 @@ export default class RawPostDao {
             .then(response => response.json());
     }
 
-    async publishPost(post, authToken) {
+    async publishPost(post, attachments, authToken) {
         let url = `${this.#Entries_URL}/publish`
+        let formData = new FormData();
+        let blob = new Blob([JSON.stringify(post)], { type: 'application/json' });
+        formData.append('entry', blob);
+        if (attachments) {
+            attachments.forEach(a => formData.append('attachments', a));
+        }
         return this.#cleanFetch(this.#auth(url, authToken), {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(post)
+            body: formData
         }).then(response => response.json());
     }
 
@@ -108,20 +111,6 @@ export default class RawPostDao {
             },
             body: JSON.stringify(post)
         }).then(response => response.json());
-    }
-
-    async setTitleImage(post, titleImage, authToken) {
-        let attachment = {
-            userId: post.userId,
-            userName: post.userName,
-            entryId: post.entryId,
-            isGalleryImage: true,
-            fileName: titleImage.name,
-            mimeType: titleImage.type,
-            fileType: 'image',
-            title: post.title,
-        }
-        return this.uploadAttachment(attachment, titleImage, authToken);
     }
 
     async uploadAttachment(attachment, file, authToken) {

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, memo, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import PostDao from '/model/PostDao';
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -10,35 +10,30 @@ import { useAuthenticationContext } from "@/components/auth/AuthenticationContex
 
 export default function CreatePostPage() {
     const { getAuthToken, getEmail, isLoggedIn } = useAuthenticationContext();
-    const [postDao, setPostDao] = useState(new PostDao());
+    const [postDao, setPostDao] = useState(new PostDao()); // TOOD: useMemo
     const [post, setPost] = useState(null);
 
     const savePost = (post, attachments) => {
         console.info({ msg: 'publishing post', post })
         let authToken = getAuthToken();
-        postDao.publishPost(post, authToken)
-            .then(post => {
-                if (titleImage) {
-                    return postDao.setTitleImage(post, titleImage, authToken);
-                } else {
-                    return post;
-                }
-            })
+        postDao.publishPost(post, attachments, authToken)
             .then(post => setPost(post));
     };
 
     useEffect(() => {
-        console.debug(`Fetching fresh entry`);
-        let email = getEmail();
-        let authToken = getAuthToken();
-        postDao.createPost(email, authToken)
-            .then(post => {
-                setPost(post)
-            })
-            .catch(e => {
-                console.error(e);
-                setPost(null);
-            });
+        if (isLoggedIn) {
+            console.debug(`Fetching fresh entry`);
+            let email = getEmail();
+            let authToken = getAuthToken();
+            postDao.createPost(email, authToken)
+                .then(post => {
+                    setPost(post)
+                })
+                .catch(e => {
+                    console.error(e);
+                    setPost(null);
+                });
+        }
     }, [isLoggedIn]);
 
     if (!post) {
