@@ -84,7 +84,7 @@ export default class RawPostDao {
 
     async createPost(email, authToken) {
         let url = `${this.#Entries_URL}/create?${new URLSearchParams({ email, auth: authToken })}`;
-        return this.#cleanFetch(url)
+        return this.#cleanFetch(url, { method: "POST"})
             .then(response => response.json());
     }
 
@@ -125,7 +125,7 @@ export default class RawPostDao {
     }
 
     async uploadAttachment(attachment, file, authToken) {
-        let create_url = `${this.#Attachments_URL}/upload`;
+        let create_url = `${this.#Attachments_URL}/create`;
         return this.#postJson(this.#auth(create_url, authToken), attachment)
             .then(createdAttachment => {
                 let upload_url = `${this.#Attachments_URL}/upload/${createdAttachment.attachmentId}`;

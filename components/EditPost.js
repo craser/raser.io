@@ -1,5 +1,4 @@
 import styles from './Post.module.css';
-import PostTitleImage from "@/components/PostTitleImage";
 import EditTitleImage from "@/components/EditTitleImage";
 import { useState } from "react";
 
@@ -20,7 +19,7 @@ export const EditPost = ({ post, savePost }) => {
     }
 
     function onSaveClicked(e) {
-        savePost(post, titleImage);
+        savePost(post, [titleImage]);
     }
 
     function onTitleImageDrop(file) {

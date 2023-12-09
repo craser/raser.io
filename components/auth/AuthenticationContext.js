@@ -4,7 +4,7 @@ import LoginModal from "@/components/auth/LoginModal";
 
 const AuthContextObj = createContext({
     login: () => false,
-    isLoggedIn: () => false,
+    isLoggedIn: false,
     getAuthToken: () => null,
     getEmail: () => null
 })
