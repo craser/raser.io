@@ -30,7 +30,7 @@ export default function LoginModal() {
                 <form onSubmit={onSubmit}>
                     <div className={styles.logincontainer}>
                         <div className={styles.row}>
-                            <input ref={userRef} type="text" placeholder="username"/>
+                            <input ref={userRef} type="text" placeholder="email" defaultValue={authContext.getEmail()}/>
                         </div>
                         <div className={styles.row}>
                             <input ref={passRef} type="password" placeholder="password"/>
