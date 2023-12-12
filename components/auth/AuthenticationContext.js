@@ -5,7 +5,7 @@ import { auth } from "mysql/lib/protocol/Auth";
 
 const AuthContextObj = createContext({
     login: () => false,
-    isLoggedIn: false,
+    isAuthenticated: false,
     getAuthToken: () => null,
     getEmail: () => null
 })
@@ -101,12 +101,12 @@ export default function AuthenticationContext({ children }) {
         }
     }
 
-    function login(user, pass) {
-        console.debug('AuthenticationContext.login()', user, pass);
-        return authManager.login(user, pass)
+    function login(email, pass) {
+        console.debug('AuthenticationContext.login()', email, pass);
+        return authManager.login(email, pass)
             .then(auth => {
                 console.log('login successful', auth);
-                setEmailState(user);
+                setEmailState(email);
                 setAuthTokenState(auth.token);
                 setAuthExpirationState(auth.expires);
             })
@@ -118,9 +118,19 @@ export default function AuthenticationContext({ children }) {
         setAuthExpirationState(0);
     }
 
+    function getStatus() {
+        if (!!authToken) {
+            return 'authenticated';
+        } else if (!!email) {
+            return 'recognized';
+        } else {
+            return 'guest'
+        }
+    }
+
     return (
         <>
-            <AuthContextObj.Provider value={{ login, logout, isLoggedIn: !!authToken, getAuthToken, getEmail }}>
+            <AuthContextObj.Provider value={{ login, logout, status: getStatus(), isAuthenticated: !!authToken, getAuthToken, getEmail }}>
                 {children}
             </AuthContextObj.Provider>
         </>

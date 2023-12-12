@@ -7,9 +7,11 @@ import NextPrevPostLinks from "@/components/NextPrevPostLinks";
 import FrontPageLayout from "@/components/templates/FrontPageLayout";
 import { EditPost } from "@/components/EditPost";
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
+import { getPostLink } from "@/components/PostLink";
 
 export default function CreatePostPage() {
-    const { getAuthToken, getEmail, isLoggedIn } = useAuthenticationContext();
+    const router = useRouter();
+    const { getAuthToken, getEmail, isAuthenticated } = useAuthenticationContext();
     const [postDao, setPostDao] = useState(new PostDao()); // TOOD: useMemo
     const [post, setPost] = useState(null);
 
@@ -17,11 +19,12 @@ export default function CreatePostPage() {
         console.info({ msg: 'publishing post', post })
         let authToken = getAuthToken();
         postDao.publishPost(post, attachments, authToken)
-            .then(post => setPost(post));
+            .then(getPostLink)
+            .then(url => router.push(url));
     };
 
     useEffect(() => {
-        if (isLoggedIn) {
+        if (isAuthenticated) {
             console.debug(`Fetching fresh entry`);
             let email = getEmail();
             let authToken = getAuthToken();
@@ -34,7 +37,7 @@ export default function CreatePostPage() {
                     setPost(null);
                 });
         }
-    }, [isLoggedIn]);
+    }, [isAuthenticated]);
 
     if (!post) {
         return (

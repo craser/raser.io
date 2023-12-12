@@ -7,16 +7,21 @@ import NextPrevPostLinks from "@/components/NextPrevPostLinks";
 import FrontPageLayout from "@/components/templates/FrontPageLayout";
 import { EditPost } from "@/components/EditPost";
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
+import { getPostLink } from "@/components/PostLink";
 
 export default function EditPostPage({ postId }) {
+    const router = useRouter();
     const { getAuthToken } = useAuthenticationContext();
     const [postDao, setPostDao] = useState(new PostDao());
     const [post, setPost] = useState(null);
+
 
     const savePost = (post, attachments) => {
         console.info({ msg: 'updating post', post })
         let authToken = getAuthToken();
         postDao.updatePost(post, attachments, authToken)
+            .then(getPostLink)
+            .then(url => router.push(url));
     };
 
     useEffect(() => {

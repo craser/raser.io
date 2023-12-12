@@ -41,6 +41,19 @@ export default class RawPostDao {
         });
     }
 
+    #sendPost(url, post, attachments, authToken) {
+        let formData = new FormData();
+        let blob = new Blob([JSON.stringify(post)], { type: 'application/json' });
+        formData.append('entry', blob);
+        if (attachments) {
+            attachments.forEach(a => formData.append('attachments', a));
+        }
+        return this.#cleanFetch(this.#auth(url, authToken), {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json());
+    }
+
     async getLatestPost() {
         let url = `${this.#Entries_URL}/latest`;
         return this.#cleanFetch(url).then(response => response.json());
@@ -90,27 +103,12 @@ export default class RawPostDao {
 
     async publishPost(post, attachments, authToken) {
         let url = `${this.#Entries_URL}/publish`
-        let formData = new FormData();
-        let blob = new Blob([JSON.stringify(post)], { type: 'application/json' });
-        formData.append('entry', blob);
-        if (attachments) {
-            attachments.forEach(a => formData.append('attachments', a));
-        }
-        return this.#cleanFetch(this.#auth(url, authToken), {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json());
+        return this.#sendPost(url, post, attachments, authToken);
     }
 
-    async updatePost(post, authToken) {
+    async updatePost(post, attachments, authToken) {
         let url = `${this.#Entries_URL}/update`;
-        return this.#cleanFetch(this.#auth(url, authToken), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(post)
-        }).then(response => response.json());
+        return this.#sendPost(url, post, attachments, authToken);
     }
 
     async uploadAttachment(attachment, file, authToken) {

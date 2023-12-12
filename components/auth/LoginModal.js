@@ -1,26 +1,30 @@
 import Modal from "@/components/Modal";
 import styles from './LoginModal.module.scss'
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
 
-export default function LoginModal() {
+export default function LoginModal({ onVisibilityChange }) {
     // { visible, login, hideLogin }
     const authContext = useAuthenticationContext();
     const userRef = useRef();
     const passRef = useRef();
     const [errorMessage, setErrorMessage] = useState(null);
-    const [visible, setVisible] = useState(!authContext.isLoggedIn);
+    const [visible, setVisible] = useState(!authContext.isAuthenticated);
 
     function onSubmit(e) {
         e.preventDefault();
-        const user = userRef.current.valueOf().value;
+        const email = userRef.current.valueOf().value;
         const pass = passRef.current.valueOf().value;
-        authContext.login(user, pass)
+        authContext.login(email, pass)
             .then(() => setVisible(false))
             .catch(error => {
                 setErrorMessage('Email or password incorrect.');
             })
     }
+
+    useEffect(() => {
+        onVisibilityChange(visible);
+    }, [visible]);
 
     if (!visible) {
         return null;
