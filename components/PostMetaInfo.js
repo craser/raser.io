@@ -4,6 +4,7 @@ import CommentsLink from "@/components/CommentsLink";
 import PostTagsList from "@/components/PostTagsList";
 import AuthLoggedIn from "@/components/auth/AuthLoggedIn";
 import EditLink from "@/components/EditLink";
+import DeleteLink from "@/components/DeleteLink";
 
 export default function PostMetaInfo(props) {
     let { post } = props;
@@ -15,7 +16,11 @@ export default function PostMetaInfo(props) {
             </div>
             <AuthLoggedIn>
                 <div className={styles.entrymetainfo}>
+                    <>(</>
                     <EditLink post={post}>edit</EditLink>
+                    <> | </>
+                    <DeleteLink post={post}>delete</DeleteLink>
+                    <>)</>
                 </div>
             </AuthLoggedIn>
         </div>

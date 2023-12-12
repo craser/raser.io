@@ -111,6 +111,11 @@ export default class RawPostDao {
         return this.#sendPost(url, post, attachments, authToken);
     }
 
+    async deletePost(post, authToken) {
+        let url = `${this.#Entries_URL}/delete?${new URLSearchParams({ id: post.entryId, auth: authToken })}`;
+        return this.#cleanFetch(url);
+    }
+
     async uploadAttachment(attachment, file, authToken) {
         let create_url = `${this.#Attachments_URL}/create`;
         return this.#postJson(this.#auth(create_url, authToken), attachment)
