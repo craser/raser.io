@@ -5,8 +5,10 @@ import PostTagsList from "@/components/PostTagsList";
 import AuthLoggedIn from "@/components/auth/AuthLoggedIn";
 import EditLink from "@/components/EditLink";
 import DeleteLink from "@/components/DeleteLink";
+import { usePostViewContext } from "@/components/PostViewContext";
 
 export default function PostMetaInfo(props) {
+    const { toEditView } = usePostViewContext();
     let { post } = props;
     return (
         <div className={styles.entryMetaInfoContainer}>
@@ -17,7 +19,7 @@ export default function PostMetaInfo(props) {
             <AuthLoggedIn>
                 <div className={styles.entrymetainfo}>
                     <>(</>
-                    <EditLink post={post}>edit</EditLink>
+                    <EditLink onClick={toEditView}>edit</EditLink>
                     <> | </>
                     <DeleteLink post={post}>delete</DeleteLink>
                     <>)</>

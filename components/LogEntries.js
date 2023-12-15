@@ -2,6 +2,7 @@ import {Fragment, useEffect, useState} from 'react';
 import {Post} from './Post';
 import PostDao from '../model/PostDao';
 import LoadingSpinner from "@/components/LoadingSpinner";
+import PostViewContext, { View } from "@/components/PostViewContext";
 
 export default function LogEntries(props) {
     const [entries, setEntries] = useState([]);
@@ -18,7 +19,7 @@ export default function LogEntries(props) {
     if (entries.length) {
         return (
             <Fragment>
-                {entries.map(e => <Post key={e.entryId} post={e}/>)}
+                {entries.map(e => <PostViewContext key={e.entryId} post={e} initialView={View.ENTRY_LIST}/>)}
             </Fragment>
         );
     } else {

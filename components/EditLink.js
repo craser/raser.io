@@ -7,8 +7,18 @@ import Link from "next/link";
  * @returns {JSX.Element}
  * @constructor
  */
-export default function EditLink({ post, children }) {
-    return (
-        <Link href={'/edit/' + post.entryId}>{children}</Link>
-    );
+export default function EditLink({ post, onClick, children }) {
+    if (post) {
+        return (
+            <Link href={'/edit/' + post.entryId}>{children}</Link>
+        );
+    } else {
+        function clickWrap(e) {
+            e.preventDefault();
+            onClick(e);
+        }
+        return (
+            <a onClick={clickWrap}>{children}</a>
+        );
+    }
 };

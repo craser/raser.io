@@ -1,6 +1,7 @@
 import { useDropzone } from 'react-dropzone'
 import styles from './EditTitleImage.module.scss'
 import { useCallback, useState } from "react";
+import PostTitleImage from "@/components/PostTitleImage";
 
 /*
   Uploading attachments:
@@ -24,13 +25,19 @@ export default function EditTitleImage({ post, setTitleImage }) {
 
     console.log({ styles });
     console.log({ imgDataUrl });
+
+    let image = null;
+    if (post.imageFileName) {
+        image = <PostTitleImage post={post} className={styles.titleimg} />;
+    } else if (imageDataUrl) {
+        image = <img src={imgDataUrl} className={styles.titleimg}/>;
+    }
+
     return (
         <section className={styles.dropzone}>
-            {imgDataUrl &&
-                <img src={imgDataUrl} className={styles.titleimg}/>
-            }
+            {image}
             <div {...getRootProps()} className={styles.verbiageContainer}>
-                {(isDragActive || !imgDataUrl) &&
+                {(isDragActive || !image) &&
                     <>
                         <input {...getInputProps()} />
                         <div className={styles.verbiage}><p>drop</p></div>

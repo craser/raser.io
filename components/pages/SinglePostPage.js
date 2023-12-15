@@ -4,6 +4,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { Post } from "@/components/Post";
 import NextPrevPostLinks from "@/components/NextPrevPostLinks";
 import FrontPageLayout from "@/components/templates/FrontPageLayout";
+import PostViewContext from "@/components/PostViewContext";
 
 export default function SinglePostPage({ postId }) {
     const [postDao, setPostDao] = useState(new PostDao());
@@ -38,10 +39,7 @@ export default function SinglePostPage({ postId }) {
     } else {
         return (
             <FrontPageLayout content={
-                <Fragment>
-                    <Post post={post}/>
-                    <NextPrevPostLinks nextPost={next} prevPost={prev}/>
-                </Fragment>
+                <PostViewContext post={post} next={next} prev={prev} />
             }/>
         );
     }

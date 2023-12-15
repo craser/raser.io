@@ -2,7 +2,7 @@ import styles from './Post.module.css';
 import EditTitleImage from "@/components/EditTitleImage";
 import { useState } from "react";
 
-export const EditPost = ({ post, savePost }) => {
+export const EditPost = ({ post, savePost, onCancel }) => {
 
     const [titleImage, setTitleImage] = useState(null);
 
@@ -40,6 +40,7 @@ export const EditPost = ({ post, savePost }) => {
                 <textarea onChange={onBodyChange} rows={10} cols={60} defaultValue={post.body} />
             </div>
             <div className={styles.entryfooter}>
+                <button onClick={onCancel}>cancel</button>
                 <button onClick={onSaveClicked}>publish</button>
             </div>
         </div>
