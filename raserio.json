@@ -1,7 +1,16 @@
 {
   "api": {
+    "root": "http://localhost:5000",
     "endpoints": {
-      "postcards": "http://localhost:8081/attachments/postcards"
+      "postcards": "/attachments/postcards",
+      "auth": {
+        "login": "/auth/login",
+        "check": "/auth/check"
+      },
+      "entries": {
+        "entry": "/entries",
+        "next": "/entries/{id}/next"
+      }
     }
   }
 }

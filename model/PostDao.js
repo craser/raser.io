@@ -7,10 +7,13 @@
  */
 import { create } from "react-test-renderer";
 import { auth } from "mysql/lib/protocol/Auth";
+import getConfig from "@/lib/RaserIoConfig";
 
 export default class RawPostDao {
-    #Entries_URL = 'http://localhost:8081/entries';
-    #Attachments_URL = 'http://localhost:8081/attachments';
+    #config = getConfig();
+    #Entries_URL = `${this.#config.api.root}${this.#config.api.endpoints.entries.entries}`
+    //#Attachments_URL = 'http://localhost:5000/attachments';
+    #Attachments_URL = `${this.#config.api.root}${this.#config.api.endpoints.attachments}`
 
     constructor() {
     }
