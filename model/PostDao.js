@@ -8,18 +8,28 @@
 import { create } from "react-test-renderer";
 import { auth } from "mysql/lib/protocol/Auth";
 import getConfig from "@/lib/RaserIoConfig";
+import CachingPostDao from "@/model/CachingPostDao";
+import { formatUrl } from "@/lib/util/StringFormatter"
 
-export default class RawPostDao {
+export default class PostDao {
     #config = getConfig();
-    #Entries_URL = `${this.#config.api.root}${this.#config.api.endpoints.entries.entries}`
-    //#Attachments_URL = 'http://localhost:5000/attachments';
-    #Attachments_URL = `${this.#config.api.root}${this.#config.api.endpoints.attachments}`
+
+    static getPostDao() {
+        //return new CachingPostDao(new PostDao());
+        return new PostDao();
+    }
 
     constructor() {
     }
 
-    #auth(uri, authToken) {
-        return `${uri}?${new URLSearchParams({ auth: authToken })}`;
+    #api(path, params) {
+        let template = `${this.#config.api.root}${path}`;
+        let url = formatUrl(template, params);
+        return url;
+    }
+
+    #auth(uri, { authToken, email }) {
+        return `${uri}?${new URLSearchParams({ auth: authToken, email })}`;
     }
 
     #cleanFetch() {
@@ -36,14 +46,6 @@ export default class RawPostDao {
             });
     }
 
-    #postJson(create_url, object) {
-        return this.#cleanFetch(create_url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(object)
-        });
-    }
-
     #sendPost(url, post, attachments, authToken) {
         let formData = new FormData();
         let blob = new Blob([JSON.stringify(post)], { type: 'application/json' });
@@ -51,27 +53,27 @@ export default class RawPostDao {
         if (attachments) {
             attachments.forEach(a => formData.append('attachments', a));
         }
-        return this.#cleanFetch(this.#auth(url, authToken), {
+        return this.#cleanFetch(this.#auth(url, { authToken }), {
             method: 'POST',
             body: formData
         }).then(response => response.json());
     }
 
     async getLatestPost() {
-        let url = `${this.#Entries_URL}/latest`;
+        let url = this.#api(this.#config.api.endpoints.entries.latest);
         return this.#cleanFetch(url).then(response => response.json());
     }
 
     async getPostById(id) {
         id = encodeURIComponent(id);
-        let url = `${this.#Entries_URL}/${id}`;
+        let url = this.#api(this.#config.api.endpoints.entries.entry, { id });
         return this.#cleanFetch(url).then(response => response.json());
     }
 
     async getNextPost(p) {
         let id = p.entryId || p;
         id = encodeURIComponent(id);
-        let url = `${this.#Entries_URL}/${id}/next`
+        let url = this.#api(this.#config.api.endpoints.entries.next, { id });
         return this.#cleanFetch(url)
             .then(response => response.json())
             .catch(() => null);
@@ -80,7 +82,7 @@ export default class RawPostDao {
     async getPrevPost(p) {
         let id = p.entryId || p;
         id = encodeURIComponent(id);
-        let url = `${this.#Entries_URL}/${id}/prev`
+        let url = this.#api(this.#config.api.endpoints.entries.previous, { id });
         return this.#cleanFetch(url)
             .then(response => response.json())
             .catch(() => null);
@@ -91,7 +93,7 @@ export default class RawPostDao {
      * @returns {Promise<any>}
      */
     async getEntries(page = 0) {
-        let url = `${this.#Entries_URL}/latest/${page}`;
+        let url = this.#api(this.#config.api.endpoints.entries.latest, { page });
         return this.#cleanFetch(url).then(response => response.json())
             .then(posts => {
                 return posts;
@@ -99,38 +101,23 @@ export default class RawPostDao {
     }
 
     async createPost(email, authToken) {
-        let url = `${this.#Entries_URL}/create?${new URLSearchParams({ email, auth: authToken })}`;
-        return this.#cleanFetch(url, { method: "POST"})
+        let url = this.#auth(this.#config.api.endpoints.entries.create, { email, authToken });
+        return this.#cleanFetch(url, { method: "POST" })
             .then(response => response.json());
     }
 
     async publishPost(post, attachments, authToken) {
-        let url = `${this.#Entries_URL}/publish`
+        let url = this.#api(this.#config.api.endpoints.entries.publish);
         return this.#sendPost(url, post, attachments, authToken);
     }
 
     async updatePost(post, attachments, authToken) {
-        let url = `${this.#Entries_URL}/update`;
+        let url = this.#api(this.#config.api.endpoints.entries.update);
         return this.#sendPost(url, post, attachments, authToken);
     }
 
     async deletePost(post, authToken) {
-        let url = `${this.#Entries_URL}/delete?${new URLSearchParams({ id: post.entryId, auth: authToken })}`;
+        let url = this.#api(this.#config.api.endpoints.entries.delete, { id: post.entryId, authToken });
         return this.#cleanFetch(url);
-    }
-
-    async uploadAttachment(attachment, file, authToken) {
-        let create_url = `${this.#Attachments_URL}/create`;
-        return this.#postJson(this.#auth(create_url, authToken), attachment)
-            .then(createdAttachment => {
-                let upload_url = `${this.#Attachments_URL}/upload/${createdAttachment.attachmentId}`;
-                let formData = new FormData();
-                formData.append('attachment', JSON.stringify(attachment));
-                formData.append('file', file);
-                return this.#cleanFetch(upload_url, {
-                    method: 'POST',
-                    body: formData
-                }).then(response => response.json());
-            })
     }
 }

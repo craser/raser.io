@@ -3,7 +3,8 @@ import getConfig from "@/lib/RaserIoConfig";
 
 
 export function getTitleImageUrl(post) {
-    const { postcards } = getConfig().api.endpoints;
+    let config = getConfig();
+    const postcards = `${config.api.root}${config.api.endpoints.postcards}`;
     const src = `${postcards}/${post.imageFileName}`;
     return src;
 }

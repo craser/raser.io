@@ -8,8 +8,14 @@
         "check": "/auth/check"
       },
       "entries": {
-        "entry": "/entries",
-        "next": "/entries/{id}/next"
+        "create": "/create",
+        "delete": "/delete?id={id}&auth={authToken}",
+        "entry": "/entries/{id}",
+        "latest": "/entries/latest/{page}",
+        "next": "/entries/{id}/next",
+        "previous": "/entries/{id}/prev",
+        "publish": "/publish",
+        "update": "/update"
       }
     }
   }

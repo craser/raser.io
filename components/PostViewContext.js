@@ -20,7 +20,7 @@ export const View = {
 
 export default function PostViewContext({ initialView, post, next, prev, children }) {
     const [views, setViews] = useState([]);
-    const [view, setView] = useState(initialView);
+    const [view, setView] = useState(initialView || View.SINGLE_ENTRY);
 
     function pushView(v) {
         let vs = [...views, view];

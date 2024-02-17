@@ -7,7 +7,7 @@ import FrontPageLayout from "@/components/templates/FrontPageLayout";
 import PostViewContext from "@/components/PostViewContext";
 
 export default function SinglePostPage({ postId }) {
-    const [postDao, setPostDao] = useState(new PostDao());
+    const [postDao, setPostDao] = useState(PostDao.getPostDao());
     const [post, setPost] = useState(null);
     const [next, setNext] = useState(null);
     const [prev, setPrev] = useState(null);

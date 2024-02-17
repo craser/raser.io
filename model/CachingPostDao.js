@@ -2,6 +2,7 @@
  * Wrapper around a (Raw)PostDao that uses localStorage as a cache.
  */
 import LocalStorageCache from "@/model/LocalStorageCache";
+import PostDao from "@/model/PostDao";
 
 export default class CachingPostDao {
     #dao = null;

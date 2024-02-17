@@ -12,7 +12,7 @@ import { getPostLink } from "@/components/PostLink";
 export default function CreatePostPage() {
     const router = useRouter();
     const { getAuthToken, getEmail, isAuthenticated } = useAuthenticationContext();
-    const [postDao, setPostDao] = useState(new PostDao()); // TOOD: useMemo
+    const [postDao, setPostDao] = useState(PostDao.getPostDao());
     const [post, setPost] = useState(null);
 
     const savePost = (post, attachments) => {

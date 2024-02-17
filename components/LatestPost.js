@@ -7,7 +7,7 @@ export const LatestPost = () => {
     const [post, setPost] = useState({});
 
     useEffect(() => {
-        new PostDao().getLatestPost()
+        PostDao.getPostDao().getLatestPost()
             .then(post => setPost(post))
             .catch((e) => setPost({
                 title: 'ERROR FETCHING LATEST',
