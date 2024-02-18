@@ -15,8 +15,7 @@ export default class PostDao {
     #config = getConfig();
 
     static getPostDao() {
-        //return new CachingPostDao(new PostDao());
-        return new PostDao();
+        return new CachingPostDao(new PostDao());
     }
 
     constructor() {

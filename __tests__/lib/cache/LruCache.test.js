@@ -87,6 +87,16 @@ test('should drop LRU if capacity is exceeded', () => {
     expect(cache.get('four')).toBe(4);
 })
 
+test('should correctly store & retrieve metadata', () => {
+    let cache = new LruCache(5);
+    cache.put('one', 1);
+    cache.setMeta('one', { up: 'two'});
+    cache.setMeta('one', { down: 'zero' });
+    let meta = cache.getMeta('one');
+    expect(meta.up).toBe('two');
+    expect(meta.down).toBe('zero');
+})
+
 
 
 
