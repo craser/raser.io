@@ -14,6 +14,7 @@ export default class CachingPostDao {
 
     async getLatestPost() {
         let post = await this.#dao.getLatestPost();
+        this.#cache.put(post.entryId, post);
         return post;
     }
 
