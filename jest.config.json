@@ -3,5 +3,8 @@
   "moduleFileExtensions": ["js"],
   "modulePaths": [
     "<rootDir>"
-  ]
+  ],
+  "moduleNameMapper": {
+    "@/(.*)$": "<rootDir>/$1"
+  }
 }
