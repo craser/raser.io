@@ -58,8 +58,8 @@ export default class CachingPostDao {
         }
     }
 
-    async getEntries() {
-        let posts = await this.#dao.getEntries();
+    async getEntries(...args) {
+        let posts = await this.#dao.getEntries(...args);
         posts.forEach((p, i) => {
             this.#cache.put(p.entryId, p); // cache the entry;
             if (posts[i + 1]) {

@@ -33,3 +33,24 @@ test('Should cache relationships between next & previous posts', async () => {
     expect(mockDao.getNextPost).not.toHaveBeenCalled(); // don't call home; we already know
     expect(postAgain.entryId).toBe(1138); // find the right thing
 })
+
+test('Should cache next/prev relations when loading pages', async () => {
+    const mockDao = {
+        getEntries: jest.fn(async () => {
+            let entries = [];
+            for (let i = 1130; i < 1140; i++) {
+                entries.push({ entryId: i, next: i+1 });
+            }
+            return entries;
+        }),
+        getNext: jest.fn(async () => ({}))
+    };
+
+    const dao = new CachingPostDao(mockDao);
+    const entries = await dao.getEntries();
+    entries.slice(0, entries.length - 1).forEach(async e => {
+        const next = await dao.getNextPost(e);
+        expect(next.entryId).toBe(e.next);
+    });
+    expect(mockDao.getNext).not.toHaveBeenCalled();
+})

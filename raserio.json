@@ -2,7 +2,7 @@
   "api": {
     "root": "http://localhost:5000",
     "endpoints": {
-      "postcards": "/attachments/postcards",
+      "postcards": "/attachments/postcards/{imageFileName}",
       "auth": {
         "login": "/auth/login",
         "check": "/auth/check"
