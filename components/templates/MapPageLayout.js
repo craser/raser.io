@@ -9,7 +9,6 @@ export default function MapPageLayout(props) {
                 <h1 className={styles.titleBanner}>
                     <Link href={'/'}>dreadedmonkeygod . net</Link>
                 </h1>
-                <HeaderNavigationOptions/>
             </header>
             <main className={styles.content}>
                 {props.children}

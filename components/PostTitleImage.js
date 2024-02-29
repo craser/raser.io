@@ -1,8 +1,8 @@
-import { RaserIoConfig } from "@/lib/RaserIoConfig";
+import { SiteConfig } from "@/lib/SiteConfig";
 
 
 export function getTitleImageUrl(post) {
-    const src = new RaserIoConfig().getEndpoint('postcards', post);
+    const src = new SiteConfig().getEndpoint('postcards', post);
     return src;
 }
 

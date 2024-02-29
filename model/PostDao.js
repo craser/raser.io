@@ -1,13 +1,4 @@
-/**
- * TODO: This is a temporary solution to get data from the Firebase database.
- *
- * example URL: https://dmg-react-db-default-rtdb.firebaseio.com/entries.json?orderBy="Entry_ID"&equalTo=3378
- *
- * See docs: https://firebase.google.com/docs/database/rest/retrieve-data
- */
-import { create } from "react-test-renderer";
-import { auth } from "mysql/lib/protocol/Auth";
-import getConfig from "@/lib/RaserIoConfig";
+import getConfig from "@/lib/SiteConfig";
 import CachingPostDao from "@/model/CachingPostDao";
 import { formatUrl } from "@/lib/util/StringFormatter"
 
