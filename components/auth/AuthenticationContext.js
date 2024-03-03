@@ -20,6 +20,7 @@ export default function AuthenticationContext({ children }) {
     const [authToken, setAuthToken] = useState(false);
     const [authExpiration, setAuthExpiration] = useState(0);
     const [authManager, setAuthManager] = useState(new AuthenticationManager());
+    const [loginVisible, setLoginVisible] = useState(false);
 
     useEffect(() => {
         if (isCsr()) {
@@ -128,9 +129,14 @@ export default function AuthenticationContext({ children }) {
         }
     }
 
+    function showLoginModal() {
+        setLoginVisible(true);
+    }
+
     return (
         <>
-            <AuthContextObj.Provider value={{ login, logout, status: getStatus(), isAuthenticated: !!authToken, getAuthToken, getEmail }}>
+            <AuthContextObj.Provider value={{ login, logout, showLoginModal, status: getStatus(), isAuthenticated: !!authToken, getAuthToken, getEmail }}>
+                {loginVisible ? <LoginModal onVisibilityChange={(visible) => setLoginVisible(visible)}/> : null}
                 {children}
             </AuthContextObj.Provider>
         </>

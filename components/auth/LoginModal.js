@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
 
 export default function LoginModal({ onVisibilityChange }) {
-    // { visible, login, hideLogin }
     const authContext = useAuthenticationContext();
     const userRef = useRef();
     const passRef = useRef();
