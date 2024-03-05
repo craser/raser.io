@@ -18,9 +18,6 @@ export default function HeaderNavigationOptions(props) {
             <li className="rss-link">
                 <Link href={"rss/monkeyfeed.xml"}>RSS</Link>
             </li>
-            <AuthGuest>
-                <LoginButton />
-            </AuthGuest>
             <AuthRecognized>
                 <LoginButton />
             </AuthRecognized>

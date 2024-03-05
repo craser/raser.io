@@ -34,12 +34,11 @@ function LoginField({ type, placeholder, defaultValue, validate: validateValue, 
     </>;
 }
 
-export default function LoginModal({ onVisibilityChange }) {
+export default function LoginModal({ onDismiss }) {
     const authContext = useAuthenticationContext();
-    const [email, setEmail] = useState(authContext.getEmail);
+    const [email, setEmail] = useState(authContext.getEmail());
     const [pass, setPass] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
-    const [visible, setVisible] = useState(!authContext.isAuthenticated);
 
     function validateUserField(user) {
         if (!user) {
@@ -52,47 +51,38 @@ export default function LoginModal({ onVisibilityChange }) {
     function onSubmit(e) {
         e.preventDefault();
         authContext.login(email, pass)
-            .then(() => setVisible(false))
             .catch(error => {
                 setErrorMessage('Email or password incorrect.');
             })
     }
 
-    useEffect(() => {
-        onVisibilityChange(visible);
-    }, [visible]);
-
-    if (!visible) {
-        return null;
-    } else {
-        return (
-            <Modal onDismiss={() => setVisible(false)}>
-                <form onSubmit={onSubmit}>
-                    <div className={styles.logincontainer}>
-                        <div className={styles.row}>
-                            <LoginField
-                                type="text"
-                                placeholder="email"
-                                defaultValue={email}
-                                validate={validateUserField}
-                                setValue={setEmail}
-                            />
-                        </div>
-                        <div className={styles.row}>
-                            <LoginField
-                                type="password"
-                                placeholder="password"
-                                validate={validateUserField}
-                                setValue={setPass}
-                            />
-                        </div>
-                        {errorMessage ? <div className={styles.error}>{errorMessage}</div> : null}
-                        <div className={styles.row}>
-                            <button type="submit">Log In</button>
-                        </div>
+    return (
+        <Modal onDismiss={onDismiss}>
+            <form onSubmit={onSubmit}>
+                <div className={styles.logincontainer}>
+                    <div className={styles.row}>
+                        <LoginField
+                            type="text"
+                            placeholder="email"
+                            defaultValue={email}
+                            validate={validateUserField}
+                            setValue={setEmail}
+                        />
                     </div>
-                </form>
-            </Modal>
-        );
-    }
+                    <div className={styles.row}>
+                        <LoginField
+                            type="password"
+                            placeholder="password"
+                            validate={validateUserField}
+                            setValue={setPass}
+                        />
+                    </div>
+                    {errorMessage ? <div className={styles.error}>{errorMessage}</div> : null}
+                    <div className={styles.row}>
+                        <button type="submit">Log In</button>
+                    </div>
+                </div>
+            </form>
+        </Modal>
+    );
 }

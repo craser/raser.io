@@ -8,7 +8,13 @@ const AuthContextObj = createContext({
     isAuthenticated: false,
     getAuthToken: () => null,
     getEmail: () => null
-})
+});
+
+export const STATUS = {
+    authenticated: 'authenticated',
+    recognized: 'recognized',
+    guest: 'guest'
+};
 
 export function useAuthenticationContext() {
     return useContext(AuthContextObj);
@@ -23,13 +29,17 @@ export default function AuthenticationContext({ children }) {
     const [loginVisible, setLoginVisible] = useState(false);
 
     useEffect(() => {
+        setLoginVisible(false);
+    }, [getStatus()])
+
+    useEffect(() => {
         if (isCsr()) {
             console.log('setting auth context user & token');
-            const email = window.localStorage.getItem('rio.user');
-            const auth = window.localStorage.getItem('rio.auth');
-            const expiration = parseInt(window.localStorage.getItem('rio.auth.expiration'));
+            setEmail(window.localStorage.getItem('rio.user'));
+            setAuthToken(window.localStorage.getItem('rio.auth'));
+            setAuthExpiration(parseInt(window.localStorage.getItem('rio.auth.expiration')));
 
-            if (isAuthExpired(expiration)) {
+            if (isAuthExpired(authExpiration)) {
                 logout();
             } else {
                 authManager.check(email, auth)
@@ -39,7 +49,7 @@ export default function AuthenticationContext({ children }) {
                         } else {
                             setEmailState(email);
                             setAuthTokenState(auth);
-                            setAuthExpirationState(expiration);
+                            setAuthExpirationState(authExpiration);
                         }
                     })
                     .catch(error => {
@@ -48,7 +58,7 @@ export default function AuthenticationContext({ children }) {
                     })
             }
         }
-    }, [authToken, authExpiration, email]);
+    }, []);
 
     function isCsr() {
         const csr = `${typeof window}` !== 'undefined';
@@ -107,6 +117,7 @@ export default function AuthenticationContext({ children }) {
         return authManager.login(email, pass)
             .then(auth => {
                 console.log('login successful', auth);
+                setLoginVisible(false);
                 setEmailState(email);
                 setAuthTokenState(auth.token);
                 setAuthExpirationState(auth.expires);
@@ -121,11 +132,11 @@ export default function AuthenticationContext({ children }) {
 
     function getStatus() {
         if (!!authToken) {
-            return 'authenticated';
+            return STATUS.authenticated;
         } else if (!!email) {
-            return 'recognized';
+            return STATUS.recognized;
         } else {
-            return 'guest'
+            return STATUS.guest
         }
     }
 
@@ -133,9 +144,14 @@ export default function AuthenticationContext({ children }) {
         setLoginVisible(true);
     }
 
+    function hideLoginModal() {
+        console.log('setting loginVisible to FALSE');
+        setLoginVisible(false);
+    }
+
     return (
         <>
-            <AuthContextObj.Provider value={{ login, logout, showLoginModal, status: getStatus(), isAuthenticated: !!authToken, getAuthToken, getEmail }}>
+            <AuthContextObj.Provider value={{ login, logout, showLoginModal, hideLoginModal, status: getStatus(), isAuthenticated: !!authToken, getAuthToken, getEmail }}>
                 {loginVisible ? <LoginModal onVisibilityChange={(visible) => setLoginVisible(visible)}/> : null}
                 {children}
             </AuthContextObj.Provider>
