@@ -40,6 +40,10 @@ export default function LoginModal({ onDismiss }) {
     const [pass, setPass] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
 
+    useEffect(() => {
+        setEmail(authContext.getEmail());
+    }, [authContext.getEmail()])
+
     function validateUserField(user) {
         if (!user) {
             return "required field";

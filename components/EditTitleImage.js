@@ -29,7 +29,7 @@ export default function EditTitleImage({ post, setTitleImage }) {
     let image = null;
     if (post.imageFileName) {
         image = <PostTitleImage post={post} className={styles.titleimg} />;
-    } else if (imageDataUrl) {
+    } else if (imgDataUrl) {
         image = <img src={imgDataUrl} className={styles.titleimg}/>;
     }
 
