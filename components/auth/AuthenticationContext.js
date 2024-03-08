@@ -16,6 +16,13 @@ export const STATUS = {
     guest: 'guest'
 };
 
+let STORAGE_KEYS = {
+    user: 'rio.auth.user',
+    token: 'rio.auth.token',
+    expiration: 'rio.auth.expiration',
+};
+
+
 export function useAuthenticationContext() {
     return useContext(AuthContextObj);
 }
@@ -27,28 +34,38 @@ export default function AuthenticationContext({ children }) {
     const [authExpiration, setAuthExpiration] = useState(0);
     const [authManager, setAuthManager] = useState(new AuthenticationManager());
     const [loginVisible, setLoginVisible] = useState(false);
+    const [loadedFromLocalStorage, setLoadedFromLocalStorage] = useState(false);
+
+
+    // load values from local storage
+    useEffect(() => {
+        if (isCsr()) {
+            let newEmail = window.localStorage.getItem(STORAGE_KEYS.user);
+            let newAuthToken = window.localStorage.getItem(STORAGE_KEYS.token);
+            let newExpiration = parseInt(window.localStorage.getItem(STORAGE_KEYS.expiration));
+            setEmail(newEmail);
+            setAuthToken(newAuthToken);
+            setAuthExpiration(newExpiration);
+            setLoadedFromLocalStorage(true);
+        }
+    }, []);
 
     useEffect(() => {
         setLoginVisible(false);
     }, [getStatus()])
 
     useEffect(() => {
-        if (isCsr()) {
-            console.log('setting auth context user & token');
-            setEmail(window.localStorage.getItem('rio.user'));
-            setAuthToken(window.localStorage.getItem('rio.auth'));
-            setAuthExpiration(parseInt(window.localStorage.getItem('rio.auth.expiration')));
-
-            if (isAuthExpired(authExpiration)) {
+        if (isCsr() && loadedFromLocalStorage) {
+            if (isAuthExpired()) {
                 logout();
             } else {
-                authManager.check(email, auth)
+                authManager.check(email, authToken)
                     .then(valid => {
                         if (!valid) {
                             logout();
                         } else {
                             setEmailState(email);
-                            setAuthTokenState(auth);
+                            setAuthTokenState(authToken);
                             setAuthExpirationState(authExpiration);
                         }
                     })
@@ -58,17 +75,17 @@ export default function AuthenticationContext({ children }) {
                     })
             }
         }
-    }, []);
+    }, [loadedFromLocalStorage]);
 
     function isCsr() {
         const csr = `${typeof window}` !== 'undefined';
         return csr;
     }
 
-    function isAuthExpired(expiration = authExpiration) {
-        console.log(`checking expiration - authExpiration: ${expiration}`);
-        if (!!expiration) {
-            return new Date().getTime() > expiration;
+    function isAuthExpired() {
+        console.log(`checking expiration - authExpiration: ${authExpiration}`);
+        if (!!authExpiration) {
+            return new Date().getTime() > authExpiration;
         } else {
             return true;
         }
@@ -86,9 +103,9 @@ export default function AuthenticationContext({ children }) {
         setEmail(newEmail);
         console.log(`setEmail(${newEmail}) ➤ ${email}`);
         if (newEmail) {
-            window.localStorage.setItem('rio.user', newEmail);
+            window.localStorage.setItem(STORAGE_KEYS.user, newEmail);
         } else {
-            window.localStorage.removeItem('rio.user');
+            window.localStorage.removeItem(STORAGE_KEYS.user);
         }
     }
 
@@ -96,9 +113,9 @@ export default function AuthenticationContext({ children }) {
         setAuthToken(token);
         console.log(`setAuthToken(${token}) ➤ ${authToken}`);
         if (token) {
-            window.localStorage.setItem('rio.auth', token);
+            window.localStorage.setItem(STORAGE_KEYS.token, token);
         } else {
-            window.localStorage.removeItem('rio.auth');
+            window.localStorage.removeItem(STORAGE_KEYS.token);
         }
     }
 
@@ -106,9 +123,9 @@ export default function AuthenticationContext({ children }) {
         setAuthExpiration(timestamp)
         console.log(`setAuthExpiration(${timestamp}) ➤ ${authExpiration}`);
         if (timestamp) {
-            window.localStorage.setItem('rio.auth.expiration', timestamp);
+            window.localStorage.setItem(STORAGE_KEYS.expiration, timestamp);
         } else {
-            window.localStorage.removeItem('rio.auth.expiration');
+            window.localStorage.removeItem(STORAGE_KEYS.expiration);
         }
     }
 

@@ -1,4 +1,5 @@
 import CachingPostDao from "@/model/CachingPostDao";
+import PostDao from "@/model/PostDao";
 
 test('Should cache after retrieving a post by ID', async () => {
     const mockDao = {

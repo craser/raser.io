@@ -10,7 +10,7 @@ export default function LogEntries(props) {
 
     useEffect(() => {
         console.log('useEffect firing!');
-        PostDao.getPostDao().getEntries()
+        PostDao.getCachingPostDao().getEntries()
             .then(entries => entries.slice(0, pageSize))
             .then(entries => setEntries(entries))
             .catch((e) => console.error(e));

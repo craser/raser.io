@@ -1,13 +1,18 @@
-import getConfig from "@/lib/SiteConfig";
+import { SiteConfig } from "@/lib/SiteConfig";
 import CachingPostDao from "@/model/CachingPostDao";
 import { formatUrl } from "@/lib/util/StringFormatter"
 
 export default class PostDao {
-    #config = getConfig();
+    #config = new SiteConfig();
 
-    static getPostDao() {
+    static getCachingPostDao() {
         return new CachingPostDao(new PostDao());
     }
+
+    static getPostDao() {
+        return new PostDao();
+    }
+
 
     constructor() {
     }
@@ -18,7 +23,8 @@ export default class PostDao {
         return url;
     }
 
-    #auth(uri, { authToken, email }) {
+    #auth(name, { authToken, email }) {
+        let uri = this.#config.getEndpoint(name);
         return `${uri}?${new URLSearchParams({ auth: authToken, email })}`;
     }
 
@@ -50,20 +56,20 @@ export default class PostDao {
     }
 
     async getLatestPost() {
-        let url = this.#api(this.#config.api.endpoints.entries.latest);
+        let url = this.#config.getEndpoint('entries.latest');
         return this.#cleanFetch(url).then(response => response.json());
     }
 
     async getPostById(id) {
         id = encodeURIComponent(id);
-        let url = this.#api(this.#config.api.endpoints.entries.entry, { id });
+        let url = this.#config.getEndpoint('entries.entry', { id });
         return this.#cleanFetch(url).then(response => response.json());
     }
 
     async getNextPost(p) {
         let id = p.entryId || p;
         id = encodeURIComponent(id);
-        let url = this.#api(this.#config.api.endpoints.entries.next, { id });
+        let url = this.#config.getEndpoint('entries.next', { id });
         return this.#cleanFetch(url)
             .then(response => response.json())
             .catch(() => null);
@@ -72,7 +78,7 @@ export default class PostDao {
     async getPrevPost(p) {
         let id = p.entryId || p;
         id = encodeURIComponent(id);
-        let url = this.#api(this.#config.api.endpoints.entries.previous, { id });
+        let url = this.#config.getEndpoint('entries.previous', { id });
         return this.#cleanFetch(url)
             .then(response => response.json())
             .catch(() => null);
@@ -83,7 +89,7 @@ export default class PostDao {
      * @returns {Promise<any>}
      */
     async getEntries(page = 0) {
-        let url = this.#api(this.#config.api.endpoints.entries.latest, { page });
+        let url = this.#config.getEndpoint('entries.latest', { page });
         return this.#cleanFetch(url).then(response => response.json())
             .then(posts => {
                 return posts;
@@ -91,18 +97,18 @@ export default class PostDao {
     }
 
     async createPost(email, authToken) {
-        let url = this.#auth(this.#config.api.endpoints.entries.create, { email, authToken });
+        let url = this.#auth('entries.create', { email, authToken });
         return this.#cleanFetch(url, { method: "POST" })
             .then(response => response.json());
     }
 
     async publishPost(post, attachments, authToken) {
-        let url = this.#api(this.#config.api.endpoints.entries.publish);
+        let url = this.#config.getEndpoint('entries.publish');
         return this.#sendPost(url, post, attachments, authToken);
     }
 
     async updatePost(post, attachments, authToken) {
-        let url = this.#api(this.#config.api.endpoints.entries.update);
+        let url = this.#config.getEndpoint('entries.update');
         return this.#sendPost(url, post, attachments, authToken);
     }
 

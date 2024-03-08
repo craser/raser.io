@@ -2,7 +2,6 @@ import Modal from "@/components/Modal";
 import styles from './LoginModal.module.scss'
 import { useEffect, useRef, useState } from "react";
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
-import { auth } from "mysql/lib/protocol/Auth";
 
 /**
  *

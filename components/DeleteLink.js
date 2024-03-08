@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 export default function DeleteLink({ post, children }) {
     const router = useRouter();
     const { getAuthToken } = useAuthenticationContext();
-    const [postDao, setPostDao] = useState(PostDao.getPostDao());
+    const [postDao, setPostDao] = useState(PostDao.getCachingPostDao());
 
     function deletePost(e) {
         e.preventDefault();

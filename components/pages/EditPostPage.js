@@ -13,7 +13,7 @@ import { EditPostView } from "@/components/EditPostView";
 export default function EditPostPage({ postId }) {
     const router = useRouter();
     const { getAuthToken } = useAuthenticationContext();
-    const [postDao, setPostDao] = useState(PostDao.getPostDao());
+    const [postDao, setPostDao] = useState(PostDao.getCachingPostDao());
     const [post, setPost] = useState(null);
 
     useEffect(() => {
