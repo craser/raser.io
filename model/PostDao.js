@@ -42,14 +42,14 @@ export default class PostDao {
             });
     }
 
-    #sendPost(url, post, attachments, authToken) {
+    #sendPost(endpointName, post, attachments, authToken) {
         let formData = new FormData();
         let blob = new Blob([JSON.stringify(post)], { type: 'application/json' });
         formData.append('entry', blob);
         if (attachments) {
             attachments.forEach(a => formData.append('attachments', a));
         }
-        return this.#cleanFetch(this.#auth(url, { authToken }), {
+        return this.#cleanFetch(this.#auth(endpointName, { authToken }), {
             method: 'POST',
             body: formData
         }).then(response => response.json());
@@ -103,13 +103,11 @@ export default class PostDao {
     }
 
     async publishPost(post, attachments, authToken) {
-        let url = this.#config.getEndpoint('entries.publish');
-        return this.#sendPost(url, post, attachments, authToken);
+        return this.#sendPost('entries.publish', post, attachments, authToken);
     }
 
     async updatePost(post, attachments, authToken) {
-        let url = this.#config.getEndpoint('entries.update');
-        return this.#sendPost(url, post, attachments, authToken);
+        return this.#sendPost('entries.update', post, attachments, authToken);
     }
 
     async deletePost(post, authToken) {
