@@ -1,5 +1,9 @@
 import LruCache from '../../../lib/cache/LruCache'
 
+afterEach(() => {
+    delete global.window;
+})
+
 test('should cache the last thing', () => {
     let cache = new LruCache();
     cache.put('one', 1);
@@ -95,6 +99,50 @@ test('should correctly store & retrieve metadata', () => {
     let meta = cache.getMeta('one');
     expect(meta.up).toBe('two');
     expect(meta.down).toBe('zero');
+})
+
+test('repeated gets should NOT remove item', () => {
+    let cache = new LruCache(5);
+    cache.put('one', 1);
+    expect(cache.get('one')).toBe(1);
+    expect(cache.get('one')).toBe(1); // again
+})
+
+test('should save to & restore from local storage', () => {
+    let storedCache = null; // string
+
+    global.window = {
+        localStorage: {
+            setItem: (key, value) => {
+                storedCache = value; // string
+            },
+            getItem: (key) => {
+                return storedCache;
+            }
+        },
+        requestIdleCallback(callback, options) {
+            callback();
+        }
+    }
+
+    let cache = new LruCache(5);
+    cache.put('one', 1);
+    cache.put('two', 2);
+    cache.setMeta('one', { up: 'two'});
+    cache.setMeta('one', { down: 'zero' });
+    let meta = cache.getMeta('one');
+    expect(meta.up).toBe('two');
+    expect(meta.down).toBe('zero');
+
+    expect(storedCache).not.toBeNull();
+
+    let restored = new LruCache(5);
+    expect(restored.get('one')).toEqual(1);
+    expect(restored.get('two')).toEqual(2);
+    cache.keys().forEach(key => {
+        expect(restored.get(key)).toEqual(cache.get(key));
+        expect(restored.getMeta(key)).toEqual(cache.getMeta(key));
+    });
 })
 
 
