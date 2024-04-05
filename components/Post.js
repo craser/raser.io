@@ -14,13 +14,14 @@ export const Post = ({ post, showBody }) => {
      * I'm not crazy about how this places the scroll position *exactly* at the
      * top of the post, but that's going to have to be a battle for another day.
      */
+    /*
     useEffect(() => {
         topRef.current.scrollIntoView({
             behavior: 'smooth',
             block: 'start'
         })
     }, [post]);
-
+     */
 
     return (
         <div ref={topRef} className={styles.entry}>
