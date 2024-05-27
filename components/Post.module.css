@@ -58,6 +58,7 @@
 .entry img, .entry a.maplink {
     position: relative;
     left: -15px;
+    width: calc(100% + 30px); /* 15px margins, but we want full-width */
 }
 
 /**

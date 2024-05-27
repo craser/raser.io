@@ -2,7 +2,7 @@ import { SiteConfig } from "@/lib/SiteConfig";
 
 
 export function getTitleImageUrl(post) {
-    const src = new SiteConfig().getEndpoint('postcards', post);
+    const src = new SiteConfig().getValue('images.postcard', post);
     return src;
 }
 

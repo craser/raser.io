@@ -1,6 +1,9 @@
 import { SiteConfig } from '@/lib/SiteConfig'
 
 jest.mock('/siteconfig.json', () => ({
+    images: {
+        postcard: 'https://example.com/images/postcards/{imageFileName}'
+    },
     api: {
         root: 'http://dummyhost.com',
         endpoints: {
@@ -10,6 +13,11 @@ jest.mock('/siteconfig.json', () => ({
         }
     }
 }))
+
+test('get a formatted value', () => {
+    let value = new SiteConfig().formatValue('images.postcard', { imageFileName: 'bogus-image.jpg'})
+    expect(value).toBe('https://example.com/images/postcards/bogus-image.jpg');
+})
 
 
 test('given value a.b.c in config, return that value', () => {

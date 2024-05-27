@@ -1,8 +1,10 @@
 {
+  "images": {
+    "postcard": "https://bucketeer-00c0d33b-7fb6-48a4-8a49-f1c850b8164f.s3.amazonaws.com/public/attachments/{imageFileName}"
+  },
   "api": {
     "root": "https://damp-island-38652-5044b8af1a09.herokuapp.com",
     "endpoints": {
-      "postcards": "/attachments/postcards/{imageFileName}",
       "auth": {
         "login": "/auth/login",
         "check": "/auth/check"
