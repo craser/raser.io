@@ -7,7 +7,7 @@ export default function FrontPageLayout({ content }) {
         <div className={styles.frontpage}>
             <header className={styles.header}>
                 <h1 className={styles.titleBanner}>
-                    <Link href={'/'}>dreadedmonkeygod . net</Link>
+                    <Link href={'/'}>raser . io</Link>
                 </h1>
                 <HeaderNavigationOptions/>
             </header>

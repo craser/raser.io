@@ -7,7 +7,7 @@ export default function MapPageLayout(props) {
         <div className={styles.mappage}>
             <header className={styles.header}>
                 <h1 className={styles.titleBanner}>
-                    <Link href={'/'}>dreadedmonkeygod . net</Link>
+                    <Link href={'/'}>raser . io</Link>
                 </h1>
             </header>
             <main className={styles.content}>
