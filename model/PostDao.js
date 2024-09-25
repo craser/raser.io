@@ -1,12 +1,17 @@
 import { SiteConfig } from "@/lib/SiteConfig";
 import CachingPostDao from "@/model/CachingPostDao";
 import { formatUrl } from "@/lib/util/StringFormatter"
+import { EdgeConfigPostDao } from "@/model/EdgeConfigPostDao";
 
 export default class PostDao {
     #config = new SiteConfig();
 
     static getCachingPostDao() {
         return new CachingPostDao(new PostDao());
+    }
+
+    static getEdgePostDao() {
+        return new EdgeConfigPostDao();
     }
 
     static getPostDao() {
