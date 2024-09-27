@@ -38,13 +38,15 @@ async function getCachedValue(blob) {
 
 // Function to asynchronously update the cache with fresh data
 async function updateCache(latest) {
-    // Delete the old cache value (if it exists)
-    await del(LATEST_PATHNAME);
-
-    // Update the cache with the latest data from the API
-    await put(LATEST_PATHNAME, JSON.stringify({ latest }), {
-        access: 'public'
-    });
+    const results = await list();
+    const blobs = results.blobs || [];
+    const all = Promise.all([
+        ...blobs.map((b) => del(b.downloadUrl)),
+        put(LATEST_PATHNAME, JSON.stringify({ latest }), {
+            access: 'public'
+        })
+    ]);
+    return all;
 }
 
 /**
@@ -64,9 +66,14 @@ export function GET(request) {
                 // if no cached blob exists, we have to wait for a fresh value
                 if (!cachedBlob) {
                     // If no cached value is available, fetch the latest and return it.
-                    PostDao.getPostDao().getEntries().then(resolve);
+                    // FIXME: Update the cache
+                    PostDao.getPostDao().getEntries()
+                        .then(fresh => {
+                            console.log('got latest from dao', fresh);
+                            resolve(fresh);
+                            updateCache(fresh); // promise ignored
+                        });
                 } else if (isStale(cachedBlob)) {
-                    // FIXME: Add timeouts, error handling, defaults
                     console.log('blob is stale, getting new value from PostDao');
                     let token;
                     getCachedValue(cachedBlob)

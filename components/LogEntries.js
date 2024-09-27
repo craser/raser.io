@@ -4,6 +4,14 @@ import EdgeConfigPostDao from "@/model/EdgeConfigPostDao";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import PostViewContext, { View } from "@/components/PostViewContext";
 
+function markCachedEntries(entries) {
+    return entries.map(e => ({ ...e, title: `cached: ${e.title}`}));
+}
+
+function markFetchedEntries(entries) {
+    return entries.map(e => ({ ...e, title: `fetched: ${e.title}`}));
+}
+
 export default function LogEntries(props) {
     const [entries, setEntries] = useState([]);
     let pageSize = props.pageSize;
@@ -11,16 +19,14 @@ export default function LogEntries(props) {
     useEffect(() => {
         const startTime = new Date().getTime();
         new EdgeConfigPostDao().getLatestPost()
-            .then(post => { console.log('edge', post); return post; })
-            .then(post => setEntries([post]))
+            .then(entries => setEntries(entries))
             .then(() => {
                 const now = new Date().getTime();
                 const elapsed = now - startTime;
-                console.log(`fetched from edge config in ${elapsed}ms`);
+                console.log(`fetched from blob cache in ${elapsed}ms`);
             })
             .then(() => PostDao.getCachingPostDao().getEntries())
             .then(entries => entries.slice(0, pageSize))
-            .then(entries => { console.log('cached/fetched', entries); return entries; })
             .then(entries => setEntries(entries))
             .then(() => {
                 const now = new Date().getTime();

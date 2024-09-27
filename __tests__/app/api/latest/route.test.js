@@ -35,14 +35,6 @@ describe('endpoint to retrieve cached first page', () => {
         jest.resetAllMocks();
     })
 
-    /*
-    fetch.mockReturnValue({
-        ok: true,
-        json: async () => { latest: 'mock latest ' }
-    });
-
-     */
-
 
     it('If no cached value exists, should wait for fresh value', async () => {
         list.mockReturnValue({
@@ -97,6 +89,7 @@ describe('endpoint to retrieve cached first page', () => {
     it('Stale cache, but fresh request is prompt: return fresh value', async () => {
         let now = new Date();
         let staleDate = new Date(now.getTime() - (1.2 * MAX_CACHE_AGE));
+        expect.assertions(1);
 
         list.mockReturnValue({
             blobs: [{
@@ -165,4 +158,6 @@ describe('endpoint to retrieve cached first page', () => {
         console.log('GET resolved');
         expect(responseValue.latest).toBe('latest from blob');
     });
+
+
 })
