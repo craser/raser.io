@@ -1,4 +1,4 @@
-import styles from './Post.module.css';
+import styles from './Post.module.scss';
 import { PostLink } from "@/components/PostLink";
 import PostMetaInfo from "@/components/PostMetaInfo";
 import PostTitleImage from "@/components/PostTitleImage";
@@ -7,11 +7,13 @@ import { useEffect, useRef } from "react";
 export const Post = ({ post, showBody }) => {
     const topRef = useRef(null);
 
+    // A temporary fix for the problem of YouTube videos being hard-coded to 630px wide.
     useEffect(() => {
-        //setPostWidth();
-        window.addEventListener('resize', () => {
+        let setPostWidth = () => {
             topRef.current.style.setProperty('--post-width', topRef.current.offsetWidth);
-        });
+        };
+        setPostWidth();
+        window.addEventListener('resize', setPostWidth);
     });
 
 

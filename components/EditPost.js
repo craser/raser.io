@@ -1,4 +1,4 @@
-import styles from './Post.module.css';
+import styles from './Post.module.scss';
 import EditTitleImage from "@/components/EditTitleImage";
 import { useState } from "react";
 

@@ -64,9 +64,14 @@
 /**
  * Hacky, fine for now. Align embedded YouTube videos.
  */
-.entry iframe {
+.entry iframe[title="YouTube video player"] {
     position: relative;
     left: -15px;
+    /* hacky fix for the problem of YT videos being hard-coded to 630px wide */
+    --scale: calc(var(--post-width) / 630); /* --post-width set in Post.js */
+    transform-origin: left center; /* Scale from the left */
+    transform: scale(var(--scale));
+
 }
 
 .entry p {

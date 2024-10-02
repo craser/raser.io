@@ -1,4 +1,4 @@
-import styles from "@/components/Post.module.css";
+import styles from "@/components/Post.module.scss";
 import DatePosted from "@/components/DatePosted";
 import CommentsLink from "@/components/CommentsLink";
 import PostTagsList from "@/components/PostTagsList";
