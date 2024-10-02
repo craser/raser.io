@@ -10,10 +10,10 @@ export default function HeaderNavigationOptions(props) {
     return (
         <ul className={styles.sitenav}>
             <li>
-                <a href="https://www.youtube.com/@burrito-fueledmtb9218">Burrito-Fueled MTB</a>
+                <a className={styles.ytLink} href="https://www.youtube.com/@burrito-fueledmtb9218">Burrito-Fueled MTB</a>
             </li>
             <li>
-                <a href="https://www.threads.net/@deathb4decaf">@DeathB4Decaf</a>
+                <a className={styles.threadsLink} href="https://www.threads.net/@deathb4decaf">DeathB4Decaf</a>
             </li>
             <AuthRecognized>
                 <LoginButton />
