@@ -10,11 +10,9 @@ function isStale(blob) {
     const now = new Date().getTime();
     const uploaded = new Date(blob.uploadedAt).getTime();
     if (!blob) {
-        console.log('stale: true');
         return true;
     } else {
         const stale = (now - uploaded) > MAX_CACHE_AGE;
-        console.log('stale: ', stale);
         return stale
     }
 }
@@ -49,6 +47,21 @@ async function updateCache(latest) {
     return all;
 }
 
+const getFreshValue = (() => {
+    let promise;
+    return function() {
+        if (!promise) {
+            promise = PostDao.getPostDao().getEntries()
+                .then(fresh => {
+                    updateCache(fresh); // promise ignored
+                    promise = null;
+                    return fresh;
+                });
+        }
+        return promise;
+    }
+})();
+
 /**
  * - If there is no cached value, retrieve a fresh value and return it, then add that value to the cache.
  * - Else, if the current cached value is less than 5 minutes old, return the cached value.
@@ -58,7 +71,7 @@ async function updateCache(latest) {
  *
  * @param request
  * @returns {Promise<NextResponse<{latest}>>}
-  */
+ */
 export function GET(request) {
     return new Promise((resolve, reject) => {
         getCachedBlob()
@@ -66,32 +79,16 @@ export function GET(request) {
                 // if no cached blob exists, we have to wait for a fresh value
                 if (!cachedBlob) {
                     // If no cached value is available, fetch the latest and return it.
-                    // FIXME: Update the cache
-                    PostDao.getPostDao().getEntries()
-                        .then(fresh => {
-                            console.log('got latest from dao', fresh);
-                            resolve(fresh);
-                            updateCache(fresh); // promise ignored
-                        });
+                    getFreshValue().then(resolve);
                 } else if (isStale(cachedBlob)) {
-                    console.log('blob is stale, getting new value from PostDao');
-                    let token;
+                    // The cache is stale, but we're prioritizing responsiveness here.
+                    // So we try to fetch a fresh value, but if it takes too long
+                    // we just return the stale cached version.
                     getCachedValue(cachedBlob)
-                        .then(cached => {
-                            console.log('setting max delay')
-                            token = setTimeout(() => resolve(cached), MAX_RESPONSE_TIME);
-                        })
-                        .then(() => {
-                            console.log('trying to get latest from dao...')
-                            PostDao.getPostDao().getEntries()
-                                .then(fresh => {
-                                    console.log('got latest from dao', fresh);
-                                    resolve(fresh);
-                                    updateCache(fresh); // promise ignored
-                                });
-                        })
+                        .then(cached => setTimeout(() => resolve(cached), MAX_RESPONSE_TIME))
+                        .then(() => getFreshValue().then(resolve))
                 } else {
-                    // cache is fresh. pass it along
+                    // The cache is fresh. Pass it along.
                     getCachedValue(cachedBlob).then(resolve);
                 }
             });

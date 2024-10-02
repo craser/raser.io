@@ -44,7 +44,10 @@ test('Should cache next/prev relations when loading pages', async () => {
             }
             return entries;
         }),
-        getNext: jest.fn(async () => ({}))
+        getNext: jest.fn(async () => ({})),
+        getNextPost: jest.fn(async (e) => ({
+            entryId: e.entryId + 1, next: e.entryId + 2
+        }))
     };
 
     const dao = new CachingPostDao(mockDao);

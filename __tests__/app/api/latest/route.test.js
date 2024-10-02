@@ -100,9 +100,7 @@ describe('endpoint to retrieve cached first page', () => {
         });
         PostDao.getPostDao.mockReturnValue({
             getEntries: () => new Promise((resolve) => {
-                console.log('calling setTimeout');
                 setTimeout(() => {
-                    console.log('returning mocked entries', MAX_RESPONSE_TIME);
                     resolve('latest entries from dao');
                 }, MAX_RESPONSE_TIME - 100); // respond BEFORE timeout
             })
@@ -114,9 +112,7 @@ describe('endpoint to retrieve cached first page', () => {
             })
         });
 
-        console.log('awaiting GET response');
         const responseValue = await GET();
-        console.log('GET resolved');
         expect(responseValue.latest).toBe('latest entries from dao');
     });
 
@@ -139,9 +135,7 @@ describe('endpoint to retrieve cached first page', () => {
         });
         PostDao.getPostDao.mockReturnValue({
             getEntries: () => new Promise((resolve) => {
-                console.log('calling setTimeout');
                 setTimeout(() => {
-                    console.log('returning mocked entries', MAX_RESPONSE_TIME);
                     resolve('latest entries from dao');
                 }, MAX_RESPONSE_TIME + 100);
             })
@@ -153,9 +147,7 @@ describe('endpoint to retrieve cached first page', () => {
             })
         });
 
-        console.log('awaiting GET response');
         const responseValue = await GET();
-        console.log('GET resolved');
         expect(responseValue.latest).toBe('latest from blob');
     });
 
