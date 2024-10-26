@@ -6,8 +6,21 @@ export function getTitleImageUrl(post) {
     return src;
 }
 
+/**
+ * Whups! I forgot that I used a file name with '.gpx' extension and a type of 'image' to indicate that a Google map
+ * of the GPX data should be rendered as the hero image.
+ *
+ * Adding a trap here for that. Will fix & render in my copious free time.
+ *
+ * @param post
+ * @param className
+ * @returns {JSX.Element|null}
+ * @constructor
+ */
 export default function PostTitleImage({ post, className }) {
-    if (post.imageFileName && post.imageFileType === 'image') {
+    if (/\.gpx$/.test(post.imageFileName)) {
+        return null;
+    } else if (post.imageFileName && post.imageFileType === 'image') {
         let src = getTitleImageUrl(post);
         return <img src={src} className={className || 'titleimage'} />;
     } else {
