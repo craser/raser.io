@@ -1,7 +1,7 @@
 import { SiteConfig } from "@/lib/SiteConfig";
 import CachingPostDao from "@/model/CachingPostDao";
 import { formatUrl } from "@/lib/util/StringFormatter"
-import { EdgeConfigPostDao } from "@/model/EdgeConfigPostDao";
+import EdgeConfigPostDao from "@/model/EdgeConfigPostDao";
 
 export default class PostDao {
     #config = new SiteConfig();
@@ -33,8 +33,8 @@ export default class PostDao {
         return `${uri}?${new URLSearchParams({ auth: authToken, email })}`;
     }
 
-    #cleanFetch() {
-        return fetch.apply(null, arguments)
+    #cleanFetch(...args) {
+        return fetch(...args)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

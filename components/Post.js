@@ -10,7 +10,9 @@ export const Post = ({ post, showBody }) => {
     // A temporary fix for the problem of YouTube videos being hard-coded to 630px wide.
     useEffect(() => {
         let setPostWidth = () => {
-            topRef.current.style.setProperty('--post-width', topRef.current.offsetWidth);
+            if (topRef.current) { // FIXME: band-aid to deal with use inside the edit view, where there's no topref.
+                topRef.current.style.setProperty('--post-width', topRef.current.offsetWidth);
+            }
         };
         setPostWidth();
         window.addEventListener('resize', setPostWidth);

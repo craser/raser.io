@@ -19,12 +19,18 @@ export const EditPost = ({ post, savePost, onCancel }) => {
     }
 
     function onSaveClicked(e) {
+        if (titleImage) {
+            post.imageFileName = titleImage.name;
+            post.imageFileType = 1; // image
+        }
         savePost(post, [titleImage]);
     }
 
     function onTitleImageDrop(file) {
-        post.imageFileName = file.name;
-        post.imageFileType = 1; // image
+        // update the post object on SAVE, not here.
+        // We don't actually upload the image until the post is saved.
+        post.imageFileName = null; // FIXME: Need a more elegant way to ensure that the EditHeroImage component doesn't try to render this.
+        post.imageFileType = null;
         setTitleImage(file);
     }
 
