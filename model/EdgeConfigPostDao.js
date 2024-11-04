@@ -12,7 +12,7 @@ export default class EdgeConfigPostDao {
                     return latest;
                 } else {
                     console.log('error fetching from edge config');
-                    throw new Error(`HTTP code ${response.status} while fetching welcome entry.`);
+                    return [];
                 }
             });
     }

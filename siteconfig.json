@@ -3,7 +3,7 @@
     "postcard": "https://raserio.b-cdn.net/{imageFileName}"
   },
   "api": {
-    "root": "http://localhost:5000",
+    "root": "https://damp-island-38652-5044b8af1a09.herokuapp.com",
     "endpoints": {
       "auth": {
         "login": "/auth/login",

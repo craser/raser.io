@@ -8,7 +8,7 @@ import FrontPageLayout from "@/components/templates/FrontPageLayout";
 import { EditPost } from "@/components/EditPost";
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
 import { getPostLink } from "@/components/PostLink";
-import { EditPostView } from "@/components/EditPostView";
+import EditPostView from "@/components/EditPostView";
 
 export default function EditPostPage({ postId }) {
     const router = useRouter();
