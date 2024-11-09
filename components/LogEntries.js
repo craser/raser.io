@@ -18,7 +18,14 @@ export default function LogEntries(props) {
 
     useEffect(() => {
         const startTime = new Date().getTime();
-        PostDao.getCachingPostDao().getEntries()
+        new EdgeConfigPostDao().getLatestPost()
+            .then(entries => setEntries(entries))
+            .then(() => {
+                const now = new Date().getTime();
+                const elapsed = now - startTime;
+                console.log(`fetched from blob cache in ${elapsed}ms`);
+            })
+            .then(() => PostDao.getCachingPostDao().getEntries())
             .then(entries => entries.slice(0, pageSize))
             .then(entries => setEntries(entries))
             .then(() => {
