@@ -30,7 +30,7 @@ export default function SinglePostPage({ postId }) {
                 setPost(null)
             });
 
-    }, [postId]);
+    }, [postId, postDao]);
 
     if (!post) {
         return (

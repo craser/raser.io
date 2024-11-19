@@ -37,7 +37,7 @@ export default function CreatePostPage() {
                     setPost(null);
                 });
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, postDao]);
 
     if (!post) {
         return (

@@ -25,7 +25,7 @@ export default function EditPostPage({ postId }) {
                 setPost(null)
             });
 
-    }, [postId]);
+    }, [postId, postDao]);
 
     const onPostSave = (post) => {
         let url = getPostLink(post);

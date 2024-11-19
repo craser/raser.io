@@ -11,6 +11,6 @@ export default function Login() {
         if (authManager.status == STATUS.authenticated) {
             router.push('/')
         }
-    }, [authManager.status])
+    }, [authManager.status, router])
     return <LoginModal onDismiss={() => null} />
 }

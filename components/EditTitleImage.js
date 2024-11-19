@@ -20,7 +20,7 @@ export default function EditTitleImage({ post, setTitleImage }) {
             setTitleImage(titleImage);
         });
         reader.readAsDataURL(titleImage);
-    }, [])
+    }, [setImgDataUrl, setTitleImage])
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
     console.log({ styles });

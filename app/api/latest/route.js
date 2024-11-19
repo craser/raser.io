@@ -1,66 +1,4 @@
-import { list, put, del } from '@vercel/blob';
-import { NextResponse } from 'next/server';
-import PostDao from "@/model/PostDao";
-
-export const LATEST_PATHNAME = "cache/latest.json";
-export const MAX_CACHE_AGE = 5 * 60 * 1000; // 5 minute timeout
-export const MAX_RESPONSE_TIME = 300; // Respond with *something* within 300ms
-
-function isStale(blob) {
-    const now = new Date().getTime();
-    const uploaded = new Date(blob.uploadedAt).getTime();
-    if (!blob) {
-        return true;
-    } else {
-        const stale = (now - uploaded) > MAX_CACHE_AGE;
-        return stale
-    }
-}
-
-async function getCachedBlob() {
-    const results = await list();
-    const blobs = results.blobs;
-    const cachedBlob = blobs.find(b => b.pathname === LATEST_PATHNAME);
-    return cachedBlob;
-}
-
-async function getCachedValue(blob) {
-    const response = await fetch(blob.downloadUrl);
-    if (response.ok) {
-        let cached = await response.json();
-        return cached.latest;
-    } else {
-        throw new Error('Failure fetching blob value');
-    }
-}
-
-// Function to asynchronously update the cache with fresh data
-async function updateCache(latest) {
-    const results = await list();
-    const blobs = results.blobs || [];
-    const all = Promise.all([
-        ...blobs.map((b) => del(b.downloadUrl)),
-        put(LATEST_PATHNAME, JSON.stringify({ latest }), {
-            access: 'public'
-        })
-    ]);
-    return all;
-}
-
-const getFreshValue = (() => {
-    let promise;
-    return function() {
-        if (!promise) {
-            promise = PostDao.getPostDao().getEntries()
-                .then(fresh => {
-                    updateCache(fresh); // promise ignored
-                    promise = null;
-                    return fresh;
-                });
-        }
-        return promise;
-    }
-})();
+import { getLatest, updateCache } from '@/lib/edge/latest';
 
 /**
  * - If there is no cached value, retrieve a fresh value and return it, then add that value to the cache.
@@ -73,25 +11,5 @@ const getFreshValue = (() => {
  * @returns {Promise<NextResponse<{latest}>>}
  */
 export function GET(request) {
-    return new Promise((resolve, reject) => {
-        getCachedBlob()
-            .then(cachedBlob => {
-                // if no cached blob exists, we have to wait for a fresh value
-                if (!cachedBlob) {
-                    // If no cached value is available, fetch the latest and return it.
-                    getFreshValue().then(resolve);
-                } else if (isStale(cachedBlob)) {
-                    // The cache is stale, but we're prioritizing responsiveness here.
-                    // So we try to fetch a fresh value, but if it takes too long
-                    // we just return the stale cached version.
-                    getCachedValue(cachedBlob)
-                        .then(cached => setTimeout(() => resolve(cached), MAX_RESPONSE_TIME))
-                        .then(() => getFreshValue().then(resolve))
-                } else {
-                    // The cache is fresh. Pass it along.
-                    getCachedValue(cachedBlob).then(resolve);
-                }
-            });
-    })
-        .then(latest => NextResponse.json({ latest }));
+    return getLatest();
 }
