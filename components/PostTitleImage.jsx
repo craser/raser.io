@@ -1,4 +1,5 @@
 import { SiteConfig } from "@/lib/SiteConfig";
+import { useAnalytics } from "@/components/analytics/AnalyticsContext";
 
 
 export function getTitleImageUrl(post) {
@@ -18,11 +19,16 @@ export function getTitleImageUrl(post) {
  * @constructor
  */
 export default function PostTitleImage({ post, className }) {
+    const analytics = useAnalytics();
+    const notifyAnalytics = (src) => {
+        analytics.fireEvent(`image load failed. src: "${src}"`);
+    }
+
     if (/\.gpx$/.test(post.imageFileName)) {
         return null;
     } else if (post.imageFileName && post.imageFileType === 'image') {
         let src = getTitleImageUrl(post);
-        return <img src={src} className={className || 'titleimage'} />;
+        return <img src={src} className={className || 'titleimage'} onError={() => notifyAnalytics(src)} />;
     } else {
         return null;
     }

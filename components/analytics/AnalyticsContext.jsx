@@ -1,6 +1,5 @@
 import { createContext, useContext } from "react";
 import { useStatsigClient } from "@statsig/react-bindings";
-import Logger from "@/components/analytics/Logger";
 
 function ccConsole(...args) {
     console.log(...args);

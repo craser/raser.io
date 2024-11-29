@@ -1,6 +1,11 @@
 {
   "collectCoverage": true,
-  "moduleFileExtensions": ["js"],
+  "testMatch": [
+    "**/__tests__/**/*.[jt]s?(x)",
+    "**/?(*.)+(spec|test).[jt]s?(x)"
+  ],
+  "testEnvironment": "jest-environment-jsdom",
+  "moduleFileExtensions": ["js", "jsx"],
   "modulePaths": [
     "<rootDir>"
   ],
