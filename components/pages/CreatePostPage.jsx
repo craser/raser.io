@@ -1,10 +1,7 @@
-import { Fragment, memo, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import PostDao from '/model/PostDao';
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { Post } from "@/components/Post";
-import NextPrevPostLinks from "@/components/NextPrevPostLinks";
-import FrontPageLayout from "@/components/templates/FrontPageLayout";
 import { EditPost } from "@/components/EditPost";
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
 import { getPostLink } from "@/components/PostLink";
@@ -16,7 +13,7 @@ export default function CreatePostPage() {
     const [post, setPost] = useState(null);
 
     const savePost = (post, attachments) => {
-        logger.info({ msg: 'publishing post', post })
+        console.info({ msg: 'publishing post', post })
         let authToken = getAuthToken();
         postDao.publishPost(post, attachments, authToken)
             .then(getPostLink)
@@ -25,7 +22,7 @@ export default function CreatePostPage() {
 
     useEffect(() => {
         if (isAuthenticated) {
-            logger.debug(`Fetching fresh entry`);
+            console.debug(`Fetching fresh entry`);
             let email = getEmail();
             let authToken = getAuthToken();
             postDao.createPost(email, authToken)
@@ -33,7 +30,7 @@ export default function CreatePostPage() {
                     setPost(post)
                 })
                 .catch(e => {
-                    logger.error(e);
+                    console.error(e);
                     setPost(null);
                 });
         }

@@ -17,11 +17,11 @@ export default function EditPostPage({ postId }) {
     const [post, setPost] = useState(null);
 
     useEffect(() => {
-        logger.debug(`Fetching entry for ${postId}`);
+        console.debug(`Fetching entry for ${postId}`);
         postDao.getPostById(postId)
             .then(post => setPost(post))
             .catch((e) => {
-                logger.error(e);
+                console.error(e);
                 setPost(null)
             });
 

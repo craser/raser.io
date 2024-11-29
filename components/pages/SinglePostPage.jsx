@@ -13,7 +13,7 @@ export default function SinglePostPage({ postId }) {
     const [prev, setPrev] = useState(null);
 
     useEffect(() => {
-        logger.debug(`Fetching entry for ${postId}`);
+        console.debug(`Fetching entry for ${postId}`);
         postDao.getPostById(postId)
             .then(post => {
                 setPost(post);
@@ -26,7 +26,7 @@ export default function SinglePostPage({ postId }) {
                     .then(setPrev);
             })
             .catch((e) => {
-                logger.error(e);
+                console.error(e);
                 setPost(null)
             });
 
