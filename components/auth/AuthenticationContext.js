@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import AuthenticationManager from "@/lib/api/AuthenticationManager";
 import LoginModal from "@/components/auth/LoginModal";
 import { auth } from "mysql/lib/protocol/Auth";
+import { useAnalytics } from "@/components/analytics/AnalyticsContext";
 
 const AuthContextObj = createContext({
     login: () => false,
@@ -28,6 +29,7 @@ export function useAuthenticationContext() {
 }
 
 export default function AuthenticationContext({ children }) {
+    const logger = useAnalytics();
 
     const [email, setEmail] = useState(null);
     const [authToken, setAuthToken] = useState(false);
@@ -70,7 +72,7 @@ export default function AuthenticationContext({ children }) {
                         }
                     })
                     .catch(error => {
-                        console.error(error);
+                        logger.fireEvent(error);
                         logout();
                     })
             }
@@ -83,7 +85,7 @@ export default function AuthenticationContext({ children }) {
     }
 
     function isAuthExpired() {
-        console.log(`checking expiration - authExpiration: ${authExpiration}`);
+        logger.log(`checking expiration - authExpiration: ${authExpiration}`);
         if (!!authExpiration) {
             return new Date().getTime() > authExpiration;
         } else {
@@ -101,7 +103,7 @@ export default function AuthenticationContext({ children }) {
 
     function setEmailState(newEmail) {
         setEmail(newEmail);
-        console.log(`setEmail(${newEmail}) ➤ ${email}`);
+        logger.log(`setEmail(${newEmail}) ➤ ${email}`);
         if (newEmail) {
             window.localStorage.setItem(STORAGE_KEYS.user, newEmail);
         } else {
@@ -111,7 +113,7 @@ export default function AuthenticationContext({ children }) {
 
     function setAuthTokenState(token) {
         setAuthToken(token);
-        console.log(`setAuthToken(${token}) ➤ ${authToken}`);
+        logger.log(`setAuthToken(${token}) ➤ ${authToken}`);
         if (token) {
             window.localStorage.setItem(STORAGE_KEYS.token, token);
         } else {
@@ -121,7 +123,7 @@ export default function AuthenticationContext({ children }) {
 
     function setAuthExpirationState(timestamp) {
         setAuthExpiration(timestamp)
-        console.log(`setAuthExpiration(${timestamp}) ➤ ${authExpiration}`);
+        logger.log(`setAuthExpiration(${timestamp}) ➤ ${authExpiration}`);
         if (timestamp) {
             window.localStorage.setItem(STORAGE_KEYS.expiration, timestamp);
         } else {
@@ -130,10 +132,10 @@ export default function AuthenticationContext({ children }) {
     }
 
     function login(email, pass) {
-        console.debug('AuthenticationContext.login()', email, pass);
+        logger.debug('AuthenticationContext.login()', email, pass);
         return authManager.login(email, pass)
             .then(auth => {
-                console.log('login successful', auth);
+                logger.log('login successful', auth);
                 setLoginVisible(false);
                 setEmailState(email);
                 setAuthTokenState(auth.token);
@@ -142,7 +144,7 @@ export default function AuthenticationContext({ children }) {
     }
 
     function logout() {
-        console.info(`AuthenticationContext: logging out`);
+        logger.info(`AuthenticationContext: logging out`);
         setAuthTokenState(null);
         setAuthExpirationState(0);
     }
@@ -162,7 +164,7 @@ export default function AuthenticationContext({ children }) {
     }
 
     function hideLoginModal() {
-        console.log('setting loginVisible to FALSE');
+        logger.log('setting loginVisible to FALSE');
         setLoginVisible(false);
     }
 

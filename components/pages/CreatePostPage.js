@@ -16,7 +16,7 @@ export default function CreatePostPage() {
     const [post, setPost] = useState(null);
 
     const savePost = (post, attachments) => {
-        console.info({ msg: 'publishing post', post })
+        logger.info({ msg: 'publishing post', post })
         let authToken = getAuthToken();
         postDao.publishPost(post, attachments, authToken)
             .then(getPostLink)
@@ -25,7 +25,7 @@ export default function CreatePostPage() {
 
     useEffect(() => {
         if (isAuthenticated) {
-            console.debug(`Fetching fresh entry`);
+            logger.debug(`Fetching fresh entry`);
             let email = getEmail();
             let authToken = getAuthToken();
             postDao.createPost(email, authToken)
@@ -33,7 +33,7 @@ export default function CreatePostPage() {
                     setPost(post)
                 })
                 .catch(e => {
-                    console.error(e);
+                    logger.error(e);
                     setPost(null);
                 });
         }

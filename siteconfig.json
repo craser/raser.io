@@ -20,5 +20,8 @@
         "update": "/entries/update"
       }
     }
+  },
+  "statsig": {
+    "sdkKey": "client-1dApaPalDEFp7nvAG5NteYNbIIqfVjdIEPOkkQ2yoJZ"
   }
 }
