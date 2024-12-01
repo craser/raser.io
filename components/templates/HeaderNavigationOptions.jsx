@@ -15,6 +15,9 @@ export default function HeaderNavigationOptions(props) {
             <li>
                 <a className={styles.threadsLink} href="https://www.threads.net/@deathb4decaf">DeathB4Decaf</a>
             </li>
+            <li>
+                <Search/>
+            </li>
             <AuthRecognized>
                 <LoginButton />
             </AuthRecognized>
