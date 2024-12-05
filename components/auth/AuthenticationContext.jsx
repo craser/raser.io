@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import AuthenticationManager from "@/lib/api/AuthenticationManager";
 import LoginModal from "@/components/auth/LoginModal";
 import { auth } from "mysql/lib/protocol/Auth";
+import { useAnalytics } from "@/components/analytics/AnalyticsContext";
 
 const AuthContextObj = createContext({
     login: () => false,
@@ -28,7 +29,7 @@ export function useAuthenticationContext() {
 }
 
 export default function AuthenticationContext({ children }) {
-
+    const analytics = useAnalytics();
     const [email, setEmail] = useState(null);
     const [authToken, setAuthToken] = useState(false);
     const [authExpiration, setAuthExpiration] = useState(0);
@@ -130,10 +131,10 @@ export default function AuthenticationContext({ children }) {
     }
 
     function login(email, pass) {
-        console.debug('AuthenticationContext.login()', email, pass);
+        analytics.fireEvent('login attempt', email);
         return authManager.login(email, pass)
             .then(auth => {
-                console.log('login successful', auth);
+                analytics.fireEvent('login success', email);
                 setLoginVisible(false);
                 setEmailState(email);
                 setAuthTokenState(auth.token);

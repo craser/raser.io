@@ -1,29 +1,30 @@
 import { createContext, useContext } from "react";
-import { useStatsigClient } from "@statsig/react-bindings";
+import { StatsigProvider, useStatsigClient } from "@statsig/react-bindings";
+import { SiteConfig } from "@/lib/SiteConfig";
 
 function ccConsole(...args) {
     console.log(...args);
 }
 
-const AnalyticsContextObj = createContext({
-    fireEvent: (...args) => ccConsole(...args)
-});
-
 export function useAnalytics() {
-    return useContext(AnalyticsContextObj);
+    const statsig = useStatsigClient();
+    return {
+        fireEvent: (...args) => {
+            ccConsole(...args);
+            console.log(`logging to statsig: ${args.join('|')}`);
+            statsig.logEvent(args.join('|'))
+        }
+    };
 }
 
 export default function AnalyticsContext({ children }) {
-    const statsigClient = useStatsigClient();
-    const analytics = {
-        fireEvent: (...args) => {
-            ccConsole(...args);
-            statsigClient.logEvent(...args)
-        }
-    };
+    const sdkKey = new SiteConfig().getValue('statsig.sdkKey');
     return (
-        <AnalyticsContextObj.Provider value={analytics}>
+        <StatsigProvider
+            sdkKey={sdkKey}
+            user={{ userID: 'guest', email: 'none@example.com' }}
+        >
             {children}
-        </AnalyticsContextObj.Provider>
+        </StatsigProvider>
     );
 }
