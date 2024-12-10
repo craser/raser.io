@@ -101,6 +101,13 @@ export default class PostDao {
             });
     }
 
+    async getLatestEntries(numEntries = 100) {
+        let url = this.#config.getEndpoint('entries.bulk', { numEntries });
+        return this.#cleanFetch(url)
+            .then(response => response.json())
+            .catch(e => console.error(e));
+    }
+
     async createPost(email, authToken) {
         let url = this.#auth('entries.create', { email, authToken });
         return this.#cleanFetch(url, { method: "POST" })

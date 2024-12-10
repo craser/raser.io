@@ -11,12 +11,15 @@
     --font-main: 'Lato';
     --theme-color-text: #000;
     --theme-color-pop: #e88c49;
+    --theme-color-border-light: #aaa;
     --theme-color-subtext: #555;
     --theme-color-border: #555;
     --theme-color-content-text-bg: #fff;
     --theme-color-title: var(--theme-color-text);
     --theme-color-link: #456;
     --theme-color-link-underline: var(--theme-color-pop);
+    --theme-large-border-radius: 7px;
+    --theme-container-padding-large: 15px;
 }
 
 /*@media (prefers-color-scheme: dark) {

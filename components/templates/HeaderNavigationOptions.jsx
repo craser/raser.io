@@ -5,6 +5,8 @@ import LoginButton from "@/components/auth/LoginButton";
 import LogoutButton from "@/components/auth/LogoutButton";
 import AuthRecognized from "@/components/auth/AuthRecognized";
 import AuthGuest from "@/components/auth/AuthGuest";
+import Search from "@/components/search/Search";
+import SearchButton from "@/components/search/SearchButton";
 
 export default function HeaderNavigationOptions(props) {
     return (
@@ -16,7 +18,7 @@ export default function HeaderNavigationOptions(props) {
                 <a className={styles.threadsLink} href="https://www.threads.net/@deathb4decaf">DeathB4Decaf</a>
             </li>
             <li>
-                <Search/>
+                <SearchButton/>
             </li>
             <AuthRecognized>
                 <LoginButton />

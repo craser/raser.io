@@ -17,7 +17,8 @@
         "next": "/entries/{id}/next",
         "previous": "/entries/{id}/prev",
         "publish": "/entries/publish",
-        "update": "/entries/update"
+        "update": "/entries/update",
+        "bulk": "/entries/bulk/{numEntries}"
       }
     }
   },

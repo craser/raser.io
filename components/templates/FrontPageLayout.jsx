@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from './FrontPageLayout.module.scss'
 import HeaderNavigationOptions from "@/components/templates/HeaderNavigationOptions";
+import Search from "@/components/search/Search";
 
 export default function FrontPageLayout({ content }) {
     return (
@@ -12,6 +13,7 @@ export default function FrontPageLayout({ content }) {
                 <HeaderNavigationOptions/>
             </header>
             <main className={styles.content}>
+                <Search/>
                 {content}
             </main>
         </div>

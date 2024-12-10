@@ -16,6 +16,26 @@ export default function LogEntries({ pageSize, initialEntries }) {
     console.log({ initialEntries });
     const [entries, setEntries] = useState(initialEntries || []);
 
+    useEffect(() => {
+        const startTime = new Date().getTime();
+        new EdgeConfigPostDao().getLatestPost()
+            .then(entries => setEntries(entries))
+            .then(() => {
+                const now = new Date().getTime();
+                const elapsed = now - startTime;
+                console.log(`fetched from blob cache in ${elapsed}ms`);
+            })
+            .then(() => PostDao.getCachingPostDao().getEntries())
+            .then(entries => entries.slice(0, pageSize))
+            .then(entries => setEntries(entries))
+            .then(() => {
+                const now = new Date().getTime();
+                const elapsed = now - startTime;
+                console.log(`fetched from api in ${elapsed}ms`);
+            })
+            .catch((e) => console.error(e));
+    }, []);
+
     if (entries.length) {
         return (
             <Fragment>
