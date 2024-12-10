@@ -72,6 +72,10 @@
                 padding-top: var(--theme-container-padding-large);
                 padding-bottom: var(--theme-container-padding-large);
 
+                &:last-child {
+                    border: none;
+                }
+
                 .searchResultTitle {
                     display: none;
                 }

@@ -23,7 +23,7 @@ export default function SearchResults({ pageSize = 5 }) {
     const results = searchContext.getSearchResults();
 
     return (
-        <div className={styles.searchResults}>
+        <div className={styles.searchResults} onClick={() => searchContext.showSearchUi(false)}>
             {results.length == 0 && (
                 <EmptySearchResult/>
             )}

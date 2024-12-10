@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import allEntries from './mock-entries';
+import search from './SearchImplementation'
 
 function extractText(post) {
     const div = document.createElement('div');
@@ -50,23 +51,6 @@ export default function SearchContext({ children }) {
         }
     };
 
-    /**
-     * Returns an array of search results: { post, text }
-     *
-     * Matches if the text contains all the tokens.
-     */
-    const search = () => {
-        const tokenMatchers = searchTerms
-            .split(/\s+/)
-            .map(t => new RegExp(t, 'i'))
-        const results = index.filter(result => tokenMatchers.every(matcher => matcher.test(result.text)));
-        const typeAheadSuggestion = 'suggestion'; // TODO: implement this
-        return {
-            typeAheadSuggestion,
-            results,
-        }
-    }
-
     useEffect(() => {
         console.log('SearchContext: binding global key listener');
         document.addEventListener('keyup', onKeyUp);
@@ -80,7 +64,7 @@ export default function SearchContext({ children }) {
 
     useEffect(() => {
         if (searchTerms) {
-            const { results, typeAheadSuggestion } = search();
+            const { results, typeAheadSuggestion } = search(searchTerms, index);
             setSearchResults(results);
             setTypeAheadSuggestion(typeAheadSuggestion);
         } else {
