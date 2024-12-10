@@ -9,10 +9,10 @@
  */
 export default function search(searchTerms, candidates) {
     const startTime = new Date().getTime();
-    const searchTokens = searchTerms.split(/\s+/);
+    const searchTokens = searchTerms.split(/\s+/).filter(t => t);
     const lastToken = searchTokens[searchTokens.length - 1];
-    const tokenMatchers = searchTokens.map(t => new RegExp(`\\b[\\w-]*${t}[\\w-]*\\b`, 'ig'));
-    const lastTokenMatcher = new RegExp(`\\b${lastToken}[\\w-]*\\b`, 'ig');
+    const tokenMatchers = searchTokens.map(t => new RegExp(`\\b(?=\\w{3})[\\w-]*${t}[\\w-]*\\b`, 'ig'));
+    const lastTokenMatcher = new RegExp(`\\b(?=\\w{3})${lastToken}[\\w-]*\\b`, 'ig');
 
     const matchCounts = {};
     const results = [];
@@ -40,11 +40,13 @@ export default function search(searchTerms, candidates) {
 }
 
 function suggestCompletion(searchTerms, matchCounts) {
-    let lastTerm = searchTerms.split(/\s+/).reverse()[0];
+    const searchTokens = searchTerms.split(/\s+/);
+    const lastTerm = searchTokens[searchTokens.length - 1];
     let max = 0;
     let completion = '';
     Object.keys(matchCounts)
         .filter(match => match.startsWith(lastTerm))
+        .filter(match => searchTokens.indexOf(match) === -1)
         .forEach(match => {
             const count = matchCounts[match];
             if (count > max) {

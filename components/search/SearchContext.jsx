@@ -3,6 +3,8 @@ import allEntries from './mock-entries';
 import search from './SearchImplementation'
 import LruCache from "@/lib/cache/LruCache";
 
+const MIN_SEARCH_TERM_LENGTH = 3;
+
 function extractText(post) {
     const div = document.createElement('div');
     div.innerHTML = [
@@ -72,7 +74,10 @@ export default function SearchContext({ children }) {
     }, []);
 
     useEffect(() => {
-        if (false && searchTerms && resultsCache.get(searchTerms)) {
+        if (!searchTerms || searchTerms.length < MIN_SEARCH_TERM_LENGTH) {
+            setSearchResults([]);
+            setCompletion('');
+        } else if (searchTerms && resultsCache.get(searchTerms)) {
             const { results, completion } = resultsCache.get(searchTerms);
             setSearchResults(results);
             setCompletion(completion);
@@ -81,9 +86,6 @@ export default function SearchContext({ children }) {
             setSearchResults(results.results);
             setCompletion(results.completion);
             cacheResults(searchTerms, results);
-        } else {
-            setSearchResults([]);
-            setCompletion('');
         }
     }, [searchTerms]);
 
