@@ -107,9 +107,16 @@
                     display: none;
                 }
 
-                .searchResultMatchedText {
+                .searchResultText {
                     max-height: 3em;
                     overflow: hidden;
+
+                    .resultTokenMatch {
+                        font-weight: bold;
+                        background-color: chartreuse;
+                    }
+
+
                 }
             }
         }
