@@ -17,9 +17,10 @@ function EmptySearchResult() {
  * @param pageSize: number
  * @returns {JSX.Element}
  */
-export default function SearchResults({ searchTerms = '', results = [], pageSize = 5 }) {
+export default function SearchResults({ pageSize = 5 }) {
     const searchContext = useSearchContext();
     const terms = searchContext.getSearchTerms();
+    const results = searchContext.getSearchResults();
 
     return (
         <div className={styles.searchResults}>
