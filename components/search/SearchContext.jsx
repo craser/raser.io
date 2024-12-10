@@ -27,6 +27,7 @@ export default function SearchContext({ children }) {
     const [isUiVisible, setIsUiVisible] = useState(false);
     const [searchTerms, setSearchTerms] = useState('');
     const [searchResults, setSearchResults] = useState([])
+    const [typeAheadSuggestion, setTypeAheadSuggestion] = useState('');
 
     const context = {
         showSearchUi: (show) => {
@@ -40,6 +41,7 @@ export default function SearchContext({ children }) {
         },
         getSearchTerms: () => searchTerms,
         getSearchResults: () => [...searchResults],
+        getTypeAheadSuggestion: () => typeAheadSuggestion,
     };
 
     const onKeyUp = (e) => {
@@ -57,7 +59,12 @@ export default function SearchContext({ children }) {
         const tokenMatchers = searchTerms
             .split(/\s+/)
             .map(t => new RegExp(t, 'i'))
-        return index.filter(result => tokenMatchers.every(matcher => matcher.test(result.text)));
+        const results = index.filter(result => tokenMatchers.every(matcher => matcher.test(result.text)));
+        const typeAheadSuggestion = 'not yet implemented';
+        return {
+            typeAheadSuggestion,
+            results,
+        }
     }
 
     useEffect(() => {
@@ -73,10 +80,12 @@ export default function SearchContext({ children }) {
 
     useEffect(() => {
         if (searchTerms) {
-            const newResults = search();
-            setSearchResults(newResults);
+            const { results, typeAheadSuggestion } = search();
+            setSearchResults(results);
+            setTypeAheadSuggestion(typeAheadSuggestion);
         } else {
             setSearchResults([]);
+            setTypeAheadSuggestion('I want to be an Air Force Ranger!'); // FIXME... obviously
         }
     }, [searchTerms]);
 

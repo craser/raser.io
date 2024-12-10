@@ -2,8 +2,9 @@ import styles from './Search.module.scss'
 import React, { useEffect, useRef } from 'react';
 import { useSearchContext } from "@/components/search/SearchContext";
 
-export default function SearchInput({ setTerms, typeAheadText = '' }) {
+export default function SearchInput(props) {
     const searchContext = useSearchContext();
+    const typeAheadSuggestion = searchContext.getTypeAheadSuggestion();
     const inputRef = useRef(null);
     const onKeyUp = (e) => {
         e.preventDefault();
@@ -18,8 +19,8 @@ export default function SearchInput({ setTerms, typeAheadText = '' }) {
 
     return (
         <div className={styles.searchInput}>
-            <input ref={inputRef} placeholder={'Search'} onKeyUp={onKeyUp} />
-            <div className={styles.typeAhead}>{typeAheadText}</div>
+            <div className={styles.typeAhead}>{typeAheadSuggestion}</div>
+            <input ref={inputRef} placeholder={'I want to be'} onKeyUp={onKeyUp} />
         </div>
     );
 }

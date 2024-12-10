@@ -28,17 +28,26 @@
 
 
         .searchInput {
+            position: relative;
+            font-size: 3em;
+            z-index: 1;
+            color: black;
+
             input {
                 border: none;
                 outline: none;
-                background-color: purple;
                 width: 100%;
-                font-size: 3em;
+                font-size: inherit;
+                padding: 0;
+                background-color: transparent;
             }
 
-            input.typeAhead {
-
-
+            .typeAhead {
+                color: var(--theme-color-typeahead-suggestion);
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: -1; /* BEHIND actual input */
             }
 
         }
