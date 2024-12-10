@@ -8,7 +8,18 @@ export default function SearchInput(props) {
     const inputRef = useRef(null);
     const onKeyUp = (e) => {
         e.preventDefault();
+        // listen for tab
+        console.log({ keyup: e });
         searchContext.setSearchTerms(inputRef.current.value);
+    }
+
+    const onKeyDown = (e) => {
+        console.log({ keydown: e });
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            inputRef.current.value = typeAheadSuggestion;
+            searchContext.setSearchTerms(typeAheadSuggestion);
+        }
     }
 
     useEffect(() => {
@@ -20,7 +31,7 @@ export default function SearchInput(props) {
     return (
         <div className={styles.searchInput}>
             <div className={styles.typeAhead}>{typeAheadSuggestion}</div>
-            <input ref={inputRef} placeholder={'I want to be'} onKeyUp={onKeyUp} />
+            <input ref={inputRef} placeholder={'I want to be'} onKeyUp={onKeyUp} onKeyDown={onKeyDown} />
         </div>
     );
 }

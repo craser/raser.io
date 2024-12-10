@@ -60,7 +60,7 @@ export default function SearchContext({ children }) {
             .split(/\s+/)
             .map(t => new RegExp(t, 'i'))
         const results = index.filter(result => tokenMatchers.every(matcher => matcher.test(result.text)));
-        const typeAheadSuggestion = 'not yet implemented';
+        const typeAheadSuggestion = 'suggestion'; // TODO: implement this
         return {
             typeAheadSuggestion,
             results,
