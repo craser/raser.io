@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import allEntries from './mock-entries';
 import search from './SearchImplementation'
+import LruCache from "@/lib/cache/LruCache";
 
 function extractText(post) {
     const div = document.createElement('div');
@@ -24,6 +25,7 @@ export function useSearchContext() {
 }
 
 export default function SearchContext({ children }) {
+    const [resultsCache, setResultsCache] = useState(new LruCache(10, { useLocalStorage: false }));
     const [index, setIndex] = useState([]);
     const [isUiVisible, setIsUiVisible] = useState(false);
     const [searchTerms, setSearchTerms] = useState('');
@@ -51,6 +53,13 @@ export default function SearchContext({ children }) {
         }
     };
 
+    const cacheResults = (terms, results) => {
+        setResultsCache((cache) => {
+            cache.put(terms, results);
+            return cache;
+        });
+    }
+
     useEffect(() => {
         console.log('SearchContext: binding global key listener');
         document.addEventListener('keyup', onKeyUp);
@@ -63,10 +72,15 @@ export default function SearchContext({ children }) {
     }, []);
 
     useEffect(() => {
-        if (searchTerms) {
-            const { results, completion } = search(searchTerms, index);
+        if (false && searchTerms && resultsCache.get(searchTerms)) {
+            const { results, completion } = resultsCache.get(searchTerms);
             setSearchResults(results);
             setCompletion(completion);
+        } else if (searchTerms) {
+            const results = search(searchTerms, index);
+            setSearchResults(results.results);
+            setCompletion(results.completion);
+            cacheResults(searchTerms, results);
         } else {
             setSearchResults([]);
             setCompletion('');

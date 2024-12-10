@@ -10,8 +10,9 @@
 export default function search(searchTerms, candidates) {
     const startTime = new Date().getTime();
     const searchTokens = searchTerms.split(/\s+/);
+    const lastToken = searchTokens[searchTokens.length - 1];
     const tokenMatchers = searchTokens.map(t => new RegExp(`\\b[\\w-]*${t}[\\w-]*\\b`, 'ig'));
-    const lastTokenMatcher = tokenMatchers[tokenMatchers.length - 1];
+    const lastTokenMatcher = new RegExp(`\\b${lastToken}[\\w-]*\\b`, 'ig');
 
     const matchCounts = {};
     const results = [];
@@ -50,7 +51,7 @@ function suggestCompletion(searchTerms, matchCounts) {
                 max = count;
                 completion = match.substring(lastTerm.length);
             } else if (count === max && match < completion) { // FIXME: potentially expensive
-                completion = match;
+                completion = match.substring(lastTerm.length);
             }
         });
     return completion;
