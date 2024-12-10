@@ -17,7 +17,6 @@ export default function Search(props) {
         console.log({ key: e });
         if (e.keyCode === 27) {
             searchContext.showSearchUi(false);
-            searchContext.setSearchTerms('');
         } else if (e.code === 'Escape') {
             searchContext.showSearchUi(false);
         }

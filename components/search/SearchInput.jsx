@@ -18,7 +18,6 @@ export default function SearchInput(props) {
         if (e.key === 'Tab') {
             e.preventDefault();
             inputRef.current.value += completion;
-            searchContext.setSearchTerms(completion);
         }
     }
 
