@@ -1,18 +1,57 @@
 /**
- * Returns an array of search results: { post, text }
+ * Returns an object:
+ * {
+ *     results: Array of { post, text }
+ *     typeAheadSuggestion: recommended text completion
+ * }
  *
  * Matches if the text contains all the tokens.
  */
 export default function search(searchTerms, candidates) {
-    const tokenMatchers = searchTerms
-        .split(/\s+/)
-        .map(t => new RegExp(`\\b${t}`, 'i'));
+    const startTime = new Date().getTime();
+    const searchTokens = searchTerms.split(/\s+/);
+    const tokenMatchers = searchTokens.map(t => new RegExp(`\\b[\\w-]*${t}[\\w-]*\\b`, 'ig'));
+    const lastTokenMatcher = tokenMatchers[tokenMatchers.length - 1];
 
+    const matchCounts = {};
+    const results = [];
 
-    const results = candidates.filter(result => tokenMatchers.every(matcher => matcher.test(result.text)));
-    const typeAheadSuggestion = 'suggestion'; // TODO: implement this
+    candidates.forEach(candidate => {
+        let include = tokenMatchers.every(matcher => matcher.test(candidate.text));
+        if (include) {
+            results.push(candidate);
+            candidate.text.replaceAll(lastTokenMatcher, (match) => {
+                matchCounts[match] = (matchCounts[match] || 0) + 1;
+            });
+        }
+    });
+
+    const completion = suggestCompletion(searchTerms, matchCounts);
+    console.debug(`search completed in ${new Date().getTime() - startTime}ms`, {
+        searchTerms,
+        completion,
+        results: results.length
+    });
     return {
-        typeAheadSuggestion,
+        completion,
         results,
     }
+}
+
+function suggestCompletion(searchTerms, matchCounts) {
+    let lastTerm = searchTerms.split(/\s+/).reverse()[0];
+    let max = 0;
+    let completion = '';
+    Object.keys(matchCounts)
+        .filter(match => match.startsWith(lastTerm))
+        .forEach(match => {
+            const count = matchCounts[match];
+            if (count > max) {
+                max = count;
+                completion = match.substring(lastTerm.length);
+            } else if (count === max && match < completion) { // FIXME: potentially expensive
+                completion = match;
+            }
+        });
+    return completion;
 }

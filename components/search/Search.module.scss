@@ -1,3 +1,12 @@
+.searchBackdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    width: 100vw;
+}
+
 /**
  * search container anchors the interface on the page & provides a container element
  */
@@ -15,16 +24,16 @@
      */
     .searchInterface {
         background-color: var(--theme-color-content-text-bg);
-        border-radius: var(--theme-large-border-radius);
+        border-radius: var(--theme-border-radius-large);
         box-shadow: #111 9px 15px 20px;
         height: fit-content;
         left: 0;
         min-height: 40vh;
-        padding: var(--theme-container-padding-large);
         position: absolute;
         top: 0;
-        width: calc(100% - (2 * var(--theme-container-padding-large)));
+        width: 100%;
         z-index: 1;
+        overflow: hidden;
 
 
         .searchInput {
@@ -32,39 +41,53 @@
             font-size: 3em;
             z-index: 1;
             color: black;
+            background: var(--theme-gradient-neon);
+
+            input, .typeAhead {
+                font-size: inherit;
+                padding: var(--theme-container-padding-large);
+                text-wrap: nowrap;
+            }
 
             input {
                 border: none;
                 outline: none;
                 width: 100%;
                 font-size: inherit;
-                padding: 0;
                 background-color: transparent;
             }
 
             .typeAhead {
-                color: var(--theme-color-typeahead-suggestion);
                 position: absolute;
                 top: 0;
                 left: 0;
                 z-index: -1; /* BEHIND actual input */
+
+                .existingQuery {
+                    color: transparent;
+                }
+
+                .suggestedCompletion {
+                    color: var(--theme-color-typeahead-suggestion);
+                }
             }
 
         }
 
         .searchResults {
             background-color: var(--theme-color-content-text-bg);
+            padding: var(--theme-container-padding-large);
 
             .emptySearchResult {
                 font-size: 11em;
                 color: tan;
 
                 background: #CE00A0;
-                background: -webkit-linear-gradient(top, #ff00c6 0%, #BA008B 50%, #9B00C5 100%);
+                background: var(--theme-gradient-neon);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
 
-                scale: calc(100% / 2);
+                line-height: 0.8em;
             }
 
             .searchResult {

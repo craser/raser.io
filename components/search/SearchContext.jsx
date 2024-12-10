@@ -28,7 +28,7 @@ export default function SearchContext({ children }) {
     const [isUiVisible, setIsUiVisible] = useState(false);
     const [searchTerms, setSearchTerms] = useState('');
     const [searchResults, setSearchResults] = useState([])
-    const [typeAheadSuggestion, setTypeAheadSuggestion] = useState('');
+    const [completion, setCompletion] = useState('');
 
     const context = {
         showSearchUi: (show) => {
@@ -42,7 +42,7 @@ export default function SearchContext({ children }) {
         },
         getSearchTerms: () => searchTerms,
         getSearchResults: () => [...searchResults],
-        getTypeAheadSuggestion: () => typeAheadSuggestion,
+        getCompletion: () => completion,
     };
 
     const onKeyUp = (e) => {
@@ -64,12 +64,12 @@ export default function SearchContext({ children }) {
 
     useEffect(() => {
         if (searchTerms) {
-            const { results, typeAheadSuggestion } = search(searchTerms, index);
+            const { results, completion } = search(searchTerms, index);
             setSearchResults(results);
-            setTypeAheadSuggestion(typeAheadSuggestion);
+            setCompletion(completion);
         } else {
             setSearchResults([]);
-            setTypeAheadSuggestion('I want to be an Air Force Ranger!'); // FIXME... obviously
+            setCompletion('');
         }
     }, [searchTerms]);
 

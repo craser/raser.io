@@ -27,13 +27,18 @@ export default function Search(props) {
     }, [contextUiVisible]);
 
     return (
-        <div className={styles.searchContainer} onKeyUp={onKeyUp}>
+        <>
             {uiVisible &&
-                <div className={styles.searchInterface}>
-                    <SearchInput />
-                    <SearchResults pageSize={10} />
-                </div>
+                <div className={styles.searchBackdrop} onClick={() => searchContext.showSearchUi(false)}></div>
             }
-        </div>
+            <div className={styles.searchContainer} onKeyUp={onKeyUp}>
+                {uiVisible &&
+                    <div className={styles.searchInterface}>
+                        <SearchInput/>
+                        <SearchResults pageSize={10}/>
+                    </div>
+                }
+            </div>
+        </>
     )
 }

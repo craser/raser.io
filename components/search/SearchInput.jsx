@@ -4,7 +4,7 @@ import { useSearchContext } from "@/components/search/SearchContext";
 
 export default function SearchInput(props) {
     const searchContext = useSearchContext();
-    const typeAheadSuggestion = searchContext.getTypeAheadSuggestion();
+    const completion = searchContext.getCompletion();
     const inputRef = useRef(null);
     const onKeyUp = (e) => {
         e.preventDefault();
@@ -17,8 +17,8 @@ export default function SearchInput(props) {
         console.log({ keydown: e });
         if (e.key === 'Tab') {
             e.preventDefault();
-            inputRef.current.value = typeAheadSuggestion;
-            searchContext.setSearchTerms(typeAheadSuggestion);
+            inputRef.current.value += completion;
+            searchContext.setSearchTerms(completion);
         }
     }
 
@@ -30,7 +30,10 @@ export default function SearchInput(props) {
 
     return (
         <div className={styles.searchInput}>
-            <div className={styles.typeAhead}>{typeAheadSuggestion}</div>
+            <div className={styles.typeAhead}>
+                <span className={styles.existingQuery}>{inputRef.current && inputRef.current.value}</span>
+                <span className={styles.suggestedCompletion}>{completion}</span>
+            </div>
             <input ref={inputRef} placeholder={'search...'} onKeyUp={onKeyUp} onKeyDown={onKeyDown} />
         </div>
     );
