@@ -31,7 +31,7 @@ export default function SearchInput(props) {
     return (
         <div className={styles.searchInput}>
             <div className={styles.typeAhead}>{typeAheadSuggestion}</div>
-            <input ref={inputRef} placeholder={'I want to be'} onKeyUp={onKeyUp} onKeyDown={onKeyDown} />
+            <input ref={inputRef} placeholder={'search...'} onKeyUp={onKeyUp} onKeyDown={onKeyDown} />
         </div>
     );
 }
