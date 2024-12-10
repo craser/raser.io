@@ -48,6 +48,18 @@ export default function SearchContext({ children }) {
         }
     };
 
+    /**
+     * Returns an array of search results: { post, text }
+     *
+     * Matches if the text contains all the tokens.
+     */
+    const search = () => {
+        const tokenMatchers = searchTerms
+            .split(/\s+/)
+            .map(t => new RegExp(t, 'i'))
+        return index.filter(result => tokenMatchers.every(matcher => matcher.test(result.text)));
+    }
+
     useEffect(() => {
         console.log('SearchContext: binding global key listener');
         document.addEventListener('keyup', onKeyUp);
@@ -60,8 +72,12 @@ export default function SearchContext({ children }) {
     }, []);
 
     useEffect(() => {
-        const bogus = searchTerms.length % 5;
-        setSearchResults([index[bogus]]);
+        if (searchTerms) {
+            const newResults = search();
+            setSearchResults(newResults);
+        } else {
+            setSearchResults([]);
+        }
     }, [searchTerms]);
 
     return (
