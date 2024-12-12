@@ -5,6 +5,7 @@ import { useSearchContext } from "@/components/search/SearchContext";
 export default function SearchInput(props) {
     const searchContext = useSearchContext();
     const completion = searchContext.getCompletion();
+    const searchTerms = searchContext.getSearchTerms();
     const inputRef = useRef(null);
     const onKeyUp = (e) => {
         e.preventDefault();
@@ -24,13 +25,14 @@ export default function SearchInput(props) {
     useEffect(() => {
         if (inputRef && inputRef.current) {
             inputRef.current.focus();
+            inputRef.current.value = searchTerms;
         }
     }, []);
 
     return (
         <div className={styles.searchInput}>
             <div className={styles.typeAhead}>
-                <span className={styles.existingQuery}>{inputRef.current && inputRef.current.value}</span>
+                <span className={styles.existingQuery}>{inputRef.current?.value || searchTerms}</span>
                 <span className={styles.suggestedCompletion}>{completion}</span>
             </div>
             <input ref={inputRef} placeholder={'search...'} onKeyUp={onKeyUp} onKeyDown={onKeyDown} />

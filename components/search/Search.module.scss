@@ -40,8 +40,9 @@
             position: relative;
             font-size: 3em;
             z-index: 1;
-            color: black;
-            background: var(--theme-gradient-neon);
+            color: var(--theme-color-text);
+            background: var(--theme-color-content-text-bg);
+            border-bottom: 1px solid var(--theme-color-border);
 
             input, .typeAhead {
                 font-size: inherit;
@@ -82,8 +83,7 @@
                 font-size: 11em;
                 color: tan;
 
-                background: #CE00A0;
-                background: var(--theme-gradient-neon);
+                background-image: url(/img/gold-rush-desktop.jpg);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
 
@@ -94,6 +94,7 @@
                 border-bottom: 1px solid var(--theme-color-border-light);
                 padding-top: var(--theme-container-padding-large);
                 padding-bottom: var(--theme-container-padding-large);
+                cursor: pointer;
 
                 &:last-child {
                     border: none;
@@ -112,11 +113,8 @@
                     overflow: hidden;
 
                     .resultTokenMatch {
-                        font-weight: bold;
                         background-color: chartreuse;
                     }
-
-
                 }
             }
         }
