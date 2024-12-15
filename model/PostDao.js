@@ -101,7 +101,7 @@ export default class PostDao {
             });
     }
 
-    async getLatestEntries(numEntries = 100) {
+    async getSearchStubs(numEntries = 100) {
         let url = this.#config.getEndpoint('entries.bulk', { numEntries });
         return this.#cleanFetch(url)
             .then(response => response.json())

@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import allEntries from './mock-entries';
 import search from './SearchImplementation'
 import LruCache from "@/lib/cache/LruCache";
+import PostDao from "@/model/PostDao";
 
 const MIN_SEARCH_TERM_LENGTH = 3;
 
@@ -68,9 +68,15 @@ export default function SearchContext({ children }) {
     }, [])
 
     useEffect(() => {
-        let newIndex = allEntries.map(post => ({ post, text: extractText(post) }));
-        console.log({ index: newIndex });
-        setIndex(newIndex);
+        const start = new Date().getTime();
+        new PostDao().getSearchStubs()
+            .then(entries => entries.map(post => ({ post, text: extractText(post) })))
+            .then(index => {
+                console.log(`fetched search stubs in ${new Date().getTime() - start}ms`)
+                console.log({ index });
+                return index;
+            })
+            .then(setIndex);
     }, []);
 
     useEffect(() => {
@@ -87,7 +93,7 @@ export default function SearchContext({ children }) {
             setCompletion(results.completion);
             cacheResults(searchTerms, results);
         }
-    }, [searchTerms]);
+    }, [searchTerms, index.length]);
 
     return (
         <SearchContextObj.Provider value={context}>

@@ -1,3 +1,28 @@
+function compileSearchMetaData(candidates, tokenMatchers, matchCounts) {
+    const results = candidates.reduce((results, post) => {
+        let found = false;
+        const result = tokenMatchers.reduce((result, re) => {
+            post.text.replaceAll(re, (match) => {
+                found = true;
+                result.matches[match] = (result.matches[match] || 0) + 1;
+                result.numMatches++;
+                matchCounts[match] = (matchCounts[match] || 0) + 1;  // aggregate for suggested completion
+            });
+            return result;
+        }, { post, matches: {}, numMatches: 0 });
+        if (found) {
+            results.push(result);
+        }
+        return results;
+    }, []);
+    return results;
+}
+
+function metaComparator(a, b) {
+    return b.numMatches - a.numMatches;
+};
+
+
 /**
  * Returns an object:
  * {
@@ -10,33 +35,36 @@
 export default function search(searchTerms, candidates) {
     const startTime = new Date().getTime();
     const searchTokens = searchTerms.split(/\s+/).filter(t => t);
-    const lastToken = searchTokens[searchTokens.length - 1];
     const tokenMatchers = searchTokens.map(t => new RegExp(`\\b(?=\\w{3})[\\w-]*${t}[\\w-]*\\b`, 'ig'));
-    const lastTokenMatcher = new RegExp(`\\b(?=\\w{3})${lastToken}[\\w-]*\\b`, 'ig');
-
-    const matchCounts = {};
-    const results = [];
-
-    candidates.forEach(candidate => {
-        let include = tokenMatchers.every(matcher => matcher.test(candidate.text));
-        if (include) {
-            results.push(candidate);
-            candidate.text.replaceAll(lastTokenMatcher, (match) => {
-                matchCounts[match] = (matchCounts[match] || 0) + 1;
-            });
-        }
-    });
-
+    const matchCounts = {}; // aggregate
+    const meta = compileSearchMetaData(candidates, tokenMatchers, matchCounts)
+        .sort(metaComparator);
     const completion = suggestCompletion(searchTerms, matchCounts);
     console.debug(`search completed in ${new Date().getTime() - startTime}ms`, {
         searchTerms,
         completion,
-        results: results.length
+        results: meta.length
     });
     return {
         completion,
-        results,
+        results: meta.map(r => r.post),
     }
+}
+
+/**
+ * Returns an object that indicates how many of the tokenMatchers matched, and how many times each term matched.
+ *
+ * @param tokenMatchers
+ * @param candidate
+ * @return { [term]: count }
+ */
+function getMatchInfo(tokenMatchers, candidate) {
+    const info = {};
+    tokenMatchers.forEach(re => {
+        candidate.text.replaceAll(re, (match) => {
+            info[match] = (info[match] || 0) + 1;
+        });
+    });
 }
 
 function suggestCompletion(searchTerms, matchCounts) {

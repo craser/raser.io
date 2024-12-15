@@ -46,7 +46,7 @@
 
             input, .typeAhead {
                 font-size: inherit;
-                padding: var(--theme-container-padding-large);
+                padding: var(--theme-container-padding-lg);
                 text-wrap: nowrap;
             }
 
@@ -77,7 +77,7 @@
 
         .searchResults {
             background-color: var(--theme-color-content-text-bg);
-            padding: var(--theme-container-padding-large);
+            padding: var(--theme-container-padding-lg);
 
             .emptySearchResult {
                 font-size: 11em;
@@ -92,8 +92,8 @@
 
             .searchResult {
                 border-bottom: 1px solid var(--theme-color-border-light);
-                padding-top: var(--theme-container-padding-large);
-                padding-bottom: var(--theme-container-padding-large);
+                padding-top: var(--theme-container-padding-lg);
+                padding-bottom: var(--theme-container-padding-lg);
                 cursor: pointer;
 
                 &:last-child {
@@ -101,16 +101,41 @@
                 }
 
                 .searchResultTitle {
-                    display: none;
+                    font-weight: bold;
                 }
 
                 .searchResultDate {
                     display: none;
                 }
 
+                .searchResultMatchedTerms {
+                    &:before {
+                        content: 'matches:';
+                        color: var(--theme-color-subtext);
+                        padding: var(--theme-container-padding-xs);
+                        padding-right: 0.2em;
+                        padding-left: 0;
+                    }
+
+                    .searchResultTerm {
+                        background: var(--theme-gradient-neon);
+                        padding: var(--theme-container-padding-xs);
+                        border-radius: var(--theme-container-padding-xs);
+
+                    }
+                }
+
                 .searchResultText {
                     max-height: 3em;
                     overflow: hidden;
+                    display: block;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+
+                    &:before {
+                        content: '...';
+                    }
+
 
                     .resultTokenMatch {
                         background-color: chartreuse;
