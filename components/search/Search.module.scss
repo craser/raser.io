@@ -48,6 +48,7 @@
                 font-size: inherit;
                 padding: var(--theme-container-padding-lg);
                 text-wrap: nowrap;
+                max-width: calc(100% - (2 * var(--theme-container-padding-lg)));
             }
 
             input {
