@@ -33,9 +33,9 @@ export default function SearchInput(props) {
         <div className={styles.searchInput}>
             <div className={styles.typeAhead}>
                 <span className={styles.existingQuery}>{inputRef.current?.value || searchTerms}</span>
-                <span className={styles.suggestedCompletion}>{completion}</span>
+                <span data-testid="search-completion" className={styles.suggestedCompletion}>{completion}</span>
             </div>
-            <input ref={inputRef} placeholder={'search...'} onKeyUp={onKeyUp} onKeyDown={onKeyDown} />
+            <input data-testid="search-input" ref={inputRef} placeholder={'search...'} onKeyUp={onKeyUp} onKeyDown={onKeyDown} />
         </div>
     );
 }

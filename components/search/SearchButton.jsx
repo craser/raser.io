@@ -12,6 +12,6 @@ export default function SearchButton(props) {
 
     // FIXME: Using an <a> here to piggyback on nav styling.
     return (
-        <a onClick={showSearchUi}>Search</a>
+        <a data-testid="search-button" onClick={showSearchUi}>Search</a>
     );
 }

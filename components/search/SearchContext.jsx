@@ -11,7 +11,7 @@ function extractText(post) {
         post.intro,
         post.body,
     ].filter(t => t).join(' ');
-    const stripped = div.innerText;
+    const stripped = div.innerText || div.innerHTML;
     const sanitized = stripped.replaceAll(/\s+/g, ' ');
     return sanitized;
 }

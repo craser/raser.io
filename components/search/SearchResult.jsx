@@ -14,7 +14,7 @@ export default function SearchResult({ terms, post, text }) {
     }
 
     return (
-        <div className={styles.searchResult} onClick={go}>
+        <div data-testclass="search-result" className={styles.searchResult} onClick={go}>
             <div className={styles.searchResultTitle}>{post.title}</div>
             <div className={styles.searchResultDate}>{post.datePosted}</div>
             <SearchResultMatchedTerms terms={terms} text={text} />

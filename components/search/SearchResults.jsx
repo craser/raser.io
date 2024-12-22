@@ -23,15 +23,15 @@ export default function SearchResults({ pageSize = 5 }) {
     const results = searchContext.getSearchResults();
 
     return (
-        <div className={styles.searchResults}>
-            {(terms.length > 0) && (results.length == 0) && (
+        <div data-testid="search-results" className={styles.searchResults}>
+            {(terms.length > 0) && (results.length === 0) && (
                 <SearchResultPlaceHolder text={"no results :("}/>
             )}
             {(terms.length === 0) && (results.length === 0) && (
                 <SearchResultPlaceHolder text={"enter search terms"} />
             )}
             {results.map(({ post, text }, i) => (
-                <SearchResult key={i} post={post} terms={terms} text={text}/>
+                <SearchResult data-testclass="search-result" key={i} post={post} terms={terms} text={text}/>
             ))}
         </div>
     );

@@ -33,7 +33,7 @@ export default function Search(props) {
             }
             <div className={styles.searchContainer} onKeyUp={onKeyUp}>
                 {uiVisible &&
-                    <div className={styles.searchInterface}>
+                    <div data-testid="search-ui" className={styles.searchInterface}>
                         <SearchInput/>
                         <SearchResults pageSize={10}/>
                     </div>

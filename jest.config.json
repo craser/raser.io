@@ -5,12 +5,21 @@
     "**/?(*.)+(spec|test).[jt]s?(x)"
   ],
   "testEnvironment": "jest-environment-jsdom",
-  "moduleFileExtensions": ["js", "jsx"],
+  "moduleFileExtensions": [
+    "js",
+    "jsx"
+  ],
   "modulePaths": [
     "<rootDir>"
   ],
   "moduleNameMapper": {
     "@/(.*)$": "<rootDir>/$1",
-    "^/(.*)$": "<rootDir>/$1"
+    "^/(.*)$": "<rootDir>/$1",
+    "\\.module\\.scss$": "identity-obj-proxy",
+    "\\.scss$": "<rootDir>/__mocks__/styleMock.js"
+  },
+  "transform": {
+    "^.+\\.jsx?$": "babel-jest",
+    "^.+\\.module\\.(css|sass|scss)$": "jest-css-modules-transform"
   }
 }
