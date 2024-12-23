@@ -5,17 +5,17 @@
 
 import { act, render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import SearchContext from "@/components/search/SearchContext";
+import SearchProvider from "@/components/search/SearchProvider";
 import Search from "@/components/search/Search";
 import SearchButton from "@/components/search/SearchButton";
 
 
 async function renderScaffold() {
     return render(
-        <SearchContext>
+        <SearchProvider>
             <SearchButton/>
             <Search/>
-        </SearchContext>
+        </SearchProvider>
     );
 }
 

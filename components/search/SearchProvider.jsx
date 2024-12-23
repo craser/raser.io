@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import search from '@/lib/search/SearchImplementation';
-import { extractText } from '@/lib/search/TextProcessing';
+import search, { toSearchCandidates } from '@/lib/search/SearchImplementation';
 import LruCache from "@/lib/cache/LruCache";
 import PostDao from "@/model/PostDao";
+import { extractText } from "@/lib/search/TextProcessing";
 
 const MIN_SEARCH_TERM_LENGTH = 3;
 
@@ -16,7 +16,7 @@ export function useSearchContext() {
     return useContext(SearchContextObj);
 }
 
-export default function SearchContext({ children }) {
+export default function SearchProvider({ children }) {
     const [resultsCache, setResultsCache] = useState(new LruCache(10, { useLocalStorage: false }));
     const [index, setIndex] = useState([]);
     const [isUiVisible, setIsUiVisible] = useState(false);
@@ -60,7 +60,7 @@ export default function SearchContext({ children }) {
     useEffect(() => {
         const start = new Date().getTime();
         new PostDao().getSearchStubs()
-            .then(entries => entries.map(post => ({ post, text: extractText(post) })))
+            .then(toSearchCandidates)
             .then(index => {
                 console.log(`fetched search stubs in ${new Date().getTime() - start}ms`)
                 console.log({ index });

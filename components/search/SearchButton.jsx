@@ -1,4 +1,4 @@
-import { useSearchContext } from "@/components/search/SearchContext";
+import { useSearchContext } from "@/components/search/SearchProvider";
 
 // TODO: Make styling consistent with other nav items by pulling in nav styling
 

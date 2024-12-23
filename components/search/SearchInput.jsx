@@ -1,6 +1,6 @@
 import styles from './Search.module.scss'
 import React, { useEffect, useRef } from 'react';
-import { useSearchContext } from "@/components/search/SearchContext";
+import { useSearchContext } from "@/components/search/SearchProvider";
 
 export default function SearchInput(props) {
     const searchContext = useSearchContext();

@@ -1,6 +1,6 @@
 import styles from './Search.module.scss'
 import React from "react";
-import { useSearchContext } from "@/components/search/SearchContext";
+import { useSearchContext } from "@/components/search/SearchProvider";
 import { useRouter } from "next/router";
 import { getPostLink } from "@/components/PostLink";
 
