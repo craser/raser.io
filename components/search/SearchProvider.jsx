@@ -1,11 +1,9 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import search, { toSearchCandidates } from '@/lib/search/SearchImplementation';
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import Search, { search, toSearchCandidates } from '@/lib/search/SearchImplementation';
 import LruCache from "@/lib/cache/LruCache";
 import PostDao from "@/model/PostDao";
-import { extractText } from "@/lib/search/TextProcessing";
 
 const MIN_SEARCH_TERM_LENGTH = 3;
-
 
 const SearchContextObj = createContext({
     showSearchUi: (show) => console.log(`(noop) showSearchContext(${show})`),
@@ -23,6 +21,7 @@ export default function SearchProvider({ children }) {
     const [searchTerms, setSearchTerms] = useState('');
     const [searchResults, setSearchResults] = useState([])
     const [completion, setCompletion] = useState('');
+    const searchImpl = useMemo(() => new Search());
 
     const context = {
         showSearchUi: (show) => {

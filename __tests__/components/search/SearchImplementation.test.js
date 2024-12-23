@@ -1,4 +1,4 @@
-import search, { toSearchCandidates } from '@/lib/search/SearchImplementation';
+import Search, { search, toSearchCandidates } from '@/lib/search/SearchImplementation';
 
 import MOCK_STUBS from './MockSearchStubs.json'; // 3 hard-coded mocks to test FUNCTIONALITY
 import SAMPLE_STUBS from './SampleSearchStubs.json'; // 1000 sample entries from prod to test PERFORMANCE
