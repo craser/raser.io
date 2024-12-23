@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import Search, { search, toSearchCandidates } from '@/lib/search/SearchImplementation';
+import Search from '@/lib/search/SearchImplementation';
 import LruCache from "@/lib/cache/LruCache";
 import PostDao from "@/model/PostDao";
 
@@ -59,7 +59,7 @@ export default function SearchProvider({ children }) {
     useEffect(() => {
         const start = new Date().getTime();
         new PostDao().getSearchStubs()
-            .then(toSearchCandidates)
+            .then(stubs => searchImpl.toSearchCandidates(stubs))
             .then(index => {
                 console.log(`fetched search stubs in ${new Date().getTime() - start}ms`)
                 console.log({ index });
@@ -77,7 +77,7 @@ export default function SearchProvider({ children }) {
             setSearchResults(results);
             setCompletion(completion);
         } else if (searchTerms) {
-            const results = search(searchTerms, index);
+            const results = searchImpl.search(searchTerms, index);
             setSearchResults(results.results);
             setCompletion(results.completion);
             cacheResults(searchTerms, results);
