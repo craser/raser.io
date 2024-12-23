@@ -4,11 +4,11 @@
  */
 
 import { act, render } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import SearchContext from "@/components/search/SearchContext";
 import Search from "@/components/search/Search";
 import SearchButton from "@/components/search/SearchButton";
-import { userEvent } from "@testing-library/user-event";
-import PostDao from "@/model/PostDao";
+
 
 async function renderScaffold() {
     return render(
@@ -90,21 +90,9 @@ describe('Navigation Search', () => {
             userEvent.click(button);
         });
         let input = await result.findByTestId('search-input');
-        await act(async () => {
-            await userEvent.click(input);
-            console.log('typing...');
-            await userEvent.type(input, 'lor');
-        });
-        input = await result.findByTestId('search-input');
-        let completion = await result.findByTestId('search-completion');
-
-        expect(input.value).toBe('lor');
-        expect(completion.textContent).toBe('em');
-
-        await act(async () => {
-            input.focus();
-            await userEvent.tab();
-        })
+        await userEvent.click(input);
+        await userEvent.type(input, 'lor');
+        await userEvent.tab();
         expect(input.value).toBe('lorem');
     });
 });

@@ -1,20 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import search from './SearchImplementation'
+import search from '@/lib/search/SearchImplementation';
+import { extractText } from '@/lib/search/TextProcessing';
 import LruCache from "@/lib/cache/LruCache";
 import PostDao from "@/model/PostDao";
 
 const MIN_SEARCH_TERM_LENGTH = 3;
-
-function extractText(post) {
-    const div = document.createElement('div');
-    div.innerHTML = [
-        post.intro,
-        post.body,
-    ].filter(t => t).join(' ');
-    const stripped = div.innerText || div.innerHTML;
-    const sanitized = stripped.replaceAll(/\s+/g, ' ');
-    return sanitized;
-}
 
 
 const SearchContextObj = createContext({
