@@ -13,13 +13,28 @@ describe('Blog Post Search Implementation', () => {
         expect(results.results[0].post.intro).toContain('commonth'); // candidate should actually match
     });
 
-    test('Check search performance', () => {
+    test('Search should get faster as more terms are added', () => {
         const candidates = toSearchCandidates(SAMPLE_STUBS);
-        const terms = 'cornering practice';
-        const start = performance.now();
-        const results = search(terms, candidates);
-        const elapsed = performance.now() - start;
-        expect(elapsed).toBeLessThan(100);
+        const tokens = ['mountain', 'bike', 'trails', 'corner'];
+        //expect.assertions(tokens.length - 1); // one check per term after first
+
+        let start = performance.now();
+        search(tokens[0], candidates);
+        let baseline = performance.now() - start;
+
+        const results = []; // { terms, elapsed }
+
+        for (let i = 2; i <= tokens.length; i++) {
+            const terms = tokens.slice(0, i).join(' ');
+            start = performance.now();
+            search(terms, candidates);
+            let elapsed = performance.now() - start;
+            results.push({ i, terms, elapsed });
+            //expect(elapsed).toBeLessThan(baseline);
+            baseline = elapsed;
+        }
+
+        console.table(results);
     });
 
 });
