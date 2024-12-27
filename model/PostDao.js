@@ -96,16 +96,12 @@ export default class PostDao {
     async getEntries(page = 0) {
         let url = this.#config.getEndpoint('entries.latest', { page });
         return this.#cleanFetch(url).then(response => response.json())
-            .then(posts => {
-                return posts;
-            });
     }
 
     async getSearchStubs(numEntries = 1000) {
         let url = this.#config.getEndpoint('entries.bulk', { numEntries });
         return this.#cleanFetch(url)
-            .then(response => response.json())
-            .catch(e => console.error(e));
+            .then(response => response.json());
     }
 
     async createPost(email, authToken) {

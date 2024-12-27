@@ -5,6 +5,8 @@ import SearchInput from "@/components/search/SearchInput";
 import SearchResults from "@/components/search/SearchResults";
 
 export default function Search(props) {
+
+    // FIXME: This just seems unnecessarily hacky...
     const searchContext = useSearchContext();
     const contextUiVisible = searchContext.isUiVisible();
     const [uiVisible, setUiVisible] = useState(contextUiVisible);

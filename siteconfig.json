@@ -3,7 +3,7 @@
     "postcard": "https://raserio.b-cdn.net/{imageFileName}"
   },
   "api": {
-    "root": "http://localhost:5000",
+    "root": "{NEXT_PUBLIC_API_ROOT}",
     "endpoints": {
       "auth": {
         "login": "/auth/login",

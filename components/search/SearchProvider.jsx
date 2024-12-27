@@ -1,29 +1,25 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import Search from '@/lib/search/SearchImplementation';
-import LruCache from "@/lib/cache/LruCache";
 import PostDao from "@/model/PostDao";
 
 const MIN_SEARCH_TERM_LENGTH = 3;
 
-const SearchContextObj = createContext({
-    showSearchUi: (show) => console.log(`(noop) showSearchContext(${show})`),
-    search: (terms) => console.log(`(noop) search("${terms}")`),
-})
+const SearchContextObj = createContext({})
 
 export function useSearchContext() {
     return useContext(SearchContextObj);
 }
 
 export default function SearchProvider({ children }) {
-    const [resultsCache, setResultsCache] = useState(new LruCache(10, { useLocalStorage: false }));
-    const [index, setIndex] = useState([]);
+    const [isSearchAvailable, setIsSearchAvailable] = useState(true);
     const [isUiVisible, setIsUiVisible] = useState(false);
     const [searchTerms, setSearchTerms] = useState('');
     const [searchResults, setSearchResults] = useState([])
     const [completion, setCompletion] = useState('');
-    const searchImpl = useMemo(() => new Search());
+    const [searchImpl, setSearchImpl] = useState(null);
 
     const context = {
+        isSearchAvailable: () => isSearchAvailable,
         showSearchUi: (show) => {
             console.log(`showSearchUi(${show})`);
             setIsUiVisible(show);
@@ -44,13 +40,6 @@ export default function SearchProvider({ children }) {
         }
     };
 
-    const cacheResults = (terms, results) => {
-        setResultsCache((cache) => {
-            cache.put(terms, results);
-            return cache;
-        });
-    }
-
     useEffect(() => {
         console.log('SearchContext: binding global key listener');
         document.addEventListener('keyup', onKeyUp);
@@ -59,30 +48,29 @@ export default function SearchProvider({ children }) {
     useEffect(() => {
         const start = new Date().getTime();
         new PostDao().getSearchStubs()
-            .then(stubs => searchImpl.toSearchCandidates(stubs))
-            .then(index => {
+            .then(stubs => {
                 console.log(`fetched search stubs in ${new Date().getTime() - start}ms`)
-                console.log({ index });
-                return index;
+                console.log({ stubs: stubs });
+                return stubs;
             })
-            .then(setIndex);
+            .then(stubs => setSearchImpl(new Search(stubs)))
+            .catch((e) => {
+                //console.error('error fetching search stubs', e);
+                setIsSearchAvailable(false);
+                setIsUiVisible(false);
+            });
     }, []);
 
     useEffect(() => {
         if (!searchTerms || searchTerms.length < MIN_SEARCH_TERM_LENGTH) {
             setSearchResults([]);
             setCompletion('');
-        } else if (searchTerms && resultsCache.get(searchTerms)) {
-            const { results, completion } = resultsCache.get(searchTerms);
-            setSearchResults(results);
-            setCompletion(completion);
         } else if (searchTerms) {
-            const results = searchImpl.search(searchTerms, index);
+            const results = searchImpl.search(searchTerms);
             setSearchResults(results.results);
             setCompletion(results.completion);
-            cacheResults(searchTerms, results);
         }
-    }, [searchTerms, index.length]);
+    }, [searchTerms]);
 
     return (
         <SearchContextObj.Provider value={context}>

@@ -8,15 +8,20 @@ import { userEvent } from "@testing-library/user-event";
 import SearchProvider from "@/components/search/SearchProvider";
 import Search from "@/components/search/Search";
 import SearchButton from "@/components/search/SearchButton";
+import PostDao from "@/model/PostDao";
 
 
 async function renderScaffold() {
-    return render(
-        <SearchProvider>
-            <SearchButton/>
-            <Search/>
-        </SearchProvider>
-    );
+    let result;
+    act(() => {
+        result = render(
+            <SearchProvider>
+                <SearchButton/>
+                <Search/>
+            </SearchProvider>
+        );
+    });
+    return result;
 }
 
 jest.mock('next/router', () => {
@@ -94,5 +99,19 @@ describe('Navigation Search', () => {
         await userEvent.type(input, 'lor');
         await userEvent.tab();
         expect(input.value).toBe('lorem');
+    });
+
+
+    test('If search stubs cannot be retrieved, do not show search button or UI.', async () => {
+        new PostDao().getSearchStubs.mockImplementation(() => {
+            return new Promise((k, ek) => {
+                throw new Error('nope!');
+            });
+        });
+        const result = await renderScaffold();
+        let button = await result.queryByTestId('search-button');
+        let ui = await result.queryByTestId('search-ui');
+        expect(button).not.toBeTruthy();
+        expect(ui).not.toBeTruthy();
     });
 });
