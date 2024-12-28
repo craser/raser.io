@@ -71,4 +71,21 @@ describe('SearchTrie', () => {
         expect(values.has(3)).toBe(true);
         expect(values.has(4)).toBe(true);
     })
+
+    it('Should support getValues(key) as shorthand for getNode(key).getValues()', () => {
+       const trie = new SearchTrie();
+       trie.insert('aaa', 1);
+       trie.insert('aaa', 2);
+
+       const nodeValues = trie.getNode('aaa').getValues();
+       const shortValues = trie.getValues('aaa');
+       expect(nodeValues).toEqual(shortValues);
+    });
+
+    it('Should return empty set for getValues on an unmatched key', () => {
+        const trie = new SearchTrie();
+        trie.insert('aaa', 5);
+        expect(trie.getValues('unmatched')).not.toBeNull();
+        expect(trie.getValues('unmatched').size).toBe(0);
+    })
 })

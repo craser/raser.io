@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSearchContext } from "@/components/search/SearchProvider";
 import styles from "./Search.module.scss"
 import SearchInput from "@/components/search/SearchInput";
@@ -8,8 +8,7 @@ export default function Search(props) {
 
     // FIXME: This just seems unnecessarily hacky...
     const searchContext = useSearchContext();
-    const contextUiVisible = searchContext.isUiVisible();
-    const [uiVisible, setUiVisible] = useState(contextUiVisible);
+    const uiVisible = searchContext.isUiVisible();
 
 
     /* Close the Search UI if user hits esc
@@ -23,10 +22,6 @@ export default function Search(props) {
             searchContext.showSearchUi(false);
         }
     }
-
-    useEffect(() => {
-        setUiVisible(contextUiVisible)
-    }, [contextUiVisible]);
 
     return (
         <>

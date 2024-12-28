@@ -9,7 +9,6 @@ export default function SearchInput(props) {
     const inputRef = useRef(null);
     const onKeyUp = (e) => {
         e.preventDefault();
-        // listen for tab
         console.log({ keyup: e });
         setTimeout(() => searchContext.setSearchTerms(inputRef.current.value), 0);
     }

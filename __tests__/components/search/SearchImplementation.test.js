@@ -15,6 +15,19 @@ describe('Blog Post Search Implementation', () => {
         expect(results.completion).toBe('ree');
     });
 
+    test('Should return "commontwo" as the completion', () => {
+        const search = new Search(MOCK_STUBS);
+        const results = search.search('commonone commont');
+        expect(results.completion).toBe('wo');
+    });
+
+    test('Should return empty results for unmatched tokens', () => {
+        const search = new Search(MOCK_STUBS);
+        const results = search.search('nope');
+        expect(results.results).toEqual([]);
+        expect(results.completion).toBe('');
+    })
+
     test('Should match all mock entries', () => {
         const search = new Search(MOCK_STUBS);
         const results = search.search('common');
