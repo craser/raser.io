@@ -6,9 +6,9 @@ import AnalyticsContext from "@/components/analytics/AnalyticsContext";
 import SearchProvider from "@/components/search/SearchProvider";
 
 export default function App({ Component, pageProps }) {
-    const statsigConfig = new SiteConfig().getValue('statsig');
+    const statsigsdkKey = new SiteConfig().getValue('statsig.sdkKey');
     return (
-        <StatsigProvider sdkKey={statsigConfig.sdkKey} user={{ userID: "0000", email: "noone@nowhere.com" }}>
+        <StatsigProvider sdkKey={statsigsdkKey} user={{ userID: "0000", email: "noone@nowhere.com" }}>
             <AnalyticsContext>
                 <AuthenticationContext>
                     <SearchProvider>
