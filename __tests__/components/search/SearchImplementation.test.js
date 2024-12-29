@@ -7,6 +7,35 @@ import { setIntersection } from "@/lib/search/SetUtils"; // 1000 sample entries 
 
 describe('Blog Post Search Implementation', () => {
 
+    test('find stopword candidates', () => {
+        return; // FIXME: DO NOT COMMIT TO CODE REPOSITORY!
+        const search = new Search(SAMPLE_PROD_STUBS);
+        const results = search.search('');
+        expect(results.results.length).toBe(SAMPLE_PROD_STUBS.length);
+        const completion = search.trie.getMostCommonCompletion('');
+    });
+
+    test('Post titles should be searchable', () => {
+        const SEARCHABLE_FIELDS = ['title', 'intro', 'body'];
+        const BLANK_STUB = {
+            "entryId": 101,
+            "datePosted": "2022-06-22T11:00:00.000+00:00",
+            "title": null,
+            "intro": null,
+            "body": null
+        };
+
+        expect.assertions(SEARCHABLE_FIELDS.length);
+        SEARCHABLE_FIELDS.forEach((field) => {
+            const token = `searchable${field}`;
+            let SAMPLE_STUB = { ...BLANK_STUB, [field]: token };
+            const search = new Search([SAMPLE_STUB]); // drop sample stub into list & submit for indexing
+            const results = search.search(token);
+            expect(results.results.length).toBe(1);
+        });
+    });
+
+
     test('Should return only first entry, with "commonthree" as completion', () => {
         const search = new Search(MOCK_STUBS);
         const results = search.search('commonth');
