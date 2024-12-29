@@ -1,4 +1,4 @@
-import Search from '@/lib/search/SearchImplementation';
+import Search, { ENGLISH_STOP_WORDS } from '@/lib/search/SearchImplementation';
 
 import MOCK_STUBS from './MockSearchStubs.json'; // 3 hard-coded mocks to test FUNCTIONALITY
 import SAMPLE_PROD_STUBS from './SampleSearchStubs.json';
@@ -14,6 +14,23 @@ describe('Blog Post Search Implementation', () => {
         expect(results.results[0].post.intro).toContain('commonth'); // candidate should actually match
         expect(results.completion).toBe('ree');
     });
+
+    test('Should ignore stop words', () => {
+        const STUB_WITH_STOPS = [
+            {
+                "entryId": 101,
+                "datePosted": "2022-06-22T11:00:00.000+00:00",
+                "intro": ENGLISH_STOP_WORDS.join(' '),
+                "body": null
+            }
+        ];
+        const search = new Search(STUB_WITH_STOPS);
+        expect.assertions(ENGLISH_STOP_WORDS.length);
+        ENGLISH_STOP_WORDS.forEach((word) => {
+            const results = search.search(word);
+            expect(results.results.length).toBe(0);
+        });
+    })
 
     test('Should return "commontwo" as the completion', () => {
         const search = new Search(MOCK_STUBS);
@@ -70,8 +87,6 @@ describe('Blog Post Search Implementation', () => {
         const search = new Search(SAMPLE_PROD_STUBS);
         const initElapsed = performance.now() - initStart;
         results.push({ i: -1, terms: '(init)', elapsed: initElapsed });
-
-
 
 
         const tokens = ['mountain', 'bike', 'trails', 'corner'];
