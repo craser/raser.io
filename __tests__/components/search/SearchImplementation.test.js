@@ -27,6 +27,17 @@ describe('Blog Post Search Implementation', () => {
         });
     });
 
+    test('Search should be case-insensitive', () => {
+        const search = new Search(MOCK_STUBS);
+        const lowerCaseResults = search.search('commontwo');
+        const mixedCaseResults = search.search('cOmMoNTwo');
+        const upperCaseResults = search.search('COMMONTWO');
+
+        expect(lowerCaseResults.results.length).toBe(2);
+        expect(mixedCaseResults.results.length).toBe(2);
+        expect(upperCaseResults.results.length).toBe(2);
+    });
+
 
     test('Should return only first entry, with "commonthree" as completion', () => {
         const search = new Search(MOCK_STUBS);
