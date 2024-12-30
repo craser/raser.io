@@ -79,6 +79,13 @@
     }
 }
 
+.searchButton {
+    &:before {
+        background-image: url(/icons/search-circle-fill.svg);
+    }
+}
+
+
 .content {
     font-family: HelveticaNeue-condensed, sans-serif;
     color: #222;

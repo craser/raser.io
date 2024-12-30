@@ -10,7 +10,7 @@ export default function SearchInput(props) {
     const onKeyUp = (e) => {
         e.preventDefault();
         console.log({ keyup: e });
-        setTimeout(() => searchContext.setSearchTerms(inputRef.current.value), 0);
+        setTimeout(() => searchContext.setSearchTerms(inputRef.current?.value || ''), 0);
     }
 
     const onKeyDown = (e) => {

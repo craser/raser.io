@@ -18,7 +18,8 @@ export default function HeaderNavigationOptions(props) {
                 <a className={styles.threadsLink} href="https://www.threads.net/@deathb4decaf">DeathB4Decaf</a>
             </li>
             <li>
-                <SearchButton/>
+                {/* I'm really annoyed with myself for blending the components like this. */}
+                <SearchButton className={styles.searchButton}/>
             </li>
             <AuthRecognized>
                 <LoginButton />

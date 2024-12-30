@@ -78,7 +78,7 @@
 
         .searchResults {
             background-color: var(--theme-color-content-text-bg);
-            padding: var(--theme-container-padding-lg);
+            padding: var(--theme-container-padding-s);
 
             .emptySearchResult {
                 font-size: 11em;
@@ -92,54 +92,71 @@
             }
 
             .searchResult {
-                border-bottom: 1px solid var(--theme-color-border-light);
-                padding-top: var(--theme-container-padding-lg);
-                padding-bottom: var(--theme-container-padding-lg);
+                border-bottom: 1px dotted var(--theme-color-border-light);
+                padding: var(--theme-container-padding-lg);
                 cursor: pointer;
+
+                &:hover {
+                    border-color: transparent;
+                    background-color: var(--theme-color-pop);
+                    border-radius: var(--theme-border-radius-large);
+                }
 
                 &:last-child {
                     border: none;
                 }
 
                 .searchResultTitle {
+                    font-family: var(--font-title);
+                    font-size: 1.4em;
                     font-weight: bold;
                 }
 
-                .searchResultDate {
-                    display: none;
-                }
+                .searchResultsMetaData {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    padding-top: var(--theme-container-padding-s);
 
-                .searchResultMatchedTerms {
-                    &:before {
-                        content: 'matches:';
-                        color: var(--theme-color-subtext);
-                        padding: var(--theme-container-padding-xs);
-                        padding-right: 0.2em;
-                        padding-left: 0;
-                    }
-
-                    .searchResultTerm {
-                        background: var(--theme-gradient-neon);
-                        padding: var(--theme-container-padding-xs);
-                        border-radius: var(--theme-container-padding-xs);
+                    .searchResultDate {
 
                     }
-                }
 
-                .searchResultText {
-                    max-height: 3em;
-                    overflow: hidden;
-                    display: block;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
+                    .searchResultMatchedTerms {
+                        &:before, &:after {
+                            content: '(matches:';
+                            color: var(--theme-color-border-light);
+                            padding-top: var(--theme-container-padding-lg);
+                            padding-right: 0.2em;
+                            padding-left: 0;
+                        }
 
-                    &:before {
-                        content: '...';
+                        &:after {
+                            content: ')';
+                        }
+
+                        .searchResultTerm {
+                            padding: var(--theme-container-padding-xs);
+                            border-radius: var(--theme-container-padding-xs);
+
+                        }
                     }
 
+                    .searchResultText {
+                        max-height: 3em;
+                        overflow: hidden;
+                        display: block;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
 
-                    .resultTokenMatch {
-                        background-color: chartreuse;
+                        &:before {
+                            content: '...';
+                        }
+
+
+                        .resultTokenMatch {
+                            background-color: chartreuse;
+                        }
                     }
                 }
             }

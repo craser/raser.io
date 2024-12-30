@@ -29,7 +29,7 @@ export default function SearchResults({ pageSize = 5 }) {
                 <SearchResultPlaceHolder text={"no results :("}/>
             )}
             {(terms.length === 0) && (results.length === 0) && (
-                <SearchResultPlaceHolder text={"enter search terms"} />
+                <SearchResultPlaceHolder text={"enter search terms"}/>
             )}
             {results.map(({ post, text }, i) => (
                 <SearchResult data-testclass="search-result" key={i} post={post} terms={terms} text={text}/>
@@ -38,6 +38,12 @@ export default function SearchResults({ pageSize = 5 }) {
     );
 }
 
+
+function SearchResultPostedDate({ datePosted }) {
+    const date = new Date(datePosted);
+    const formatted = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    return <div className={styles.searchResultDate}>{formatted}</div>;
+}
 
 export function SearchResult({ terms, post, text }) {
     const searchContext = useSearchContext();
@@ -50,8 +56,10 @@ export function SearchResult({ terms, post, text }) {
     return (
         <div data-testclass="search-result" className={styles.searchResult} onClick={go}>
             <div className={styles.searchResultTitle}>{post.title}</div>
-            <div className={styles.searchResultDate}>{post.datePosted}</div>
-            <SearchResultMatchedTerms terms={terms} text={text} />
+            <div className={styles.searchResultsMetaData}>
+                <SearchResultPostedDate datePosted={post.datePosted}/>
+                <SearchResultMatchedTerms terms={terms} text={text}/>
+            </div>
         </div>
     );
 }

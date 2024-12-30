@@ -7,15 +7,7 @@ import { setIntersection } from "@/lib/search/SetUtils"; // 1000 sample entries 
 
 describe('Blog Post Search Implementation', () => {
 
-    test('find stopword candidates', () => {
-        return; // FIXME: DO NOT COMMIT TO CODE REPOSITORY!
-        const search = new Search(SAMPLE_PROD_STUBS);
-        const results = search.search('');
-        expect(results.results.length).toBe(SAMPLE_PROD_STUBS.length);
-        const completion = search.trie.getMostCommonCompletion('');
-    });
-
-    test('Post titles should be searchable', () => {
+    test('Post title, intro, and body should be searchable', () => {
         const SEARCHABLE_FIELDS = ['title', 'intro', 'body'];
         const BLANK_STUB = {
             "entryId": 101,
