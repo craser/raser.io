@@ -12,6 +12,10 @@ export const Post = ({ post, showBody }) => {
         let setPostWidth = () => {
             if (topRef.current) { // FIXME: band-aid to deal with use inside the edit view, where there's no topref.
                 topRef.current.style.setProperty('--post-width', topRef.current.offsetWidth);
+                topRef.current.querySelectorAll('iframe[title="YouTube video player"]').forEach((iframe) => {
+                    const height = iframe.offsetHeight;
+                    iframe.style.setProperty('--iframe-height', `${height}px`);
+                });
             }
         };
         setPostWidth();

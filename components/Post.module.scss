@@ -69,10 +69,13 @@
     position: relative;
     left: -15px;
     /* hacky fix for the problem of YT videos being hard-coded to 630px wide */
+    /* --post-width and --iframe-height are set in Post.jsx */
     --scale: calc(var(--post-width) / 630); /* --post-width set in Post.jsx */
+    --margin: calc(var(--iframe-height) * (1 - var(--scale)) * -1/2);
     transform-origin: left center; /* Scale from the left */
     transform: scale(var(--scale));
-
+    margin-top: var(--margin);
+    margin-bottom: var(--margin);
 }
 
 .entry p {

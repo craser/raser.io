@@ -87,5 +87,18 @@ describe('SearchTrie', () => {
         trie.insert('aaa', 5);
         expect(trie.getValues('unmatched')).not.toBeNull();
         expect(trie.getValues('unmatched').size).toBe(0);
-    })
+    });
+
+    it('Should find matched terms & values', () => {
+        const trie = new SearchTrie();
+        trie.insert('aaa', [1, 2]);
+        trie.insert('aab', [3, 4]);
+        trie.insert('abc', [5, 6]);
+
+        const matchedValues = trie.getMatchedValues('aa');
+        expect(matchedValues).toEqual({
+            'aaa': new Set([1, 2]),
+            'aab': new Set([3, 4]),
+        });
+    });
 })

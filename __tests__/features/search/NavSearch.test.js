@@ -24,6 +24,8 @@ async function renderScaffold() {
     return result;
 }
 
+/* SearchResult calls router.push() when clicked. We intercept that call here.
+ */
 jest.mock('next/router', () => {
     const router = { push: jest.fn };
     return {
@@ -31,8 +33,11 @@ jest.mock('next/router', () => {
     }
 });
 
+/* Mock out the search stubs we use to build the search index & find results.
+ */
 jest.mock('@/model/PostDao', () => {
     const getSearchStubs = jest.fn().mockResolvedValue([
+        // "lorem" should only appear in ONE of the stubs below - see tests below
         { entryId: 101, datePosted: Date.now(), intro: "Intro 1", body: "lorem ipsum" },
         { entryId: 102, datePosted: Date.now(), intro: "Intro 2", body: "dolor sit amet" }
     ]);
@@ -82,11 +87,28 @@ describe('Navigation Search', () => {
         expect(input).not.toBeFalsy();
         await act(async () => {
             await userEvent.click(input);
-            console.log('typing...');
             await userEvent.type(input, 'lorem');
         });
         expect(await result.container.querySelector('[data-testclass="search-result"]')).not.toBeFalsy();
     });
+
+    test('Should show matched words from post, NOT just search terms', async () => {
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await act(() => {
+            userEvent.click(button);
+        });
+        const input = await result.findByTestId('search-input');
+        expect(input).not.toBeFalsy();
+        await act(async () => {
+            await userEvent.click(input);
+            await userEvent.type(input, 'lor');
+        });
+        const resultDiv = await result.container.querySelector('[data-testclass="search-result"]');
+        expect(resultDiv).not.toBeFalsy();
+        expect(resultDiv.textContent).toContain('lorem');
+    });
+
 
     test('Typing into the search input, then hitting TAB should cause the suggested completion to be used', async () => {
         const result = await renderScaffold();
@@ -100,7 +122,6 @@ describe('Navigation Search', () => {
         await userEvent.tab();
         expect(input.value).toBe('lorem');
     });
-
 
     test('If search stubs cannot be retrieved, do not show search button or UI.', async () => {
         new PostDao().getSearchStubs.mockImplementation(() => {
