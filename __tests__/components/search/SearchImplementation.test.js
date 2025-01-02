@@ -47,6 +47,17 @@ describe('Blog Post Search Implementation', () => {
         expect(results.completion).toBe('ree');
     });
 
+    test('Should return matched words with results', () => {
+        const search = new Search(MOCK_STUBS);
+        const results = search.search('common');
+        expect(results.matchedWords).toEqual({
+            '101': new Set(['commonone', 'commontwo', 'commonthree']),
+            '102': new Set(['commonone', 'commontwo']),
+            '103': new Set(['commonone']),
+        });
+    });
+
+
     test('Should ignore stop words', () => {
         const STUB_WITH_STOPS = [
             {

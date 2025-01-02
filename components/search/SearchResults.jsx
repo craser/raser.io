@@ -51,7 +51,7 @@ export function SearchResult({ terms, post, text }) {
             <div className={styles.searchResultTitle}>{post.title}</div>
             <div className={styles.searchResultsMetaData}>
                 <SearchResultPostedDate datePosted={post.datePosted}/>
-                <SearchResultMatchedTerms terms={terms} text={text}/>
+                <SearchResultMatchedTerms words={searchContext.getMatchedWords()[post.entryId]}/>
             </div>
         </div>
     );
@@ -63,16 +63,10 @@ function SearchResultPostedDate({ datePosted }) {
     return <div className={styles.searchResultDate}>{formatted}</div>;
 }
 
-export function SearchResultMatchedTerms({ terms, text }) {
-
-
-    const matched = (terms || '')
-        .split(/\s+/)
-        .filter(t => text.indexOf(t) >= 0);
-
+export function SearchResultMatchedTerms({ words }) {
     return (
         <div data-testclass="search-matched-terms" className={styles.searchResultMatchedTerms}>
-            {matched.map(((term, i) => (<span key={i} className={styles.searchResultTerm}>{term}</span>)))}
+            {words.map(((term, i) => (<span key={i} className={styles.searchResultTerm}>{term}</span>)))}
         </div>
     );
 }

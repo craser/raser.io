@@ -17,6 +17,7 @@ export default function SearchProvider({ children }) {
     const [searchResults, setSearchResults] = useState([])
     const [completion, setCompletion] = useState('');
     const [searchImpl, setSearchImpl] = useState(null);
+    const [matchedWords, setMatchedWords] = useState({});
 
     const context = {
         isSearchAvailable: () => isSearchAvailable,
@@ -32,6 +33,7 @@ export default function SearchProvider({ children }) {
         getSearchTerms: () => searchTerms,
         getSearchResults: () => [...searchResults],
         getCompletion: () => completion,
+        getMatchedWords: () => matchedWords,
     };
 
     const onKeyUp = (e) => {
@@ -65,10 +67,12 @@ export default function SearchProvider({ children }) {
         if (!searchTerms || searchTerms.length < MIN_SEARCH_TERM_LENGTH) {
             setSearchResults([]);
             setCompletion('');
+            setMatchedWords({});
         } else if (searchTerms) {
             const results = searchImpl.search(searchTerms);
             setSearchResults(results.results);
             setCompletion(results.completion);
+            setMatchedWords(results.matchedWords);
         }
     }, [searchTerms]);
 

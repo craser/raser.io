@@ -97,8 +97,19 @@ describe('SearchTrie', () => {
 
         const matchedValues = trie.getMatchedValues('aa');
         expect(matchedValues).toEqual({
-            'aaa': new Set([1, 2]),
-            'aab': new Set([3, 4]),
+            '1': new Set(['aaa']),
+            '2': new Set(['aaa']),
+            '3': new Set(['aab']),
+            '4': new Set(['aab']),
         });
     });
+
+    it('Should store initial key in node', () => {
+        const trie = new SearchTrie();
+        trie.insert('abc', [1, 2]);
+        const node = trie.getNode('abc');
+        expect(node.key).toBe('abc');
+    });
+
+
 })
