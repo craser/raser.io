@@ -18,7 +18,7 @@ export const View = {
     EDIT: 'EDIT'
 }
 
-export default function PostViewContext({ initialView, post, next, prev, children }) {
+export default function PostViewContext({ initialView, post, showBody, next, prev, children }) {
     const [views, setViews] = useState([]);
     const [view, setView] = useState(initialView || View.SINGLE_ENTRY);
 
@@ -50,10 +50,10 @@ export default function PostViewContext({ initialView, post, next, prev, childre
     return (
         <PostViewContextObject.Provider value={{ toReaderView, toEditView }}>
             {(view === View.SINGLE_ENTRY) &&
-                <ReadPostView post={post} next={next} prev={prev} showNextPrev={true}/>
+                <ReadPostView post={post} showBody={showBody} next={next} prev={prev} showNextPrev={true}/>
             }
             {(view === View.ENTRY_LIST) &&
-                <ReadPostView post={post} next={next} prev={prev} showNextPrev={false}/>
+                <ReadPostView post={post} showBody={showBody} next={next} prev={prev} showNextPrev={false}/>
             }
             {(view === View.EDIT) &&
                 <EditPostView post={post} onPostSave={popView} onCancel={popView} />

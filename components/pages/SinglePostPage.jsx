@@ -39,7 +39,7 @@ export default function SinglePostPage({ postId }) {
     } else {
         return (
             <FrontPageLayout content={
-                <PostViewContext post={post} next={next} prev={prev} />
+                <PostViewContext post={post} showBody={true} next={next} prev={prev} />
             }/>
         );
     }
