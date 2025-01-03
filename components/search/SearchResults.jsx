@@ -66,7 +66,7 @@ function SearchResultPostedDate({ datePosted }) {
 export function SearchResultMatchedTerms({ words }) {
     return (
         <div data-testclass="search-matched-terms" className={styles.searchResultMatchedTerms}>
-            {words.map(((term, i) => (<span key={i} className={styles.searchResultTerm}>{term}</span>)))}
+            {[...words].map(((term, i) => (<span key={i} className={styles.searchResultTerm}>{term}</span>)))}
         </div>
     );
 }

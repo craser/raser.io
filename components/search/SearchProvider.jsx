@@ -68,6 +68,8 @@ export default function SearchProvider({ children }) {
             setSearchResults([]);
             setCompletion('');
             setMatchedWords({});
+        } else if (!searchImpl) {
+            return; // no point
         } else if (searchTerms) {
             const results = searchImpl.search(searchTerms);
             setSearchResults(results.results);

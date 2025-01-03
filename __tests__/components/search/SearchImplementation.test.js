@@ -5,6 +5,7 @@ import SAMPLE_PROD_STUBS from './SampleSearchStubs.json';
 import { setIntersection } from "@/lib/search/SetUtils"; // 1000 sample entries from prod to test PERFORMANCE
 
 
+
 describe('Blog Post Search Implementation', () => {
 
     test('Post title, intro, and body should be searchable', () => {
@@ -86,7 +87,13 @@ describe('Blog Post Search Implementation', () => {
         const results = search.search('nope');
         expect(results.results).toEqual([]);
         expect(results.completion).toBe('');
-    })
+    });
+
+    test('Should return an empty completion for an empty last token', () => {
+        const search = new Search(MOCK_STUBS);
+        const results = search.search('common '); // note blank space at end
+        expect(results.completion).toBe('');
+    });
 
     test('Should match all mock entries', () => {
         const search = new Search(MOCK_STUBS);

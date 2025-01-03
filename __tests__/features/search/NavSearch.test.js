@@ -80,8 +80,8 @@ describe('Navigation Search', () => {
     test('Typing into the search input should cause results to appear', async () => {
         const result = await renderScaffold();
         const button = await result.findByTestId('search-button');
-        await act(() => {
-            userEvent.click(button);
+        await act(async () => {
+            await userEvent.click(button);
         });
         const input = await result.findByTestId('search-input');
         expect(input).not.toBeFalsy();
@@ -113,8 +113,8 @@ describe('Navigation Search', () => {
     test('Typing into the search input, then hitting TAB should cause the suggested completion to be used', async () => {
         const result = await renderScaffold();
         const button = await result.findByTestId('search-button');
-        await act(() => {
-            userEvent.click(button);
+        await act(async () => {
+            await userEvent.click(button);
         });
         let input = await result.findByTestId('search-input');
         await userEvent.click(input);
@@ -134,5 +134,23 @@ describe('Navigation Search', () => {
         let ui = await result.queryByTestId('search-ui');
         expect(button).not.toBeTruthy();
         expect(ui).not.toBeTruthy();
+    });
+
+    test('Should not show recommended completion when token is empty', async () => {
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await act(async () => {
+            await userEvent.click(button);
+        });
+        let input = await result.findByTestId('search-input');
+        await act(async () => {
+            await userEvent.click(input);
+            await userEvent.type(input, 'lor');
+        });
+        const completion = await result.findByTestId('search-completion');
+        expect(completion.textContent).toBe('');
+    });
+
+    test('Typing into the search input, then hitting TAB should cause the suggested completion to be used', async () => {
     });
 });
