@@ -18,7 +18,7 @@ function SearchResultPlaceHolder({ text }) {
  * @param pageSize: number
  * @returns {JSX.Element}
  */
-export default function SearchResults({ pageSize = 5 }) {
+export default function SearchResults({ pageSize = 10 }) {
     const searchContext = useSearchContext();
     const terms = searchContext.getSearchTerms();
     const results = searchContext.getSearchResults();
@@ -31,7 +31,7 @@ export default function SearchResults({ pageSize = 5 }) {
             {(terms.length === 0) && (results.length === 0) && (
                 <SearchResultPlaceHolder text={"enter search terms"}/>
             )}
-            {results.map(({ post, text }, i) => (
+            {results.slice(0, pageSize).map(({ post, text }, i) => (
                 <SearchResult data-testclass="search-result" key={i} post={post} terms={terms} text={text}/>
             ))}
         </div>
@@ -51,7 +51,7 @@ export function SearchResult({ terms, post, text }) {
             <div className={styles.searchResultTitle}>{post.title}</div>
             <div className={styles.searchResultsMetaData}>
                 <SearchResultPostedDate datePosted={post.datePosted}/>
-                <SearchResultMatchedTerms words={searchContext.getMatchedWords()[post.entryId]}/>
+                <SearchResultMatchedTerms terms={terms} text={text} />
             </div>
         </div>
     );
@@ -63,10 +63,21 @@ function SearchResultPostedDate({ datePosted }) {
     return <div className={styles.searchResultDate}>{formatted}</div>;
 }
 
-export function SearchResultMatchedTerms({ words }) {
+export function SearchResultMatchedTerms({ terms, text }) {
+    const tokens = terms.toLowerCase().split(/\s+/).filter(Boolean);
+    const words = tokens.reduce((words, token) => {
+        const re = new RegExp(`\\b${token}\\w*\\b`);
+        const match = text.match(re);
+        if (match) {
+            let matchedWord = match[0];
+            words.add(matchedWord);
+        }
+        return words;
+    }, new Set());
+
     return (
         <div data-testclass="search-matched-terms" className={styles.searchResultMatchedTerms}>
-            {[...words].map(((term, i) => (<span key={i} className={styles.searchResultTerm}>{term}</span>)))}
+            {[...words].map(((word, i) => (<span key={i} className={styles.searchResultTerm}>{word}</span>)))}
         </div>
     );
 }

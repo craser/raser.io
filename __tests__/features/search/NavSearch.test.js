@@ -9,7 +9,7 @@ import SearchProvider from "@/components/search/SearchProvider";
 import Search from "@/components/search/Search";
 import SearchButton from "@/components/search/SearchButton";
 import PostDao from "@/model/PostDao";
-
+import SAMPLE_SEARCH_STUBS from "@/__tests__/components/search/SampleSearchStubs.json"
 
 async function renderScaffold() {
     let result;
@@ -145,12 +145,26 @@ describe('Navigation Search', () => {
         let input = await result.findByTestId('search-input');
         await act(async () => {
             await userEvent.click(input);
-            await userEvent.type(input, 'lor');
+            await userEvent.type(input, 'lor ');
         });
         const completion = await result.findByTestId('search-completion');
         expect(completion.textContent).toBe('');
     });
 
-    test('Typing into the search input, then hitting TAB should cause the suggested completion to be used', async () => {
+    test('Should show "irst" as completion', async () => {
+        new PostDao().getSearchStubs.mockResolvedValue(SAMPLE_SEARCH_STUBS);
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await act(async () => {
+            await userEvent.click(button);
+        });
+        let input = await result.findByTestId('search-input');
+        await act(async () => {
+            await userEvent.click(input);
+            await userEvent.type(input, 'corner f');
+        });
+        const completion = await result.findByTestId('search-completion');
+        expect(completion.textContent).toBe('irst');
     });
+
 });
