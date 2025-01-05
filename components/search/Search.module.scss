@@ -97,7 +97,7 @@
                 padding: var(--theme-container-padding-lg);
                 cursor: pointer;
 
-                &:hover {
+                &.selectedResult {
                     border-color: transparent;
                     background-color: var(--theme-color-pop);
                     border-radius: var(--theme-border-radius-large);

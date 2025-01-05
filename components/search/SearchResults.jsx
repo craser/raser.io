@@ -1,8 +1,6 @@
 import styles from './Search.module.scss'
 import React from "react";
 import { useSearchContext } from "@/components/search/SearchProvider";
-import { useRouter } from "next/router";
-import { getPostLink } from "@/components/PostLink";
 
 function SearchResultPlaceHolder({ text }) {
     return (
@@ -18,7 +16,7 @@ function SearchResultPlaceHolder({ text }) {
  * @param pageSize: number
  * @returns {JSX.Element}
  */
-export default function SearchResults({ pageSize = 10 }) {
+export default function SearchResults({ pageSize = 10, selectedIndex = -1 }) {
     const searchContext = useSearchContext();
     const terms = searchContext.getSearchTerms();
     const results = searchContext.getSearchResults();
@@ -32,22 +30,20 @@ export default function SearchResults({ pageSize = 10 }) {
                 <SearchResultPlaceHolder text={"enter search terms"}/>
             )}
             {results.slice(0, pageSize).map(({ post, text }, i) => (
-                <SearchResult data-testclass="search-result" key={i} post={post} terms={terms} text={text}/>
+                <SearchResult data-testclass="search-result" index={i} key={i} post={post} terms={terms} text={text}/>
             ))}
         </div>
     );
 }
 
-export function SearchResult({ terms, post, text }) {
+export function SearchResult({ terms, post, text, index }) {
     const searchContext = useSearchContext();
-    const router = useRouter();
-    const go = () => {
-        searchContext.showSearchUi(false);
-        router.push(getPostLink(post));
-    }
-
+    const selected = searchContext.getSelectedResult() === index;
     return (
-        <div data-testclass="search-result" className={styles.searchResult} onClick={go}>
+        <div data-testclass="search-result" className={[styles.searchResult, (selected && styles.selectedResult)].join(' ')}
+             onClick={() => searchContext.goToResult(index)}
+             onMouseEnter={() => searchContext.setSelectedResult(index)}
+        >
             <div className={styles.searchResultTitle}>{post.title}</div>
             <div className={styles.searchResultsMetaData}>
                 <SearchResultPostedDate datePosted={post.datePosted}/>

@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import Search from '@/lib/search/SearchImplementation';
 import PostDao from "@/model/PostDao";
+import { useRouter } from "next/router";
+import { getPostLink } from "@/components/PostLink";
 
 const MIN_SEARCH_TERM_LENGTH = 3;
 
@@ -11,13 +13,31 @@ export function useSearchContext() {
 }
 
 export default function SearchProvider({ children }) {
+    const router = useRouter();
+
     const [isSearchAvailable, setIsSearchAvailable] = useState(true);
     const [isUiVisible, setIsUiVisible] = useState(false);
     const [searchTerms, setSearchTerms] = useState('');
     const [searchResults, setSearchResults] = useState([])
     const [completion, setCompletion] = useState('');
     const [searchImpl, setSearchImpl] = useState(null);
-    const [matchedWords, setMatchedWords] = useState({});
+    const [selectedResult, setSelectedResult] = useState(null); // index of currently selected search result
+
+    function range(v) {
+        if (v < -1) {
+            return -1;
+        } else if (v > searchResults.length - 1) {
+            return searchResults.length - 1
+        } else {
+            return v;
+        }
+    }
+
+    function goToResult(i = selectedResult) {
+        setIsUiVisible(false);
+        const post = searchResults[i].post;
+        router.push(getPostLink(post));
+    }
 
     const context = {
         isSearchAvailable: () => isSearchAvailable,
@@ -33,7 +53,11 @@ export default function SearchProvider({ children }) {
         getSearchTerms: () => searchTerms,
         getSearchResults: () => [...searchResults],
         getCompletion: () => completion,
-        getMatchedWords: () => matchedWords,
+        getSelectedResult: () => selectedResult,
+        setSelectedResult: (i) => { console.log(`selected: ${i}`); setSelectedResult(i) },
+        selectNextResult: () => setSelectedResult(range(selectedResult + 1)),
+        selectPrevResult: () => setSelectedResult(range(selectedResult - 1)),
+        goToResult
     };
 
     const onKeyUp = (e) => {
@@ -67,14 +91,14 @@ export default function SearchProvider({ children }) {
         if (!searchTerms || searchTerms.length < MIN_SEARCH_TERM_LENGTH) {
             setSearchResults([]);
             setCompletion('');
-            setMatchedWords({});
+            setSelectedResult(-1);
         } else if (!searchImpl) {
             return; // no point
         } else if (searchTerms) {
             const results = searchImpl.search(searchTerms);
             setSearchResults(results.results);
             setCompletion(results.completion);
-            setMatchedWords(results.matchedWords);
+            setSelectedResult(-1);
         }
     }, [searchTerms]);
 
@@ -84,3 +108,5 @@ export default function SearchProvider({ children }) {
         </SearchContextObj.Provider>
     );
 }
+
+

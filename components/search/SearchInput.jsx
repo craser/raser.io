@@ -18,6 +18,21 @@ export default function SearchInput(props) {
         if (e.key === 'Tab') {
             e.preventDefault();
             inputRef.current.value += completion;
+        } else if (e.key === 'n' && e.ctrlKey) {
+            e.preventDefault();
+            searchContext.selectNextResult();
+        } else if (e.key === 'p' && e.ctrlKey) {
+            e.preventDefault();
+            searchContext.selectPrevResult();
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            searchContext.selectNextResult();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            searchContext.selectPrevResult();
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            searchContext.goToResult();
         }
     }
 

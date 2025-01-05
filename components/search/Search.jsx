@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSearchContext } from "@/components/search/SearchProvider";
 import styles from "./Search.module.scss"
 import SearchInput from "@/components/search/SearchInput";
@@ -6,7 +6,6 @@ import SearchResults from "@/components/search/SearchResults";
 
 export default function Search(props) {
 
-    // FIXME: This just seems unnecessarily hacky...
     const searchContext = useSearchContext();
     const uiVisible = searchContext.isUiVisible();
 
@@ -32,7 +31,7 @@ export default function Search(props) {
                 {uiVisible &&
                     <div data-testid="search-ui" className={styles.searchInterface}>
                         <SearchInput/>
-                        <SearchResults pageSize={10}/>
+                        <SearchResults pageSize={10} selectedResult={searchContext.getSelectedResult()}/>
                     </div>
                 }
             </div>

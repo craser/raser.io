@@ -167,4 +167,8 @@ describe('Navigation Search', () => {
         expect(completion.textContent).toBe('irst');
     });
 
+    test('Entering a search term and hitting Ctrl-n or DOWN should select the first result', () => {
+
+    });
+
 });
