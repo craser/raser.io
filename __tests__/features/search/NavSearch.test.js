@@ -159,8 +159,8 @@ describe('Navigation Search', () => {
             await userEvent.click(button);
         });
         let input = await result.findByTestId('search-input');
+        await userEvent.click(input);
         await act(async () => {
-            await userEvent.click(input);
             await userEvent.type(input, 'corner f');
         });
         const completion = await result.findByTestId('search-completion');

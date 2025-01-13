@@ -22,10 +22,8 @@ export default function Modal({ onDismiss, children }) {
     }
 
     return (
-        <div className={styles.backdrop} onClick={function () {
-            onDismiss();
-        }} onKeyDown={onKeyDown}>
-            <div className={styles.modal} onClick={dialogClicked} onKeyDown={onKeyDown}>
+        <div data-testid="modal-backdrop" className={styles.backdrop} onClick={onDismiss} onKeyDown={onKeyDown}>
+            <div data-testid="modal-content" className={styles.modal} onClick={dialogClicked} onKeyDown={onKeyDown}>
                 {children}
             </div>
         </div>
