@@ -5,6 +5,7 @@ import { Post } from "@/components/Post";
 import NextPrevPostLinks from "@/components/NextPrevPostLinks";
 import FrontPageLayout from "@/components/templates/FrontPageLayout";
 import PostViewContext from "@/components/PostViewContext";
+import { useDataContext } from "@/components/api/DataProvider";
 
 export default function SinglePostPage({ postId }) {
     const dataContext = useDataContext();
@@ -15,7 +16,7 @@ export default function SinglePostPage({ postId }) {
     useEffect(() => {
         console.debug(`Fetching entry for ${postId}`);
         const postDao = dataContext.getPostDao();
-        postDao.getPostDao().getPostById(postId)
+        postDao.getPostById(postId)
             .then(post => {
                 setPost(post);
                 return post;
