@@ -1,6 +1,6 @@
 import Link from "next/link";
 import styles from './MapPageLayout.module.scss'
-import HeaderNavigationOptions from "@/components/templates/HeaderNavigationOptions";
+import SiteNavigationHeader from "@/components/templates/SiteNavigationHeader";
 
 export default function MapPageLayout(props) {
     return (

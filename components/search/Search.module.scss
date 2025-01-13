@@ -15,7 +15,7 @@
     background-color: rgba(0, 0, 0, 0.5);
     height: 100vh;
     width: 100vw;
-    animation: fadeIn 200ms ease-in-out;
+    animation: fadeIn 150ms ease-in-out;
 }
 
 /**
@@ -34,7 +34,7 @@
      * this contains the actual UI
      */
     .searchInterface {
-        animation: fadeIn 200ms ease-in-out;
+        animation: fadeIn 150ms ease-in-out;
 
         background-color: var(--theme-color-content-text-bg);
         border-radius: var(--theme-border-radius-large);

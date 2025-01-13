@@ -4,10 +4,9 @@ import AuthLoggedIn from "@/components/auth/AuthLoggedIn";
 import LoginButton from "@/components/auth/LoginButton";
 import LogoutButton from "@/components/auth/LogoutButton";
 import AuthRecognized from "@/components/auth/AuthRecognized";
-import Search from "@/components/search/Search";
 import SearchButton from "@/components/search/SearchButton";
 
-export default function HeaderNavigationOptions(props) {
+export default function SiteNavigationHeader(props) {
     return (
         <ul className={styles.sitenav}>
             <li>

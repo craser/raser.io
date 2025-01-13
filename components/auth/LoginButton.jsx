@@ -1,7 +1,5 @@
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
 import { useState } from "react";
-import LoginModal from "@/components/auth/LoginModal";
-
 export default function LoginButton({ className }) {
     const authContext = useAuthenticationContext();
     const clickHandler = (event) => {
@@ -13,3 +11,5 @@ export default function LoginButton({ className }) {
         <a className={className} data-testid="search-button" onClick={clickHandler}>Log In</a>
     )
 }
+
+import LoginModal from "@/components/auth/LoginModal";
