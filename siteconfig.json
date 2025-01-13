@@ -13,7 +13,7 @@
         "create": "/entries/create",
         "delete": "/delete?id={id}&auth={authToken}",
         "entry": "/entries/{id}",
-        "latest": "/entries/latest/{page}",
+        "latest": "/entries/latest/{page}?pageSize={pageSize}",
         "next": "/entries/{id}/next",
         "previous": "/entries/{id}/prev",
         "publish": "/entries/publish",

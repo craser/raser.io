@@ -85,6 +85,12 @@
     }
 }
 
+.loginButton {
+    &:before {
+        background-image: url(/icons/login-circle.png);
+    }
+}
+
 
 .content {
     font-family: HelveticaNeue-condensed, sans-serif;

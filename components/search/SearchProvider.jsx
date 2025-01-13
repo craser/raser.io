@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import Search from '@/lib/search/SearchImplementation';
-import PostDao from "@/model/PostDao";
 import { useRouter } from "next/router";
 import { getPostLink } from "@/components/PostLink";
+import { useDataContext } from "@/components/api/DataProvider";
 
 const MIN_SEARCH_TERM_LENGTH = 3;
 
@@ -13,6 +13,7 @@ export function useSearchContext() {
 }
 
 export default function SearchProvider({ children }) {
+    const dataContext = useDataContext()
     const router = useRouter();
 
     const [isSearchAvailable, setIsSearchAvailable] = useState(true);
@@ -73,7 +74,7 @@ export default function SearchProvider({ children }) {
 
     useEffect(() => {
         const start = new Date().getTime();
-        new PostDao().getSearchStubs()
+        dataContext.getPostDao().getSearchStubs()
             .then(stubs => {
                 console.log(`fetched search stubs in ${new Date().getTime() - start}ms`)
                 console.log({ stubs: stubs });

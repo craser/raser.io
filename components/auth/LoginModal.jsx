@@ -33,7 +33,7 @@ function LoginField({ type, placeholder, defaultValue, validate: validateValue, 
     </>;
 }
 
-export default function LoginModal({ onDismiss }) {
+export default function LoginModal({ onVisibilityChange }) {
     const authContext = useAuthenticationContext();
     const [email, setEmail] = useState(authContext.getEmail());
     const [pass, setPass] = useState(null);
@@ -60,7 +60,7 @@ export default function LoginModal({ onDismiss }) {
     }
 
     return (
-        <Modal onDismiss={onDismiss}>
+        <Modal onDismiss={() => onVisibilityChange(false)}>
             <form onSubmit={onSubmit}>
                 <div className={styles.logincontainer}>
                     <div className={styles.row}>

@@ -9,7 +9,15 @@ export default class CachingPostDao {
 
     constructor(dao) {
         this.#dao = dao;
-        this.#cache = new LruCache(30); // TODO: replace this with some reasoned-out number/logic
+        this.#cache = new LruCache(100); // TODO: replace this with some reasoned-out number/logic
+    }
+
+    #hit(id) {
+        console.debug(`Cache HIT for ${id}`);
+    }
+
+    #miss(id) {
+        console.debug(`Cache MISS for ${id}`);
     }
 
     async getLatestPost() {
@@ -21,8 +29,11 @@ export default class CachingPostDao {
     async getPostById(id) {
         let post = this.#cache.get(id);
         if (!post) {
+            this.#miss(id);
             post = await this.#dao.getPostById(id);
             this.#cache.put(post.entryId, post);
+        } else {
+            this.#hit(id);
         }
         return post;
     }
@@ -64,10 +75,14 @@ export default class CachingPostDao {
             this.#cache.put(p.entryId, p); // cache the entry;
             if (posts[i + 1]) {
                 let prev = posts[i + 1]; // previous in TIME, presented in reverse-chronological order
-                this.#cache.setMeta(p.entryId,  { prev: prev.entryId});
+                this.#cache.setMeta(p.entryId, { prev: prev.entryId });
                 this.#cache.setMeta(prev.entryId, { next: p.entryId });
             }
         });
         return posts;
+    }
+
+    async getSearchStubs(numEntries = 1000) {
+        return this.#dao.getSearchStubs(numEntries);
     }
 }

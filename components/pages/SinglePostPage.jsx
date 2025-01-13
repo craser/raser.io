@@ -7,14 +7,15 @@ import FrontPageLayout from "@/components/templates/FrontPageLayout";
 import PostViewContext from "@/components/PostViewContext";
 
 export default function SinglePostPage({ postId }) {
-    const [postDao, setPostDao] = useState(PostDao.getCachingPostDao());
+    const dataContext = useDataContext();
     const [post, setPost] = useState(null);
     const [next, setNext] = useState(null);
     const [prev, setPrev] = useState(null);
 
     useEffect(() => {
         console.debug(`Fetching entry for ${postId}`);
-        postDao.getPostById(postId)
+        const postDao = dataContext.getPostDao();
+        postDao.getPostDao().getPostById(postId)
             .then(post => {
                 setPost(post);
                 return post;
@@ -30,7 +31,7 @@ export default function SinglePostPage({ postId }) {
                 setPost(null)
             });
 
-    }, [postId, postDao]);
+    }, [postId]);
 
     if (!post) {
         return (
@@ -39,7 +40,7 @@ export default function SinglePostPage({ postId }) {
     } else {
         return (
             <FrontPageLayout content={
-                <PostViewContext post={post} showBody={true} next={next} prev={prev} />
+                <PostViewContext post={post} showBody={true} next={next} prev={prev}/>
             }/>
         );
     }

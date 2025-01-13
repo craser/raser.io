@@ -6,7 +6,6 @@ export default class EdgeConfigPostDao {
         return fetch('/api/latest')
             .then(async (response) => {
                 if (response.ok) {
-                    console.log('fetched latest from edge config');
                     const json = await response.text();
                     const { latest } = JSON.parse(json);
                     return latest;

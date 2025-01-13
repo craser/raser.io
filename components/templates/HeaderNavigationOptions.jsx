@@ -22,7 +22,7 @@ export default function HeaderNavigationOptions(props) {
                 <SearchButton className={styles.searchButton}/>
             </li>
             <AuthRecognized>
-                <LoginButton />
+                <LoginButton className={styles.loginButton} />
             </AuthRecognized>
             <AuthLoggedIn>
                 <Link href={'/create'}>new entry</Link>

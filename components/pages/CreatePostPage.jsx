@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import PostDao from '/model/PostDao';
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { EditPost } from "@/components/EditPost";
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
 import { getPostLink } from "@/components/PostLink";
+import { useDataContext } from "@/components/api/DataProvider";
 
 export default function CreatePostPage() {
+    const dataContext = useDataContext();
+    const postDao = dataContext.getPostDao();
     const router = useRouter();
     const { getAuthToken, getEmail, isAuthenticated } = useAuthenticationContext();
-    const [postDao, setPostDao] = useState(PostDao.getPostDao());
     const [post, setPost] = useState(null);
 
     const savePost = (post, attachments) => {

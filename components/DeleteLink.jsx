@@ -1,16 +1,15 @@
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
-import PostDao from "@/model/PostDao";
-import { useState } from "react";
 import { useRouter } from "next/router";
+import { useDataContext } from "@/components/api/DataProvider";
 
 export default function DeleteLink({ post, children }) {
+    const dataContext = useDataContext();
     const router = useRouter();
     const { getAuthToken } = useAuthenticationContext();
-    const [postDao, setPostDao] = useState(PostDao.getCachingPostDao());
 
     function deletePost(e) {
         e.preventDefault();
-        postDao.deletePost(post, getAuthToken())
+        dataContext.getPostDao().deletePost(post, getAuthToken())
             .then(() => router.push('/'));
     }
 

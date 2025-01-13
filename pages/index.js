@@ -4,7 +4,7 @@ import FrontPageLayout from "@/components/templates/FrontPageLayout";
 export default function Home({ initialEntries }) {
     return (
         <FrontPageLayout
-            content={<LogEntries pageSize={10}/>}
+            content={<LogEntries initialPage={0} pageSize={30}/>}
         />
     )
 }

@@ -2,7 +2,11 @@ import styles from './Modal.module.scss'
 
 export default function Modal({ onDismiss, children }) {
     function dismiss() {
-        onDismiss();
+        try {
+            onDismiss();
+        } catch (e) {
+            console.warn('error closing Modal', e);
+        }
     }
 
     function dialogClicked(e) {

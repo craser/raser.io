@@ -93,8 +93,8 @@ export default class PostDao {
      * TODO: This is totally bogus. Limits to most recent 10 entries.
      * @returns {Promise<any>}
      */
-    async getEntries(page = 0) {
-        let url = this.#config.getEndpoint('entries.latest', { page });
+    async getEntries(page = 0, pageSize = 10) {
+        let url = this.#config.getEndpoint('entries.latest', { page, pageSize });
         return this.#cleanFetch(url).then(response => response.json())
     }
 
