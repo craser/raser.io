@@ -3,6 +3,7 @@ import { useSearchContext } from "@/components/search/SearchProvider";
 import styles from "./Search.module.scss"
 import SearchInput from "@/components/search/SearchInput";
 import SearchResults from "@/components/search/SearchResults";
+import Modal from "@/components/Modal";
 
 export default function Search(props) {
 

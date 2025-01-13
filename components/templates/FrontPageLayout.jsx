@@ -10,10 +10,10 @@ export default function FrontPageLayout({ content }) {
                 <h1 className={styles.titleBanner}>
                     <Link href={'/'}>raser . io</Link>
                 </h1>
+                <Search/>
                 <HeaderNavigationOptions/>
             </header>
             <main className={styles.content}>
-                <Search/>
                 {content}
             </main>
         </div>
