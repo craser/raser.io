@@ -3,14 +3,15 @@ import styles from './FrontPageLayout.module.scss'
 import SiteNavigationHeader from "@/components/templates/SiteNavigationHeader";
 import Search from "@/components/search/Search";
 import { useEffect, useRef } from "react";
+import { debounce } from "@/lib/util/wrappers";
 
 export default function FrontPageLayout({ content }) {
     const headerRef = useRef(null);
 
     // Shenanigans! Making the CSS styling sensitive to the scroll position.
     useEffect(() => {
-        const setScrollY = () => headerRef.current.style.setProperty('--scroll-y', window.scrollY);
-        window.addEventListener('scroll', setScrollY);
+        const setScrollY = debounce(() => headerRef.current.style.setProperty('--scroll-y', window.scrollY), 100);
+        window.addEventListener('scroll', setScrollY, true);
         return () => window.removeEventListener('scroll', setScrollY);
     }, []);
 

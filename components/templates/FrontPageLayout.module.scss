@@ -13,10 +13,10 @@
     top: 0;
     @include slide(height, 150px, 80px, --scroll-scale);
     @include slide(padding-left, 0, 5px, --scroll-scale);
-    @include slide(--bg-opacity, 0, 0.8, --scroll-scale);
+    @include slide(--bg-opacity, 0, 0.9, --scroll-scale);
     background-color: rgba(255, 255, 255, var(--bg-opacity));
     border-bottom: 2px solid rgba(0, 0, 0, var(--bg-opacity));
-    transition: background-color 100ms;
+    transition: all 300ms ease-in-out;
 
     &:hover {
         background-color: rgba(255, 255, 255, 1);
@@ -29,6 +29,7 @@
         margin-right: auto;
 
         .titleBanner {
+            transition: all 300ms ease-in-out;
             @include slide(font-size, 80px, 60px, --scroll-scale);
             @include slide(letter-spacing, -10px, -5px, --scroll-scale);
             @incude slide(line-height, 120px, 90px, --scroll-scale);
@@ -87,8 +88,8 @@
                 }
 
                 &:hover {
-                    color: #e88c49;
-                    background-color: oldlace;
+                    color: black;
+                    background-color: white;
                 }
             }
         }
@@ -112,6 +113,12 @@
 .searchButton {
     &:before {
         background-image: url(/icons/search-circle-fill.svg);
+    }
+    &:hover {
+        color: black;
+        filter: invert(1);
+        transition: all 1000ms;
+
     }
 }
 
