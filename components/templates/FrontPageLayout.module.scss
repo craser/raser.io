@@ -1,21 +1,30 @@
+@mixin slide($property, $from, $to, $pctVar) {
+    #{$property}: $from;
+    #{$property}: calc(#{$from} + (#{$to} - #{$from}) * var(#{$pctVar}));
+}
+
+
 .header {
+    --scroll-y: 0; /* this will also have --scroll-y set by js */
+    --scroll-scale: min(1, calc(var(--scroll-y) / 90)); /* 0 - 100% */
+
     width: 630px;
     max-width: calc(100vw - 20px);
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1rem;
 
-
     position: sticky;
-    top: -80px;
-    height: 150px;
+    top: 0;
+    @include slide(height, 150px, 80px, --scroll-scale);
+    @include slide(padding-left, 0, 5px, --scroll-scale);
 
     .titleBanner {
-        --scroll-y: 0; /* this will also have --scroll-y set by js */
-        --scroll-scale: max(0.6, 1 - calc(var(--scroll-y) / 80));
-        --font-size: calc(80px * var(--scroll-scale));
-        font: bold var(--font-size) var(--font-title), sans-serif;
-        letter-spacing: calc(-10px * var(--scroll-scale));
+        @include slide(font-size, 80px, 60px, --scroll-scale);
+        @include slide(letter-spacing, -10px, -5px, --scroll-scale);
+        @incude slide(line-height, 120px, 90px, --scroll-scale);
+        font-family: var(--font-title), Serif;
+
         /* line-height: 120px; */
         margin: 0;
         padding: 0;
@@ -35,8 +44,9 @@
         vertical-align: middle;
         margin: 0;
 
-        position: sticky;
-        top: 10px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
 
         li {
             display: inline;
@@ -73,6 +83,7 @@
             }
         }
     }
+
 }
 
 .ytLink {

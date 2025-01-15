@@ -5,11 +5,11 @@ import Search from "@/components/search/Search";
 import { useEffect, useRef } from "react";
 
 export default function FrontPageLayout({ content }) {
-    const titleRef = useRef(null);
+    const headerRef = useRef(null);
 
     // Shenanigans! Making the CSS styling sensitive to the scroll position.
     useEffect(() => {
-        const setScrollY = () => titleRef.current.style.setProperty('--scroll-y', window.scrollY);
+        const setScrollY = () => headerRef.current.style.setProperty('--scroll-y', window.scrollY);
         window.addEventListener('scroll', setScrollY);
         return () => window.removeEventListener('scroll', setScrollY);
     }, []);
@@ -17,8 +17,8 @@ export default function FrontPageLayout({ content }) {
 
     return (
         <div className={styles.frontpage}>
-            <header className={styles.header}>
-                <h1 ref={titleRef} className={styles.titleBanner}>
+            <header ref={headerRef} className={styles.header}>
+                <h1 className={styles.titleBanner}>
                     <Link href={'/'}>raser . io</Link>
                 </h1>
                 <SiteNavigationHeader/>
