@@ -18,11 +18,13 @@ export default function FrontPageLayout({ content }) {
     return (
         <div className={styles.frontpage}>
             <header ref={headerRef} className={styles.header}>
-                <h1 className={styles.titleBanner}>
-                    <Link href={'/'}>raser . io</Link>
-                </h1>
-                <SiteNavigationHeader/>
-                <Search/>
+                <div className={styles.headerContent}>
+                    <h1 className={styles.titleBanner}>
+                        <Link href={'/'}>raser . io</Link>
+                    </h1>
+                    <SiteNavigationHeader/>
+                    <Search/>
+                </div>
             </header>
             <main className={styles.content}>
                 {content}

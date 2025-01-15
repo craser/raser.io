@@ -7,79 +7,89 @@
 .header {
     --scroll-y: 0; /* this will also have --scroll-y set by js */
     --scroll-scale: min(1, calc(var(--scroll-y) / 90)); /* 0 - 100% */
-
-    width: 630px;
-    max-width: calc(100vw - 20px);
-    margin-left: auto;
-    margin-right: auto;
+    z-index: 1; /* strangely, needed to stay above the YouTube iframes... wtf... */
     margin-bottom: 1rem;
-
     position: sticky;
     top: 0;
     @include slide(height, 150px, 80px, --scroll-scale);
     @include slide(padding-left, 0, 5px, --scroll-scale);
+    @include slide(--bg-opacity, 0, 0.8, --scroll-scale);
+    background-color: rgba(255, 255, 255, var(--bg-opacity));
+    border-bottom: 2px solid rgba(0, 0, 0, var(--bg-opacity));
+    transition: background-color 100ms;
 
-    .titleBanner {
-        @include slide(font-size, 80px, 60px, --scroll-scale);
-        @include slide(letter-spacing, -10px, -5px, --scroll-scale);
-        @incude slide(line-height, 120px, 90px, --scroll-scale);
-        font-family: var(--font-title), Serif;
-
-        /* line-height: 120px; */
-        margin: 0;
-        padding: 0;
-
-        position: sticky;
-        top: 0;
-
-        a {
-            color: black;
-            text-decoration: none;
-        }
+    &:hover {
+        background-color: rgba(255, 255, 255, 1);
     }
 
-    /* The UL that holds the navigation links */
-    .sitenav {
-        text-align: right;
-        vertical-align: middle;
-        margin: 0;
+    .headerContent {
+        width: 630px;
+        max-width: calc(100vw - 20px);
+        margin-left: auto;
+        margin-right: auto;
 
-        position: absolute;
-        bottom: 0;
-        right: 0;
+        .titleBanner {
+            @include slide(font-size, 80px, 60px, --scroll-scale);
+            @include slide(letter-spacing, -10px, -5px, --scroll-scale);
+            @incude slide(line-height, 120px, 90px, --scroll-scale);
+            font-family: var(--font-title), serif;
 
-        li {
-            display: inline;
-            list-style-type: none;
-            text-transform: lowercase;
-            margin-left: 20px;
+            /* line-height: 120px; */
+            margin: 0;
+            padding: 0;
+
+            position: sticky;
+            top: 0;
+
+            a {
+                color: black;
+                text-decoration: none;
+            }
         }
 
-        a {
-            --icon-square-size: 40px;
-            height: var(--icon-square-size);
-            color: #000;
-            margin: 3px;
-            border: 0;
-            display: inline-flex;
-            align-items: center;
-            border-radius: 5px;
-            padding: 5px;
+        /* The UL that holds the navigation links */
+        .sitenav {
+            text-align: right;
+            vertical-align: middle;
+            margin: 0;
 
-            &:before {
-                content: ' ';
-                font-size: 0;
-                height: var(--icon-square-size);
-                width: var(--icon-square-size);
-                background-repeat: no-repeat;
-                background-size: contain;
-                display: inline-block;
-                margin-right: 5px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+
+            li {
+                display: inline;
+                list-style-type: none;
+                text-transform: lowercase;
+                margin-left: 20px;
             }
 
-            &:hover {
-                color: #e88c49;
-                background-color: oldlace;
+            a {
+                --icon-square-size: 40px;
+                height: var(--icon-square-size);
+                color: #000;
+                margin: 3px;
+                border: 0;
+                display: inline-flex;
+                align-items: center;
+                border-radius: 5px;
+                padding: 5px;
+
+                &:before {
+                    content: ' ';
+                    font-size: 0;
+                    height: var(--icon-square-size);
+                    width: var(--icon-square-size);
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    display: inline-block;
+                    margin-right: 5px;
+                }
+
+                &:hover {
+                    color: #e88c49;
+                    background-color: oldlace;
+                }
             }
         }
     }
