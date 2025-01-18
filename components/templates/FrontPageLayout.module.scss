@@ -1,46 +1,48 @@
-@mixin slide($property, $from, $to, $pctVar) {
-    #{$property}: $from;
-    #{$property}: calc(#{$from} + (#{$to} - #{$from}) * var(#{$pctVar}));
-}
-
-
 .header {
-    --scroll-y: 0; /* this will also have --scroll-y set by js */
-    --scroll-scale: min(1, calc(var(--scroll-y) / 90)); /* 0 - 100% */
-    z-index: 1; /* strangely, needed to stay above the YouTube iframes... wtf... */
+    border-bottom: 2px solid rgba(0, 0, 0, var(--bg-opacity));
+    height: 150px;
     margin-bottom: 1rem;
+    padding-left: 0;
     position: sticky;
     top: 0;
-    @include slide(height, 150px, 80px, --scroll-scale);
-    @include slide(padding-left, 0, 5px, --scroll-scale);
-    @include slide(--bg-opacity, 0, 0.9, --scroll-scale);
-    background-color: rgba(255, 255, 255, var(--bg-opacity));
-    border-bottom: 2px solid rgba(0, 0, 0, var(--bg-opacity));
     transition: all 300ms ease-in-out;
+    z-index: 1; /* strangely, needed to stay above the YouTube iframes... wtf... */
 
-    &:hover {
-        background-color: rgba(255, 255, 255, 1);
+    &.stuck {
+        background-color: rgba(255, 255, 255, 0.9);
+        height: 80px;
+        padding-left: 5px;
+        &:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+
+
+        .headerContent {
+            .titleBanner {
+                font-size: 60px;
+                letter-spacing: -5px;
+                line-height: 90px;
+            }
+        }
     }
 
     .headerContent {
-        width: 630px;
-        max-width: calc(100vw - 20px);
         margin-left: auto;
         margin-right: auto;
+        max-width: calc(100vw - 20px);
+        width: 630px;
 
         .titleBanner {
-            transition: all 300ms ease-in-out;
-            @include slide(font-size, 80px, 60px, --scroll-scale);
-            @include slide(letter-spacing, -10px, -5px, --scroll-scale);
-            @incude slide(line-height, 120px, 90px, --scroll-scale);
             font-family: var(--font-title), serif;
-
-            /* line-height: 120px; */
+            font-size: 80px;
+            letter-spacing: -10px;
+            line-height: 120px;
             margin: 0;
             padding: 0;
-
             position: sticky;
             top: 0;
+            transition: all 300ms ease-in-out;
 
             a {
                 color: black;
@@ -50,41 +52,40 @@
 
         /* The UL that holds the navigation links */
         .sitenav {
+            bottom: 0;
+            margin: 0;
+            position: absolute;
+            right: 0;
             text-align: right;
             vertical-align: middle;
-            margin: 0;
-
-            position: absolute;
-            bottom: 0;
-            right: 0;
 
             li {
                 display: inline;
                 list-style-type: none;
-                text-transform: lowercase;
                 margin-left: 20px;
+                text-transform: lowercase;
             }
 
             a {
                 --icon-square-size: 40px;
-                height: var(--icon-square-size);
-                color: #000;
-                margin: 3px;
-                border: 0;
-                display: inline-flex;
                 align-items: center;
                 border-radius: 5px;
+                border: 0;
+                color: #000;
+                display: inline-flex;
+                height: var(--icon-square-size);
+                margin: 3px;
                 padding: 5px;
 
                 &:before {
-                    content: ' ';
-                    font-size: 0;
-                    height: var(--icon-square-size);
-                    width: var(--icon-square-size);
                     background-repeat: no-repeat;
                     background-size: contain;
+                    content: ' ';
                     display: inline-block;
+                    font-size: 0;
+                    height: var(--icon-square-size);
                     margin-right: 5px;
+                    width: var(--icon-square-size);
                 }
 
                 &:hover {
@@ -95,19 +96,6 @@
         }
     }
 
-}
-
-.ytLink {
-    &:before {
-        background-image: url(https://www.google.com/s2/favicons?sz=64&domain=youtube.com);
-    }
-}
-
-.threadsLink {
-    &:before {
-        background-image: url(https://www.google.com/s2/favicons?sz=64&domain=threads.net);
-        border-radius: 50%;
-    }
 }
 
 .searchButton {
