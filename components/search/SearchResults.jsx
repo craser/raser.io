@@ -32,10 +32,13 @@ export default function SearchResults() {
         const newSelected = containerRef.current.getElementsByClassName(styles.searchResult).item(selectedIndex);
         newSelected?.classList.add(styles.selectedResult);
         if (!hasHover) {
+            console.log(`hasHover: ${hasHover}`);
             newSelected?.scrollIntoView({
                 behavior: 'smooth',
                 block: 'center',
             });
+        } else {
+            console.log(`hasHover: ${hasHover}`);
         }
     }, [selectedIndex]);
 
@@ -43,6 +46,8 @@ export default function SearchResults() {
         <div ref={containerRef} data-testid="search-results" className={styles.searchResults}
              onMouseEnter={() => setHasHover(true)}
              onMouseLeave={() => setHasHover(false)}
+             onMouseMove={() => setHasHover(true)}
+             onKeyDown={() => setHasHover(false)}
         >
             {selectedIndex >= 0 && <SearchResultSelectionIndicator />}
             {(terms.length > 0) && (results.length === 0) && (
