@@ -25,12 +25,15 @@ export default function SearchResults() {
 
     useEffect(() => {
         console.log(`selecting item #${selectedIndex}`);
-        containerRef.current.getElementsByClassName(styles.selectedResult)
-            .item(0)
-            ?.classList.remove(styles.selectedResult);
-        containerRef.current.getElementsByClassName(styles.searchResult)
-            .item(selectedIndex)
-            ?.classList.add(styles.selectedResult);
+        const prevSelected = containerRef.current.getElementsByClassName(styles.selectedResult).item(0);
+        prevSelected?.classList.remove(styles.selectedResult);
+
+        const newSelected = containerRef.current.getElementsByClassName(styles.searchResult).item(selectedIndex);
+        newSelected?.classList.add(styles.selectedResult);
+        newSelected?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+        });
     }, [selectedIndex]);
 
     return (
