@@ -38,6 +38,7 @@ export default function SearchResults() {
 
     return (
         <div ref={containerRef} data-testid="search-results" className={styles.searchResults}>
+            {selectedIndex >= 0 && <SearchResultSelectionIndicator />}
             {(terms.length > 0) && (results.length === 0) && (
                 <SearchResultPlaceHolder text={"no results :("}/>
             )}
@@ -49,6 +50,19 @@ export default function SearchResults() {
             ))}
         </div>
     );
+}
+
+function SearchResultSelectionIndicator() {
+    const searchContext = useSearchContext();
+    const selectedIndex = searchContext.getSelectedResult();
+    const numResults = searchContext.getSearchResults().length;
+
+    return (
+        <div className={styles.selectionIndicator}>
+            <span className={styles.numerator}>{selectedIndex + 1}</span>
+            <span className={styles.denominator}>{numResults}</span>
+        </div>
+    )
 }
 
 export function SearchResult({ terms, post, text, index }) {
@@ -63,8 +77,17 @@ export function SearchResult({ terms, post, text, index }) {
             <div className={styles.searchResultTitle}>{post.title}</div>
             <div className={styles.searchResultsMetaData}>
                 <SearchResultPostedDate datePosted={post.datePosted}/>
-                <SearchResultMatchedTerms terms={terms} text={text} />
+                <SearchResultMatchedTerms terms={terms} text={text}/>
             </div>
+        </div>
+    );
+}
+
+function SearchResultNumber({ number, numResults }) {
+    return (
+        <div className={styles.resultNumber}>
+            <span className={styles.numerator}>{number}</span>
+            <span calssName={styles.denominator}>{numResults}</span>
         </div>
     );
 }
