@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSearchContext } from "@/components/search/SearchProvider";
 import styles from "./Search.module.scss"
 import SearchInput from "@/components/search/SearchInput";
@@ -10,32 +10,16 @@ export default function Search(props) {
     const searchContext = useSearchContext();
     const uiVisible = searchContext.isUiVisible();
 
-
-    /* Close the Search UI if user hits esc
-     * (Bound on container around input, NOT input itself.)
-     */
-    const onKeyUp = (e) => {
-        console.log({ key: e });
-        if (e.keyCode === 27) {
-            searchContext.showSearchUi(false);
-        } else if (e.code === 'Escape') {
-            searchContext.showSearchUi(false);
-        }
+    if (!uiVisible) {
+        return null;
+    } else {
+        return (
+            <Modal onDismiss={() => searchContext.showSearchUi(false)}>
+                <div data-testid="search-ui" className={styles.searchInterface}>
+                    <SearchInput/>
+                    <SearchResults pageSize={10} selectedResult={searchContext.getSelectedResult()}/>
+                </div>
+            </Modal>
+        )
     }
-
-    return (
-        <>
-            {uiVisible &&
-                <div className={styles.searchBackdrop} onClick={() => searchContext.showSearchUi(false)}></div>
-            }
-            <div className={styles.searchContainer} onKeyUp={onKeyUp}>
-                {uiVisible &&
-                    <div data-testid="search-ui" className={styles.searchInterface}>
-                        <SearchInput/>
-                        <SearchResults pageSize={10} selectedResult={searchContext.getSelectedResult()}/>
-                    </div>
-                }
-            </div>
-        </>
-    )
 }

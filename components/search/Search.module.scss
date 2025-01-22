@@ -8,180 +8,149 @@
     }
 }
 
-.searchBackdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    height: 100vh;
-    width: 100vw;
-    animation: fadeIn 150ms ease-in-out;
-}
-
 /**
- * search container anchors the interface on the page & provides a container element
+ * this contains the actual UI
  */
-.searchContainer {
-    position: absolute;
+.searchInterface {
+    animation: fadeIn 150ms ease-in-out;
+    background-color: var(--theme-color-content-text-bg);
+    height: fit-content;
+    max-width: calc(100vw - 20px);
+    min-height: 90vh;
+    max-height: 90vh;
+    overflow: hidden;
+    width: 630px;
+    z-index: 1;
 
-    top: 0;
-    left: 0;
-    z-index: 1; /* float above nearby elements, provide z-index context */
-    height: 100vh;
-    width: 100vw;
-    overflow: visible;
 
-    /**
-     * this contains the actual UI
-     */
-    .searchInterface {
-
-        animation: fadeIn 150ms ease-in-out;
-        background-color: var(--theme-color-content-text-bg);
-        border-radius: var(--theme-border-radius-large);
-        box-shadow: #111 9px 15px 20px;
-        height: fit-content;
-        left: 50%;
-        max-width: calc(100vw - 20px);
-        min-height: 40vh;
-        overflow: hidden;
-        position: absolute;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 630px;
+    .searchInput {
+        position: relative;
+        font-size: 3em;
         z-index: 1;
+        color: var(--theme-color-text);
+        background: var(--theme-color-content-text-bg);
+        border-bottom: 1px solid var(--theme-color-border);
 
-
-
-        .searchInput {
-            position: relative;
-            font-size: 3em;
-            z-index: 1;
-            color: var(--theme-color-text);
-            background: var(--theme-color-content-text-bg);
-            border-bottom: 1px solid var(--theme-color-border);
-
-            input, .typeAhead {
-                font-size: inherit;
-                padding: var(--theme-container-padding-lg);
-                text-wrap: nowrap;
-                max-width: calc(100% - (2 * var(--theme-container-padding-lg)));
-            }
-
-            input {
-                border: none;
-                outline: none;
-                width: 100%;
-                font-size: inherit;
-                background-color: transparent;
-            }
-
-            .typeAhead {
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: -1; /* BEHIND actual input */
-                font-variant-ligatures: none;
-
-                .existingQuery {
-                    color: transparent;
-                }
-
-                .suggestedCompletion {
-                    color: var(--theme-color-typeahead-suggestion);
-                }
-            }
-
+        input, .typeAhead {
+            font-size: inherit;
+            padding: var(--theme-container-padding-lg);
+            text-wrap: nowrap;
+            max-width: calc(100% - (2 * var(--theme-container-padding-lg)));
         }
 
-        .searchResults {
-            background-color: var(--theme-color-content-text-bg);
-            padding: var(--theme-container-padding-s);
+        input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: inherit;
+            background-color: transparent;
+        }
 
-            .emptySearchResult {
-                font-size: 11em;
-                color: tan;
+        .typeAhead {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1; /* BEHIND actual input */
+            font-variant-ligatures: none;
 
-                background-image: url(/img/gold-rush-desktop.jpg);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-
-                line-height: 0.8em;
+            .existingQuery {
+                color: transparent;
             }
 
-            .searchResult {
-                border-bottom: 1px dotted var(--theme-color-border-light);
-                padding: var(--theme-container-padding-lg);
-                cursor: pointer;
+            .suggestedCompletion {
+                color: var(--theme-color-typeahead-suggestion);
+            }
+        }
 
-                &.selectedResult {
-                    border-color: transparent;
-                    background-color: var(--theme-color-pop);
-                    border-radius: var(--theme-border-radius-large);
+    }
+
+    .searchResults {
+        background-color: var(--theme-color-content-text-bg);
+        padding: var(--theme-container-padding-s);
+
+        .emptySearchResult {
+            font-size: 11em;
+            color: tan;
+
+            background-image: url(/img/gold-rush-desktop.jpg);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            line-height: 0.8em;
+        }
+
+        .searchResult {
+            border-bottom: 1px dotted var(--theme-color-border-light);
+            padding: var(--theme-container-padding-lg);
+            cursor: pointer;
+
+            &.selectedResult {
+                border-color: transparent;
+                background-color: var(--theme-color-pop);
+                border-radius: var(--theme-border-radius-large);
+            }
+
+            &:last-child {
+                border: none;
+            }
+
+            .searchResultTitle {
+                font-family: var(--font-title);
+                font-size: 1.4em;
+                font-weight: bold;
+            }
+
+            .searchResultsMetaData {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                padding-top: var(--theme-container-padding-s);
+
+                .searchResultDate {
+
                 }
 
-                &:last-child {
-                    border: none;
-                }
-
-                .searchResultTitle {
-                    font-family: var(--font-title);
-                    font-size: 1.4em;
-                    font-weight: bold;
-                }
-
-                .searchResultsMetaData {
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    padding-top: var(--theme-container-padding-s);
-
-                    .searchResultDate {
-
+                .searchResultMatchedTerms {
+                    &:before, &:after {
+                        content: '(matches:';
+                        color: var(--theme-color-border-light);
+                        padding-top: var(--theme-container-padding-lg);
+                        padding-right: 0.2em;
+                        padding-left: 0;
                     }
 
-                    .searchResultMatchedTerms {
-                        &:before, &:after {
-                            content: '(matches:';
-                            color: var(--theme-color-border-light);
-                            padding-top: var(--theme-container-padding-lg);
-                            padding-right: 0.2em;
-                            padding-left: 0;
-                        }
-
-                        &:after {
-                            content: ')';
-                        }
-
-                        .searchResultTerm {
-                            padding: var(--theme-container-padding-xs);
-                            border-radius: var(--theme-container-padding-xs);
-
-                        }
+                    &:after {
+                        content: ')';
                     }
 
-                    .searchResultText {
-                        max-height: 3em;
-                        overflow: hidden;
-                        display: block;
-                        white-space: nowrap;
-                        text-overflow: ellipsis;
+                    .searchResultTerm {
+                        padding: var(--theme-container-padding-xs);
+                        border-radius: var(--theme-container-padding-xs);
 
-                        &:before {
-                            content: '...';
-                        }
+                    }
+                }
+
+                .searchResultText {
+                    max-height: 3em;
+                    overflow: hidden;
+                    display: block;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+
+                    &:before {
+                        content: '...';
+                    }
 
 
-                        .resultTokenMatch {
-                            background-color: chartreuse;
-                        }
+                    .resultTokenMatch {
+                        background-color: chartreuse;
                     }
                 }
             }
         }
     }
 }
+
 
 .resultsAnchor {
     height: 2px;
