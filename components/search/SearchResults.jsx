@@ -1,5 +1,5 @@
 import styles from './Search.module.scss'
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSearchContext } from "@/components/search/SearchProvider";
 
 function SearchResultPlaceHolder({ text }) {
@@ -22,6 +22,7 @@ export default function SearchResults() {
     const results = searchContext.getSearchResults();
     const selectedIndex = searchContext.getSelectedResult();
     const containerRef = useRef();
+    const [hasHover, setHasHover] = useState(false);
 
     useEffect(() => {
         console.log(`selecting item #${selectedIndex}`);
@@ -30,14 +31,19 @@ export default function SearchResults() {
 
         const newSelected = containerRef.current.getElementsByClassName(styles.searchResult).item(selectedIndex);
         newSelected?.classList.add(styles.selectedResult);
-        newSelected?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-        });
+        if (!hasHover) {
+            newSelected?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
+        }
     }, [selectedIndex]);
 
     return (
-        <div ref={containerRef} data-testid="search-results" className={styles.searchResults}>
+        <div ref={containerRef} data-testid="search-results" className={styles.searchResults}
+             onMouseEnter={() => setHasHover(true)}
+             onMouseLeave={() => setHasHover(false)}
+        >
             {selectedIndex >= 0 && <SearchResultSelectionIndicator />}
             {(terms.length > 0) && (results.length === 0) && (
                 <SearchResultPlaceHolder text={"no results :("}/>
