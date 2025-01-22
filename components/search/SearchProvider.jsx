@@ -25,13 +25,15 @@ export default function SearchProvider({ children }) {
     const [selectedResult, setSelectedResult] = useState(null); // index of currently selected search result
 
     function range(v) {
-        if (v < -1) {
-            return -1;
-        } else if (v > searchResults.length - 1) {
-            return searchResults.length - 1
-        } else {
-            return v;
+        let result = v;
+        let max = searchResults.length - 1;
+        if (v <= -1) {
+            result = 0;
+        } else if (v >= max) {
+            result = max;
         }
+        console.log(`range(${v}) (max: ${max}) = ${result}`)
+        return result;
     }
 
     function goToResult(i = selectedResult) {

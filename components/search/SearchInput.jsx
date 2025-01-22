@@ -33,6 +33,8 @@ export default function SearchInput(props) {
         } else if (e.key === 'Enter') {
             e.preventDefault();
             searchContext.goToResult();
+        } else {
+            console.log({ ignored: e});
         }
     }
 

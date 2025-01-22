@@ -17,7 +17,7 @@ export default function Search(props) {
             <Modal onDismiss={() => searchContext.showSearchUi(false)}>
                 <div data-testid="search-ui" className={styles.searchInterface}>
                     <SearchInput/>
-                    <SearchResults pageSize={10} selectedResult={searchContext.getSelectedResult()}/>
+                    <SearchResults selectedResult={searchContext.getSelectedResult()}/>
                 </div>
             </Modal>
         )

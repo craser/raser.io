@@ -19,9 +19,9 @@ export default function FrontPageLayout({ content }) {
     useEffect(() => {
         const setStuck = () => {
             if (window.scrollY > 100) {
-                headerRef.current.classList.add(styles.stuck);
+                headerRef.current?.classList.add(styles.stuck);
             } else if (window.scrollY < 20) {
-                headerRef.current.classList.remove(styles.stuck);
+                headerRef.current?.classList.remove(styles.stuck);
             }
         }
         const setScrollY = debounce(inIdle(setStuck), 100);

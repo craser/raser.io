@@ -1,5 +1,5 @@
 import styles from './Search.module.scss'
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSearchContext } from "@/components/search/SearchProvider";
 
 function SearchResultPlaceHolder({ text }) {
@@ -16,20 +16,32 @@ function SearchResultPlaceHolder({ text }) {
  * @param pageSize: number
  * @returns {JSX.Element}
  */
-export default function SearchResults({ pageSize = 10, selectedIndex = -1 }) {
+export default function SearchResults() {
     const searchContext = useSearchContext();
     const terms = searchContext.getSearchTerms();
     const results = searchContext.getSearchResults();
+    const selectedIndex = searchContext.getSelectedResult();
+    const containerRef = useRef();
+
+    useEffect(() => {
+        console.log(`selecting item #${selectedIndex}`);
+        containerRef.current.getElementsByClassName(styles.selectedResult)
+            .item(0)
+            ?.classList.remove(styles.selectedResult);
+        containerRef.current.getElementsByClassName(styles.searchResult)
+            .item(selectedIndex)
+            ?.classList.add(styles.selectedResult);
+    }, [selectedIndex]);
 
     return (
-        <div data-testid="search-results" className={styles.searchResults}>
+        <div ref={containerRef} data-testid="search-results" className={styles.searchResults}>
             {(terms.length > 0) && (results.length === 0) && (
                 <SearchResultPlaceHolder text={"no results :("}/>
             )}
             {(terms.length === 0) && (results.length === 0) && (
                 <SearchResultPlaceHolder text={"enter search terms"}/>
             )}
-            {results.slice(0, pageSize).map(({ post, text }, i) => (
+            {results.map(({ post, text }, i) => (
                 <SearchResult data-testclass="search-result" index={i} key={i} post={post} terms={terms} text={text}/>
             ))}
         </div>
@@ -38,9 +50,10 @@ export default function SearchResults({ pageSize = 10, selectedIndex = -1 }) {
 
 export function SearchResult({ terms, post, text, index }) {
     const searchContext = useSearchContext();
-    const selected = searchContext.getSelectedResult() === index;
+    const elementRef = useRef();
+
     return (
-        <div data-testclass="search-result" className={[styles.searchResult, (selected && styles.selectedResult)].join(' ')}
+        <div ref={elementRef} data-testclass="search-result" className={styles.searchResult}
              onClick={() => searchContext.goToResult(index)}
              onMouseEnter={() => searchContext.setSelectedResult(index)}
         >

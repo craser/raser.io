@@ -18,13 +18,15 @@
     max-width: calc(100vw - 20px);
     min-height: 90vh;
     max-height: 90vh;
-    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
     width: 630px;
     z-index: 1;
 
 
     .searchInput {
-        position: relative;
+        position: sticky;
+        top: 0;
         font-size: 3em;
         z-index: 1;
         color: var(--theme-color-text);
