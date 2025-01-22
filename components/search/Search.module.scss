@@ -18,15 +18,15 @@
     max-width: calc(100vw - 20px);
     min-height: 90vh;
     max-height: 90vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
     width: 630px;
     z-index: 1;
 
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
 
     .searchInput {
-        position: sticky;
-        top: 0;
         font-size: 3em;
         z-index: 1;
         color: var(--theme-color-text);
@@ -70,6 +70,9 @@
     .searchResults {
         background-color: var(--theme-color-content-text-bg);
         padding: var(--theme-container-padding-s);
+
+        flex: 1;
+        overflow-y: auto;
 
         .selectionIndicator {
             position: absolute;
