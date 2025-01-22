@@ -113,7 +113,7 @@
             cursor: pointer;
             position: relative;
 
-            &.selectedResult {
+            &.selectedResult, &:hover {
                 border-color: transparent;
                 background-color: var(--theme-color-pop);
                 border-radius: var(--theme-border-radius-large);

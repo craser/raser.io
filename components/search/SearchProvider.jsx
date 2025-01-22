@@ -28,7 +28,7 @@ export default function SearchProvider({ children }) {
         let result = v;
         let max = searchResults.length - 1;
         if (v <= -1) {
-            result = 0;
+            result = -1;
         } else if (v >= max) {
             result = max;
         }

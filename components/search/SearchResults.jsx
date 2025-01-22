@@ -25,6 +25,11 @@ export default function SearchResults() {
     const [hasHover, setHasHover] = useState(false);
 
     useEffect(() => {
+        console.log(`keyboard input... removing hover`);
+        setHasHover(false);
+    }, [terms]);
+
+    useEffect(() => {
         console.log(`selecting item #${selectedIndex}`);
         const prevSelected = containerRef.current.getElementsByClassName(styles.selectedResult).item(0);
         prevSelected?.classList.remove(styles.selectedResult);
@@ -43,12 +48,7 @@ export default function SearchResults() {
     }, [selectedIndex]);
 
     return (
-        <div ref={containerRef} data-testid="search-results" className={styles.searchResults}
-             onMouseEnter={() => setHasHover(true)}
-             onMouseLeave={() => setHasHover(false)}
-             onMouseMove={() => setHasHover(true)}
-             onKeyDown={() => setHasHover(false)}
-        >
+        <div ref={containerRef} data-testid="search-results" className={styles.searchResults}>
             {selectedIndex >= 0 && <SearchResultSelectionIndicator />}
             {(terms.length > 0) && (results.length === 0) && (
                 <SearchResultPlaceHolder text={"no results :("}/>
@@ -83,7 +83,6 @@ export function SearchResult({ terms, post, text, index }) {
     return (
         <div ref={elementRef} data-testclass="search-result" className={styles.searchResult}
              onClick={() => searchContext.goToResult(index)}
-             onMouseEnter={() => searchContext.setSelectedResult(index)}
         >
             <div className={styles.searchResultTitle}>{post.title}</div>
             <div className={styles.searchResultsMetaData}>
