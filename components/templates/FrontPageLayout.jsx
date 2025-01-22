@@ -38,9 +38,9 @@ export default function FrontPageLayout({ content }) {
                         <Link href={'/'}>raser . io</Link>
                     </h1>
                     <SiteNavigationHeader/>
-                    <Search/>
                 </div>
             </header>
+            <Search/>
             <main className={styles.content}>
                 {content}
             </main>

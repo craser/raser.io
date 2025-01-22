@@ -22,31 +22,36 @@
  * search container anchors the interface on the page & provides a container element
  */
 .searchContainer {
-    position: relative;
+    position: absolute;
+
     top: 0;
     left: 0;
     z-index: 1; /* float above nearby elements, provide z-index context */
-    width: 100%;
-    height: 0px;
+    height: 100vh;
+    width: 100vw;
     overflow: visible;
 
     /**
      * this contains the actual UI
      */
     .searchInterface {
-        animation: fadeIn 150ms ease-in-out;
 
+        animation: fadeIn 150ms ease-in-out;
         background-color: var(--theme-color-content-text-bg);
         border-radius: var(--theme-border-radius-large);
         box-shadow: #111 9px 15px 20px;
         height: fit-content;
-        left: 0;
+        left: 50%;
+        max-width: calc(100vw - 20px);
         min-height: 40vh;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        z-index: 1;
         overflow: hidden;
+        position: absolute;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 630px;
+        z-index: 1;
+
 
 
         .searchInput {
