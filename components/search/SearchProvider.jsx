@@ -38,8 +38,10 @@ export default function SearchProvider({ children }) {
 
     function goToResult(i = selectedResult) {
         setIsUiVisible(false);
-        const post = searchResults[i].post;
-        router.push(getPostLink(post));
+        if (i in searchResults) {
+            const post = searchResults[i].post;
+            router.push(getPostLink(post));
+        }
     }
 
     const context = {
