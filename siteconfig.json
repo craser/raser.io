@@ -19,6 +19,9 @@
         "publish": "/entries/publish",
         "update": "/entries/update",
         "bulk": "/entries/search/{numEntries}"
+      },
+      "maps": {
+        "mapimageuri": "/attachments/maps/mapimageuri/{fileName}"
       }
     }
   },

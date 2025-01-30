@@ -1,5 +1,6 @@
 import { SiteConfig } from "@/lib/SiteConfig";
 import { useAnalytics } from "@/components/analytics/AnalyticsContext";
+import { MapImage } from "@/components/maps/MapImage";
 
 
 export function getTitleImageUrl(post) {
@@ -25,10 +26,18 @@ export default function PostTitleImage({ post, className }) {
     }
 
     if (/\.gpx$/.test(post.imageFileName)) {
-        return null;
+        return (
+            <MapImage className={className || 'titleimage'}
+                      onError={() => notifyAnalytics(post.imageFileName)} fileName={post.imageFileName}
+            />
+        );
     } else if (post.imageFileName && post.imageFileType === 'image') {
         let src = getTitleImageUrl(post);
-        return <img src={src} className={className || 'titleimage'} onError={() => notifyAnalytics(src)} />;
+        return (
+            <img src={src} className={className || 'titleimage'}
+                     onError={() => notifyAnalytics(src)}
+            />
+        );
     } else {
         return null;
     }
