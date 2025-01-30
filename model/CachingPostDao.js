@@ -89,4 +89,8 @@ export default class CachingPostDao {
     async createPost(...args) {
         return this.#dao.createPost(...args);
     }
+
+    async publishPost(...args) {
+        return this.#dao.publishPost(...args);
+    }
 }
