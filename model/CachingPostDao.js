@@ -93,4 +93,8 @@ export default class CachingPostDao {
     async publishPost(...args) {
         return this.#dao.publishPost(...args);
     }
+
+    async updatePost(...args) {
+        return this.#dao.updatePost(...args);
+    }
 }

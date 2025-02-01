@@ -30,7 +30,11 @@ export default class PostDao {
 
     #auth(name, { authToken, email }) {
         let uri = this.#config.getEndpoint(name);
-        return `${uri}?${new URLSearchParams({ auth: authToken, email })}`;
+        let params = new URLSearchParams({ auth: authToken });
+        if (email) {
+            params.set('email', email);
+        }
+        return `${uri}?${params}`;
     }
 
     #cleanFetch(...args) {
