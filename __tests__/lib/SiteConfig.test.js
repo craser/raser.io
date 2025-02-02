@@ -1,4 +1,4 @@
-import { SiteConfig } from '@/lib/SiteConfig'
+import SiteConfig from '@/lib/SiteConfig'
 
 jest.mock('/siteconfig.json', () => ({
     images: {

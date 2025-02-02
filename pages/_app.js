@@ -1,7 +1,7 @@
 import '@/styles/globals.scss'
 import AuthenticationContext from "@/components/auth/AuthenticationContext";
 import { StatsigProvider } from "@statsig/react-bindings";
-import { SiteConfig } from "@/lib/SiteConfig";
+import SiteConfig from "@/lib/SiteConfig";
 import AnalyticsContext from "@/components/analytics/AnalyticsContext";
 import SearchProvider from "@/components/search/SearchProvider";
 import DataProvider from "@/components/api/DataProvider";

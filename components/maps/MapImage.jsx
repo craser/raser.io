@@ -1,4 +1,4 @@
-import { SiteConfig } from "@/lib/SiteConfig";
+import SiteConfig from "@/lib/SiteConfig";
 import { useEffect, useState } from "react";
 
 export function MapImage({ fileName, className, onError }) {

@@ -79,6 +79,20 @@
     margin-bottom: var(--margin);
 }
 
+.entry h2 {
+    overflow: hidden;
+    textarea {
+        width: 100%;
+        max-width: calc(100% - 26px);
+    }
+}
+
+.entry textarea {
+    border: 3px solid #445566;
+    margin: 10px;
+}
+
+
 .entry p {
     margin: 0.5em 0 1em 0;
     line-height: 1.5em;
@@ -90,4 +104,14 @@
 
 .entryfooter a {
     color: var(--theme-color-pop);
+}
+
+.entryfooter button {
+    /* I'm in a hurry. Let's just make this usable & get on with our lives... */
+    margin: 20px;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 10px;
 }

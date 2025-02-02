@@ -1,4 +1,4 @@
-import { SiteConfig } from "@/lib/SiteConfig";
+import SiteConfig from "@/lib/SiteConfig";
 import { useAnalytics } from "@/components/analytics/AnalyticsContext";
 import { MapImage } from "@/components/maps/MapImage";
 

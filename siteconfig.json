@@ -3,11 +3,11 @@
     "postcard": "https://raserio.b-cdn.net/{imageFileName}"
   },
   "api": {
-    "root": "https://damp-island-38652-5044b8af1a09.herokuapp.com",
+    "root": "{NEXT_PUBLIC_API_ROOT}",
     "endpoints": {
       "auth": {
-        "login": "/auth/login",
-        "check": "/auth/check"
+        "login": "/auth/login?email={email}&pass={pass}",
+        "check": "/auth/check?email={email}&token={token}"
       },
       "entries": {
         "create": "/entries/create",

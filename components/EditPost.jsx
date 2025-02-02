@@ -23,7 +23,7 @@ export const EditPost = ({ post, savePost, onCancel }) => {
             post.imageFileName = titleImage.name;
             post.imageFileType = 1; // image
         }
-        savePost(post, [titleImage]);
+        savePost(post, titleImage ? [titleImage] : []);
     }
 
     function onTitleImageDrop(file) {

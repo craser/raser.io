@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { StatsigProvider, useStatsigClient } from "@statsig/react-bindings";
-import { SiteConfig } from "@/lib/SiteConfig";
+import SiteConfig from "@/lib/SiteConfig";
 
 function ccConsole(...args) {
     console.log(...args);
