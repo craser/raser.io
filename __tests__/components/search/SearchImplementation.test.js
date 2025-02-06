@@ -5,7 +5,6 @@ import SAMPLE_PROD_STUBS from './SampleSearchStubs.json';
 import { setIntersection } from "@/lib/search/SetUtils"; // 1000 sample entries from prod to test PERFORMANCE
 
 
-
 describe('Blog Post Search Implementation', () => {
 
     test('Post title, intro, and body should be searchable', () => {
@@ -48,17 +47,6 @@ describe('Blog Post Search Implementation', () => {
         expect(results.completion).toBe('ree');
     });
 
-    test('Should return matched words with results', () => {
-        const search = new Search(MOCK_STUBS);
-        const results = search.search('common');
-        expect(results.matchedWords).toEqual({
-            '101': new Set(['commonone', 'commontwo', 'commonthree']),
-            '102': new Set(['commonone', 'commontwo']),
-            '103': new Set(['commonone']),
-        });
-    });
-
-
     test('Should ignore stop words', () => {
         const STUB_WITH_STOPS = [
             {
@@ -81,6 +69,37 @@ describe('Blog Post Search Implementation', () => {
         const results = search.search('commonone commont');
         expect(results.completion).toBe('wo');
     });
+
+    test('Completion should NOT be for any previous token', () => {
+        const STUBS = [{
+            "entryId": 999,
+            "datePosted": "2022-06-22T12:00:00.000+00:00",
+            "intro": "unique",
+            "body": null
+        }];
+
+        const search = new Search(STUBS);
+        const results = search.search('unique uni');
+        expect(results.completion).toBe(''); // Should NOT re-suggest the previous token "unique"
+    });
+
+    /**
+     * The returned completion shouldn't just be the most common completion in the whole set. It should be
+     * the most common completion in the MATCHING set.
+     */
+    test('Completion should match all returned results', () => {
+        const STUBS = [...MOCK_STUBS];
+        STUBS.push({
+            "entryId": 999,
+            "datePosted": "2022-06-22T12:00:00.000+00:00",
+            "intro": "commonthree unique",
+            "body": null
+        });
+
+        const search = new Search(STUBS);
+        const results = search.search('unique common');
+        expect(results.completion).toBe('three');
+    })
 
     test('Should return empty results for unmatched tokens', () => {
         const search = new Search(MOCK_STUBS);

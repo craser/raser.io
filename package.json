@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:coverage:open": "open coverage/lcov-report/index.html"
   },
   "dependencies": {
     "@next/env": "^15.1.2",
