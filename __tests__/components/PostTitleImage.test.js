@@ -4,11 +4,9 @@ import '@testing-library/jest-dom'
 import { useAnalytics } from "@/components/analytics/AnalyticsContext";
 
 jest.mock('@/lib/SiteConfig', () => {
-    return {
-        SiteConfig: class {
-            getValue(key, post) {
-                return `proof/of/config/call/${post.imageFileName}`;
-            }
+    return class {
+        getValue(key, post) {
+            return `proof/of/config/call/${post.imageFileName}`;
         }
     };
 });
@@ -19,7 +17,7 @@ jest.mock('@/components/analytics/AnalyticsContext');
 describe('PostTitleImage', () => {
     beforeAll(() => {
         useAnalytics.mockReturnValue({
-            fireEvent: jest.fn()
+            fireImgFail: jest.fn(),
         });
     });
 
@@ -40,6 +38,6 @@ describe('PostTitleImage', () => {
         }}/>);
         const img = container.querySelector('img');
         img.dispatchEvent(new Event('error'));
-        expect(useAnalytics().fireEvent).toHaveBeenCalled();
+        expect(useAnalytics().fireImgFail).toHaveBeenCalled();
     });
 });

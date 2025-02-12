@@ -3,15 +3,20 @@ import styles from './LogEntries.module.scss';
 import LoadingSpinner from "@/components/LoadingSpinner";
 import PostViewContext, { View } from "@/components/PostViewContext";
 import { useDataContext } from "@/components/api/DataProvider";
+import { useAnalytics } from "@/components/analytics/AnalyticsContext";
 
 
 export default function LogEntries({ initialPage = 0, pageSize, initialEntries }) {
+    const analytics = useAnalytics();
     const dataContext = useDataContext();
-    console.log({ initialEntries });
     const [entries, setEntries] = useState(initialEntries || []);
     const [intersectionObserver, setIntersectionObserver] = useState(null);
     const [isLoading, setIsLoading] = useState(false); // for now, only controls spinner
     const pageBottomRef = useRef();
+
+    useEffect(() => {
+        analytics.firePageView('home');
+    }, []);
 
     function isCsr() {
         const csr = `${typeof window}` !== 'undefined';

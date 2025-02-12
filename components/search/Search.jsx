@@ -6,7 +6,6 @@ import SearchResults from "@/components/search/SearchResults";
 import Modal from "@/components/Modal";
 
 export default function Search(props) {
-
     const searchContext = useSearchContext();
     const uiVisible = searchContext.isUiVisible();
 

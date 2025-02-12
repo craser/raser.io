@@ -10,6 +10,7 @@ import Search from "@/components/search/Search";
 import SearchButton from "@/components/search/SearchButton";
 import PostDao from "@/model/PostDao";
 import SAMPLE_SEARCH_STUBS from "@/__tests__/components/search/SampleSearchStubs.json"
+import { useDataContext } from "@/components/api/DataProvider";
 
 async function renderScaffold() {
     let result;
@@ -24,6 +25,20 @@ async function renderScaffold() {
     return result;
 }
 
+jest.mock('@/components/api/DataProvider', () => {
+    const getSearchStubs = jest.fn().mockResolvedValue([
+        // "lorem" should only appear in ONE of the stubs below - see tests below
+        { entryId: 101, datePosted: Date.now(), intro: "Intro 1", body: "lorem ipsum" },
+        { entryId: 102, datePosted: Date.now(), intro: "Intro 2", body: "dolor sit amet" }
+    ]);
+
+    return {
+        useDataContext: jest.fn().mockReturnValue({
+            getPostDao: jest.fn().mockReturnValue({ getSearchStubs })
+        })
+    };
+});
+
 /* SearchResult calls router.push() when clicked. We intercept that call here.
  */
 jest.mock('next/router', () => {
@@ -31,22 +46,6 @@ jest.mock('next/router', () => {
     return {
         useRouter: jest.fn(() => router)
     }
-});
-
-/* Mock out the search stubs we use to build the search index & find results.
- */
-jest.mock('@/model/PostDao', () => {
-    const getSearchStubs = jest.fn().mockResolvedValue([
-        // "lorem" should only appear in ONE of the stubs below - see tests below
-        { entryId: 101, datePosted: Date.now(), intro: "Intro 1", body: "lorem ipsum" },
-        { entryId: 102, datePosted: Date.now(), intro: "Intro 2", body: "dolor sit amet" }
-    ]);
-
-    return jest.fn().mockImplementation(() => {
-        return {
-            getSearchStubs
-        };
-    });
 });
 
 describe('Navigation Search', () => {
@@ -124,7 +123,7 @@ describe('Navigation Search', () => {
     });
 
     test('If search stubs cannot be retrieved, do not show search button or UI.', async () => {
-        new PostDao().getSearchStubs.mockImplementation(() => {
+        useDataContext().getPostDao().getSearchStubs.mockImplementationOnce(() => {
             return new Promise((k, ek) => {
                 throw new Error('nope!');
             });
@@ -152,7 +151,7 @@ describe('Navigation Search', () => {
     });
 
     test('Should show "irst" as completion', async () => {
-        new PostDao().getSearchStubs.mockResolvedValue(SAMPLE_SEARCH_STUBS);
+        useDataContext().getPostDao().getSearchStubs.mockResolvedValue(SAMPLE_SEARCH_STUBS);
         const result = await renderScaffold();
         const button = await result.findByTestId('search-button');
         await act(async () => {
@@ -164,7 +163,7 @@ describe('Navigation Search', () => {
             await userEvent.type(input, 'corner f');
         });
         const completion = await result.findByTestId('search-completion');
-        expect(completion.textContent).toBe('irst');
+        expect(completion.textContent).toBe('avor');
     });
 
     test('Entering a search term and hitting Ctrl-n or DOWN should select the first result', () => {

@@ -22,7 +22,7 @@ export function getTitleImageUrl(post) {
 export default function PostTitleImage({ post, className }) {
     const analytics = useAnalytics();
     const notifyAnalytics = (src) => {
-        analytics.fireEvent(`image load failed. src: "${src}"`);
+        analytics.fireImgFail(src);
     }
 
     if (/\.gpx$/.test(post.imageFileName)) {

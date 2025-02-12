@@ -9,12 +9,10 @@ export default function SearchInput(props) {
     const inputRef = useRef(null);
     const onKeyUp = (e) => {
         e.preventDefault();
-        console.log({ keyup: e });
         setTimeout(() => searchContext.setSearchTerms(inputRef.current?.value || ''), 0);
     }
 
     const onKeyDown = (e) => {
-        console.log({ keydown: e });
         if (e.key === 'Tab') {
             e.preventDefault();
             inputRef.current.value += completion;
@@ -33,8 +31,6 @@ export default function SearchInput(props) {
         } else if (e.key === 'Enter') {
             e.preventDefault();
             searchContext.goToResult();
-        } else {
-            console.log({ ignored: e});
         }
     }
 

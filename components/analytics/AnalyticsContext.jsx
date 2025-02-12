@@ -1,4 +1,3 @@
-import { createContext, useContext } from "react";
 import { StatsigProvider, useStatsigClient } from "@statsig/react-bindings";
 import SiteConfig from "@/lib/SiteConfig";
 
@@ -8,13 +7,7 @@ function ccConsole(...args) {
 
 export function useAnalytics() {
     const statsig = useStatsigClient();
-    return {
-        fireEvent: (...args) => {
-            ccConsole(...args);
-            console.log(`logging to statsig: ${args.join('|')}`);
-            statsig.logEvent(args.join('|'))
-        }
-    };
+    return buildAnalyticsContext(statsig);
 }
 
 export default function AnalyticsContext({ children }) {
@@ -27,4 +20,32 @@ export default function AnalyticsContext({ children }) {
             {children}
         </StatsigProvider>
     );
+}
+
+function buildAnalyticsContext(statsig) {
+    const fire = (eventName, value, metadata) => {
+        try {
+            const event = { eventName, value, metadata };
+            ccConsole('analytics event: ', event);
+            statsig.logEvent(event);
+        } catch (e) {
+            console.error(`error while logging analytics event`, e);
+            console.error(e);
+        }
+    };
+    return {
+        firePageView: (value, metadata) => fire('pageview', value, metadata),
+        fireImgFail: (imageName, metadata) => fire('imgfail', imageName, metadata),
+        fireUiEngagement: (element, action, metadata) => fire('engagement', `${element}`, { ...metadata, action }),
+        fireReferrer: (referrer, metadata) => {
+            try {
+                let referrerHost = new URL(referrer).host;
+                if (referrerHost !== window.location.host) {
+                    fire('referred', referrerHost, { ...metadata, referrer, host: referrerHost });
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }
 }

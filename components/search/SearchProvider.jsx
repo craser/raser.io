@@ -3,6 +3,7 @@ import Search from '@/lib/search/SearchImplementation';
 import { useRouter } from "next/router";
 import { getPostLink } from "@/components/PostLink";
 import { useDataContext } from "@/components/api/DataProvider";
+import { useAnalytics } from "@/components/analytics/AnalyticsContext";
 
 const MIN_SEARCH_TERM_LENGTH = 3;
 
@@ -13,6 +14,7 @@ export function useSearchContext() {
 }
 
 export default function SearchProvider({ children }) {
+    const analytics = useAnalytics();
     const dataContext = useDataContext()
     const router = useRouter();
 
@@ -40,6 +42,10 @@ export default function SearchProvider({ children }) {
         setIsUiVisible(false);
         if (i in searchResults) {
             const post = searchResults[i].post;
+            analytics.fireUiEngagement('search', 'select result', {
+                terms: searchTerms,
+                post: post.entryId,
+            });
             router.push(getPostLink(post));
         }
     }
@@ -48,6 +54,7 @@ export default function SearchProvider({ children }) {
         isSearchAvailable: () => isSearchAvailable,
         showSearchUi: (show) => {
             console.log(`showSearchUi(${show})`);
+            analytics.fireUiEngagement('search', 'open');
             setIsUiVisible(show);
         },
         isUiVisible: () => isUiVisible,
