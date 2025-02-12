@@ -1,33 +1,24 @@
-import { StatsigProvider, useStatsigClient } from "@statsig/react-bindings";
-import SiteConfig from "@/lib/SiteConfig";
 
 function ccConsole(...args) {
     console.log(...args);
 }
 
 export function useAnalytics() {
-    const statsig = useStatsigClient();
-    return buildAnalyticsContext(statsig);
+    return buildAnalyticsContext();
 }
 
 export default function AnalyticsContext({ children }) {
-    const sdkKey = new SiteConfig().getValue('statsig.sdkKey');
     return (
-        <StatsigProvider
-            sdkKey={sdkKey}
-            user={{ userID: 'guest', email: 'none@example.com' }}
-        >
-            {children}
-        </StatsigProvider>
+        <>{children}</>
     );
 }
 
-function buildAnalyticsContext(statsig) {
+function buildAnalyticsContext() {
     const fire = (eventName, value, metadata) => {
         try {
             const event = { eventName, value, metadata };
             ccConsole('analytics event: ', event);
-            statsig.logEvent(event);
+            // FIXME: Actually implement some kind of... y'know... analytics.
         } catch (e) {
             console.error(`error while logging analytics event`, e);
             console.error(e);

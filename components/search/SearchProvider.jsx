@@ -66,7 +66,10 @@ export default function SearchProvider({ children }) {
         getSearchResults: () => [...searchResults],
         getCompletion: () => completion,
         getSelectedResult: () => selectedResult,
-        setSelectedResult: (i) => { console.log(`selected: ${i}`); setSelectedResult(i) },
+        setSelectedResult: (i) => {
+            console.log(`selected: ${i}`);
+            setSelectedResult(i)
+        },
         selectNextResult: () => setSelectedResult(range(selectedResult + 1)),
         selectPrevResult: () => setSelectedResult(range(selectedResult - 1)),
         goToResult
@@ -93,7 +96,7 @@ export default function SearchProvider({ children }) {
             })
             .then(stubs => setSearchImpl(new Search(stubs)))
             .catch((e) => {
-                //console.error('error fetching search stubs', e);
+                console.error('error fetching search stubs', e);
                 setIsSearchAvailable(false);
                 setIsUiVisible(false);
             });

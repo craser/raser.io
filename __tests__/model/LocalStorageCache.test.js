@@ -1,6 +1,7 @@
 import LocalStorageCache from 'model/LocalStorageCache'
 
 let postId = 1000;
+
 class MockPost {
     entryId = postId++;
 }
@@ -15,6 +16,21 @@ function measureCacheSize(list) {
 
 beforeEach(() => {
     jest.resetAllMocks();
+    let store = {};
+    const localStorageMock = {
+        setItem: jest.fn((name, value) => store[name] = JSON.stringify(value)),
+        getItem: jest.fn((name) => store[name]),
+        clear: () => store = {},
+    };
+    Object.defineProperty(global, 'localStorage', {
+        value: localStorageMock,
+        writable: true,
+    });
+});
+
+afterEach(() => {
+    global.localStorage.clear();
+    delete global.localStorage;
 });
 
 test('basic get/set', () => {
@@ -125,19 +141,6 @@ test('boot the least-recently-used entry', () => {
 })
 
 test('should correctly parse pickled json', () => {
-    let pickled = null;
-    let cacheName = null;
-    global.localStorage = jest.mocked({
-        getItem: jest.fn((name) => {
-            cacheName = name; // name should be consistent
-            return JSON.stringify(pickled);
-        }),
-        setItem: jest.fn((name, value) => {
-            expect(name).toBe(cacheName); // name should be consistent
-            pickled = value;
-        })
-    });
-
     let cacheA = new LocalStorageCache();
     let a = new MockPost();
     let b = new MockPost();
@@ -175,8 +178,7 @@ test('should expire entries after 3 hours', () => {
         mockCurrentTime += 3 * 60 * 60 * 1000 + 1;
         expect(cache.getById(post.entryId)).toBeFalsy();
         expect(cache.size).toBe(0);
-    }
-    finally {
+    } finally {
         global.Date = Date;
     }
 })

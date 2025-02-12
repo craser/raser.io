@@ -3,26 +3,21 @@
  *
  */
 
-import { act, render } from "@testing-library/react";
+import { act, render, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import SearchProvider from "@/components/search/SearchProvider";
 import Search from "@/components/search/Search";
 import SearchButton from "@/components/search/SearchButton";
-import PostDao from "@/model/PostDao";
 import SAMPLE_SEARCH_STUBS from "@/__tests__/components/search/SampleSearchStubs.json"
 import { useDataContext } from "@/components/api/DataProvider";
 
 async function renderScaffold() {
-    let result;
-    act(() => {
-        result = render(
-            <SearchProvider>
-                <SearchButton/>
-                <Search/>
-            </SearchProvider>
-        );
-    });
-    return result;
+    return render(
+        <SearchProvider>
+            <SearchButton/>
+            <Search/>
+        </SearchProvider>
+    );
 }
 
 jest.mock('@/components/api/DataProvider', () => {
@@ -123,12 +118,17 @@ describe('Navigation Search', () => {
     });
 
     test('If search stubs cannot be retrieved, do not show search button or UI.', async () => {
-        useDataContext().getPostDao().getSearchStubs.mockImplementationOnce(() => {
-            return new Promise((k, ek) => {
-                throw new Error('nope!');
-            });
-        });
+        useDataContext().getPostDao().getSearchStubs.mockReturnValueOnce(new Promise(function (k, ek) {
+            throw new Error('nope!');
+        }));
+
         const result = await renderScaffold();
+        // WARNING! When debugging, be aware that waitFor has a default timeout of 1000ms.
+        // It'll fail to work properly if you hit breakpoints while it's looping.
+        await waitFor(async () => {
+            const button = await result.queryByTestId('search-button');
+            expect(button).not.toBeTruthy();
+        });
         let button = await result.queryByTestId('search-button');
         let ui = await result.queryByTestId('search-ui');
         expect(button).not.toBeTruthy();
