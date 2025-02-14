@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { EditPost } from "@/components/EditPost";
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
-import { getPostLink } from "@/components/PostLink";
 import { useDataContext } from "@/components/api/DataProvider";
+import { getPostLink } from "@/lib/util/Links";
 
 export default function CreatePostPage() {
     const dataContext = useDataContext();

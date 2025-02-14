@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import Search from '@/lib/search/SearchImplementation';
 import { useRouter } from "next/router";
-import { getPostLink } from "@/components/PostLink";
 import { useDataContext } from "@/components/api/DataProvider";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
+import { getPostLink } from "@/lib/util/Links";
 
 const MIN_SEARCH_TERM_LENGTH = 3;
 

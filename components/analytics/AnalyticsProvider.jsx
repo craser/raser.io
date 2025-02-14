@@ -10,6 +10,7 @@ const AnalyticsContextObj = createContext({
     fireImgFail: log,
     fireUiEngagement: log,
     fireReferrer: log,
+    fireEvent: log,
 })
 
 export function useAnalytics() {
@@ -32,17 +33,17 @@ export default function AnalyticsProvider({ children }) {
 
 function buildAnalyticsContext() {
 
-    const fire = (eventName, value, metadata) => {
+    const fire = (eventName) => {
         try {
-            const event = { eventName, value, metadata };
-            console.warn('Incomplete analytics tracking: not passing event value & metadata through to Amplitude');
-            amplitude.track(eventName);
+            console.info(`analytics event: "${eventName}"`);
+            //amplitude.track(eventName);
         } catch (e) {
             console.error(`error while logging analytics event`, e);
             console.error(e);
         }
     };
     return {
+        fire, // Free-form events. Use sparingly, I think? Should I even open this door?
         firePageView: (value, metadata) => fire('pageview', value, metadata),
         fireImgFail: (imageName, metadata) => fire('imgfail', imageName, metadata),
         fireUiEngagement: (element, action, metadata) => fire('engagement', `${element}`, { ...metadata, action }),

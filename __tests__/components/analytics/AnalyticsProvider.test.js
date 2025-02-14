@@ -46,4 +46,12 @@ describe('AnalyticsContext', () => {
         expect(amplitude.track).toHaveBeenCalledWith('pageview');
     });
 
+    test('calling fire should pass through to Amplitude', async () => {
+        await renderScaffold(() => {
+            const analytics = useAnalytics();
+            analytics.fire('dummy event');
+        });
+        expect(amplitude.track).toHaveBeenCalledWith('dummy event');
+    });
+
 });

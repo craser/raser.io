@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import PostDao from "@/model/PostDao";
-import { getPostLink } from "@/components/PostLink";
+
+import { getPostLink } from "@/lib/util/Links";
 
 /**
  *

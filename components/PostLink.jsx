@@ -1,8 +1,5 @@
 import Link from "next/link";
-
-export function getPostLink(post) {
-    return `/archive/${post.entryId}`
-}
+import { getPostLink } from "@/lib/util/Links";
 
 /**
  * Maps a Post object to canonical URL.
