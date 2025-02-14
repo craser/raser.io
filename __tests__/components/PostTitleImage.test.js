@@ -1,7 +1,7 @@
 import PostTitleImage from "@/components/PostTitleImage.jsx";
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { useAnalytics } from "@/components/analytics/AnalyticsContext";
+import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 
 jest.mock('@/lib/SiteConfig', () => {
     return class {
@@ -11,7 +11,7 @@ jest.mock('@/lib/SiteConfig', () => {
     };
 });
 
-jest.mock('@/components/analytics/AnalyticsContext');
+jest.mock('@/components/analytics/AnalyticsProvider');
 
 
 describe('PostTitleImage', () => {

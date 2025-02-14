@@ -6,7 +6,7 @@ import NextPrevPostLinks from "@/components/NextPrevPostLinks";
 import FrontPageLayout from "@/components/templates/FrontPageLayout";
 import PostViewContext from "@/components/PostViewContext";
 import { useDataContext } from "@/components/api/DataProvider";
-import { useAnalytics } from "@/components/analytics/AnalyticsContext";
+import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 
 export default function SinglePostPage({ postId }) {
     const analytics = useAnalytics();

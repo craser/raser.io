@@ -1,12 +1,12 @@
 import '@/styles/globals.scss'
 import AuthenticationContext from "@/components/auth/AuthenticationContext";
-import AnalyticsContext from "@/components/analytics/AnalyticsContext";
+import AnalyticsProvider from "@/components/analytics/AnalyticsProvider";
 import SearchProvider from "@/components/search/SearchProvider";
 import DataProvider from "@/components/api/DataProvider";
 
 export default function App({ Component, pageProps }) {
     return (
-        <AnalyticsContext>
+        <AnalyticsProvider>
             <AuthenticationContext>
                 <DataProvider>
                     <SearchProvider>
@@ -14,6 +14,6 @@ export default function App({ Component, pageProps }) {
                     </SearchProvider>
                 </DataProvider>
             </AuthenticationContext>
-        </AnalyticsContext>
+        </AnalyticsProvider>
     );
 }

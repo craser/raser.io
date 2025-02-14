@@ -1,24 +1,42 @@
+import * as amplitude from '@amplitude/analytics-browser';
+import { createContext, useContext, useEffect } from "react";
 
-function ccConsole(...args) {
+const log = (...args) => {
     console.log(...args);
 }
 
+const AnalyticsContextObj = createContext({
+    firePageView: log,
+    fireImgFail: log,
+    fireUiEngagement: log,
+    fireReferrer: log,
+})
+
 export function useAnalytics() {
-    return buildAnalyticsContext();
+    return useContext(AnalyticsContextObj);
 }
 
-export default function AnalyticsContext({ children }) {
+export default function AnalyticsProvider({ children }) {
+    useEffect(() => {
+        window.addEventListener('load', () => {
+            amplitude.init('fb41a11b2a1da56f45839d940d5c28b0', { "autocapture": true });
+        });
+    }, []);
+
     return (
-        <>{children}</>
+        <AnalyticsContextObj.Provider value={buildAnalyticsContext()}>
+            {children}
+        </AnalyticsContextObj.Provider>
     );
 }
 
 function buildAnalyticsContext() {
+
     const fire = (eventName, value, metadata) => {
         try {
             const event = { eventName, value, metadata };
-            ccConsole('analytics event: ', event);
-            // FIXME: Actually implement some kind of... y'know... analytics.
+            console.warn('Incomplete analytics tracking: not passing event value & metadata through to Amplitude');
+            amplitude.track(eventName);
         } catch (e) {
             console.error(`error while logging analytics event`, e);
             console.error(e);

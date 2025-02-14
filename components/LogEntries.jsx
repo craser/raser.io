@@ -3,7 +3,7 @@ import styles from './LogEntries.module.scss';
 import LoadingSpinner from "@/components/LoadingSpinner";
 import PostViewContext, { View } from "@/components/PostViewContext";
 import { useDataContext } from "@/components/api/DataProvider";
-import { useAnalytics } from "@/components/analytics/AnalyticsContext";
+import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 
 
 export default function LogEntries({ initialPage = 0, pageSize, initialEntries }) {

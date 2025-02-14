@@ -1,5 +1,5 @@
 import SiteConfig from "@/lib/SiteConfig";
-import { useAnalytics } from "@/components/analytics/AnalyticsContext";
+import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 import { MapImage } from "@/components/maps/MapImage";
 
 

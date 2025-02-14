@@ -3,7 +3,7 @@ import Search from '@/lib/search/SearchImplementation';
 import { useRouter } from "next/router";
 import { getPostLink } from "@/components/PostLink";
 import { useDataContext } from "@/components/api/DataProvider";
-import { useAnalytics } from "@/components/analytics/AnalyticsContext";
+import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 
 const MIN_SEARCH_TERM_LENGTH = 3;
 

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import AuthenticationManager from "@/lib/api/AuthenticationManager";
 import LoginModal from "@/components/auth/LoginModal";
 import { auth } from "mysql/lib/protocol/Auth";
-import { useAnalytics } from "@/components/analytics/AnalyticsContext";
+import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 
 const AuthContextObj = createContext({
     login: () => false,
