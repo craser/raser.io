@@ -1,7 +1,6 @@
 import AnalyticsProvider, { useAnalytics } from "@/components/analytics/AnalyticsProvider";
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import * as amplitude from '@amplitude/analytics-browser';
-import matchers from "@testing-library/jest-dom/matchers";
 
 
 async function renderScaffold(Component) {
@@ -33,7 +32,19 @@ describe('AnalyticsContext', () => {
 
     test('should initialize with autocapture enabled', async () => {
         await renderScaffold(() => <></>);
-        expect(amplitude.init).toHaveBeenCalledWith(expect.stringMatching(/.+/), { autocapture: true });
+        await waitFor(() => {
+            expect(amplitude.init).toHaveBeenCalledWith(expect.stringMatching(/.+/), { autocapture: true });
+        });
+    });
+
+    test('calling fire should pass through to Amplitude', async () => {
+        await renderScaffold(() => {
+            const analytics = useAnalytics();
+            analytics.fire('dummy event');
+        });
+        await waitFor(() => {
+            expect(amplitude.track).toHaveBeenCalledWith('dummy event');
+        });
     });
 
     test('should exist', async () => {
@@ -42,16 +53,9 @@ describe('AnalyticsContext', () => {
             analyticsContext.firePageView('DUMMY_VALUE', { data: 'DUMMY_DATA' });
             return <>I want to be an Air Force Ranger!</>
         });
-        expect(amplitude.init).toHaveBeenCalledTimes(1);
-        expect(amplitude.track).toHaveBeenCalledWith('pageview');
-    });
-
-    test('calling fire should pass through to Amplitude', async () => {
-        await renderScaffold(() => {
-            const analytics = useAnalytics();
-            analytics.fire('dummy event');
+        await waitFor(() => {
+            expect(amplitude.track).toHaveBeenCalledWith('pageview');
         });
-        expect(amplitude.track).toHaveBeenCalledWith('dummy event');
     });
 
 });

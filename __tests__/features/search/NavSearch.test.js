@@ -10,6 +10,7 @@ import Search from "@/components/search/Search";
 import SearchButton from "@/components/search/SearchButton";
 import SAMPLE_SEARCH_STUBS from "@/__tests__/components/search/SampleSearchStubs.json"
 import { useDataContext } from "@/components/api/DataProvider";
+import { useRouter } from "next/router";
 
 async function renderScaffold() {
     return render(
@@ -37,10 +38,10 @@ jest.mock('@/components/api/DataProvider', () => {
 /* SearchResult calls router.push() when clicked. We intercept that call here.
  */
 jest.mock('next/router', () => {
-    const router = { push: jest.fn };
-    return {
-        useRouter: jest.fn(() => router)
-    }
+    const router = { push: jest.fn() };
+    const useRouter = jest.fn();
+    useRouter.mockReturnValue(router);
+    return { useRouter };
 });
 
 describe('Navigation Search', () => {
@@ -151,7 +152,7 @@ describe('Navigation Search', () => {
     });
 
     test('Should show "irst" as completion', async () => {
-        useDataContext().getPostDao().getSearchStubs.mockResolvedValue(SAMPLE_SEARCH_STUBS);
+        useDataContext().getPostDao().getSearchStubs.mockResolvedValueOnce(SAMPLE_SEARCH_STUBS);
         const result = await renderScaffold();
         const button = await result.findByTestId('search-button');
         await act(async () => {
@@ -166,8 +167,14 @@ describe('Navigation Search', () => {
         expect(completion.textContent).toBe('avor');
     });
 
-    test('Entering a search term and hitting Ctrl-n or DOWN should select the first result', () => {
-
+    test('Hitting ENTER should cause the selected result to be shown', async () => {
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await userEvent.click(button);
+        const input = await result.findByTestId('search-input');
+        await userEvent.type(input, 'lorem');
+        await userEvent.keyboard('{Enter}');
+        expect(useRouter().push).toHaveBeenCalled();
     });
 
 });

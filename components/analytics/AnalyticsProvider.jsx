@@ -1,5 +1,6 @@
 import * as amplitude from '@amplitude/analytics-browser';
 import { createContext, useContext, useEffect } from "react";
+import SiteConfig from "@/lib/SiteConfig";
 
 const log = (...args) => {
     console.log(...args);
@@ -18,9 +19,12 @@ export function useAnalytics() {
 }
 
 export default function AnalyticsProvider({ children }) {
+    let siteConfig = new SiteConfig();
+    const apiKey = siteConfig.getValue('amplitude.apiKey');
+    const options = siteConfig.getValue('amplitude.options');
     useEffect(() => {
         window.addEventListener('load', () => {
-            amplitude.init('fb41a11b2a1da56f45839d940d5c28b0', { "autocapture": true });
+            amplitude.init(apiKey, options);
         });
     }, []);
 
@@ -36,7 +40,7 @@ function buildAnalyticsContext() {
     const fire = (eventName) => {
         try {
             console.info(`analytics event: "${eventName}"`);
-            //amplitude.track(eventName);
+            amplitude.track(eventName);
         } catch (e) {
             console.error(`error while logging analytics event`, e);
             console.error(e);

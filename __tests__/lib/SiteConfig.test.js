@@ -37,4 +37,14 @@ describe('SiteConfig', () => {
         expect(endpoint).toEqual('http://dummyhost.com/fake-entry-endpoint/1138');
     });
 
+    test('return an object as a value', () => {
+        const EXPECTED = {
+            entries: {
+                entry: '/fake-entry-endpoint/{id}'
+            }
+        };
+        let actual = new SiteConfig().getValue('api.endpoints');
+        expect(actual).toEqual(EXPECTED);
+    });
+
 });

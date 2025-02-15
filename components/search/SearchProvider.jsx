@@ -40,14 +40,15 @@ export default function SearchProvider({ children }) {
 
     function goToResult(i = selectedResult) {
         setIsUiVisible(false);
-        if (i in searchResults) {
-            const post = searchResults[i].post;
-            analytics.fireUiEngagement('search', 'select result', {
-                terms: searchTerms,
-                post: post.entryId,
-            });
-            router.push(getPostLink(post));
-        }
+;        const post = (i in searchResults)
+            ? searchResults[i]
+            : searchResults[0];
+
+        analytics.fireUiEngagement('search', 'select result', {
+            terms: searchTerms,
+            post: post.entryId,
+        });
+        router.push(getPostLink(post));
     }
 
     const context = {
