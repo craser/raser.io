@@ -124,7 +124,7 @@ describe('Navigation Search', () => {
     });
 
     test('If search stubs cannot be retrieved, do not show search button or UI.', async () => {
-        useDataContext().getPostDao().getSearchStubs.mockReturnValueOnce(new Promise(function (k, ek) {
+        useDataContext().getPostDao().getSearchStubs.mockReturnValueOnce(new Promise(function () {
             throw new Error('nope!');
         }));
 
