@@ -12,6 +12,13 @@ import SAMPLE_SEARCH_STUBS from "@/__tests__/components/search/SampleSearchStubs
 import { useDataContext } from "@/components/api/DataProvider";
 import { useRouter } from "next/router";
 
+
+const MOCK_SEARCH_STUBS = [
+    // "lorem" should only appear in ONE of the stubs below - see tests below
+    { entryId: 101, datePosted: Date.now(), intro: "Intro 1", body: "lorem ipsum" },
+    { entryId: 102, datePosted: Date.now(), intro: "Intro 2", body: "dolor sit amet" }
+];
+
 async function renderScaffold() {
     return render(
         <SearchProvider>
@@ -20,31 +27,29 @@ async function renderScaffold() {
         </SearchProvider>
     );
 }
-
 jest.mock('@/components/api/DataProvider', () => {
-    const getSearchStubs = jest.fn().mockResolvedValue([
-        // "lorem" should only appear in ONE of the stubs below - see tests below
-        { entryId: 101, datePosted: Date.now(), intro: "Intro 1", body: "lorem ipsum" },
-        { entryId: 102, datePosted: Date.now(), intro: "Intro 2", body: "dolor sit amet" }
-    ]);
-
+    let mockPostDao = { getSearchStubs: jest.fn() };
+    let mockDataContext = {
+        getPostDao: () => mockPostDao
+    };
     return {
-        useDataContext: jest.fn().mockReturnValue({
-            getPostDao: jest.fn().mockReturnValue({ getSearchStubs })
-        })
+        useDataContext: () => mockDataContext
     };
 });
 
 /* SearchResult calls router.push() when clicked. We intercept that call here.
  */
 jest.mock('next/router', () => {
-    const router = { push: jest.fn() };
-    const useRouter = jest.fn();
-    useRouter.mockReturnValue(router);
-    return { useRouter };
+    return { useRouter: jest.fn() };
 });
 
 describe('Navigation Search', () => {
+
+    beforeEach(() => {
+        jest.resetAllMocks();
+        useDataContext().getPostDao().getSearchStubs.mockResolvedValue(MOCK_SEARCH_STUBS);
+        useRouter.mockReturnValue({ push: jest.fn() });
+    });
 
     test('Initial render should show the search button, and NOT the search itself.', async () => {
         const result = await renderScaffold();
