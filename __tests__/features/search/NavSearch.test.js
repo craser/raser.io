@@ -156,7 +156,7 @@ describe('Navigation Search', () => {
         expect(completion.textContent).toBe('');
     });
 
-    test('Should show "irst" as completion', async () => {
+    test('Should show "avor" as completion', async () => {
         useDataContext().getPostDao().getSearchStubs.mockResolvedValueOnce(SAMPLE_SEARCH_STUBS);
         const result = await renderScaffold();
         const button = await result.findByTestId('search-button');
@@ -169,7 +169,9 @@ describe('Navigation Search', () => {
             await userEvent.type(input, 'corner f');
         });
         const completion = await result.findByTestId('search-completion');
-        expect(completion.textContent).toBe('avor');
+        await waitFor(() => {
+            expect(completion.textContent).toBe('avor');
+        });
     });
 
     test('Hitting ENTER should cause the selected result to be shown', async () => {
