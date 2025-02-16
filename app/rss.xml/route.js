@@ -23,9 +23,9 @@ function generateRss() {
             `<?xml version="1.0" encoding="UTF-8" ?>
             <rss version="2.0">
               <channel>
-                <title>raser.io</title>
+                <title>DeathB4Decaf</title>
                 <link>https://raser.io</link>
-                <description>raser.io</description>
+                <description>Chris Raser's Personal Blog</description>
                 <language>en-us</language>
                 ${postsXml}
               </channel>
