@@ -21,7 +21,7 @@ export function useAnalytics() {
 export default function AnalyticsProvider({ children }) {
     let siteConfig = new SiteConfig();
     const apiKey = siteConfig.getValue('amplitude.apiKey');
-    const options = siteConfig.getValue('amplitude.options');
+    const options = siteConfig.getValue('amplitude.browser.options');
     useEffect(() => {
         window.addEventListener('load', () => {
             amplitude.init(apiKey, options);

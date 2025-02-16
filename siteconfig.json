@@ -30,9 +30,15 @@
     "serviceName": "raser.io"
   },
   "amplitude": {
+    "enabled": "{NEXT_PUBLIC_API_ROOT}",
     "apiKey": "fb41a11b2a1da56f45839d940d5c28b0",
-    "options": {
-      "autocapture": true
+    "browser": {
+      "options": {
+        "autocapture": true
+      }
+    },
+    "server": {
+      "options": {}
     }
   }
 }

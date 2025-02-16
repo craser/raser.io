@@ -47,7 +47,7 @@ describe('AnalyticsContext', () => {
         });
     });
 
-    test('should exist', async () => {
+    test('should pass page view even throughk', async () => {
         await renderScaffold(() => {
             const analyticsContext = useAnalytics();
             analyticsContext.firePageView('DUMMY_VALUE', { data: 'DUMMY_DATA' });
