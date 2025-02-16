@@ -181,7 +181,9 @@ describe('Navigation Search', () => {
         const input = await result.findByTestId('search-input');
         await userEvent.type(input, 'lorem');
         await userEvent.keyboard('{Enter}');
-        expect(useRouter().push).toHaveBeenCalled();
+        await waitFor(() => {
+            expect(useRouter().push).toHaveBeenCalled();
+        });
     });
 
 });
