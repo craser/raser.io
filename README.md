@@ -1,28 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# raser.io: Chris Raser's Personal Blog
 
-## Big Picture
+## Current State of Things
 
-- This app is the Next.js/React front end, which is hosted on Vercel.
-- The back end (database & attachment files) is a SpringBoot app hosted on Heroku. 
+- Currently in its infancy, still building out some features that were supported by old Java-based site.
 
+## Goals
 
-## Installation
-
-```bash
-npm install -g vercel # install needed vercel script
-vercel link # log in with github, link to "craser's projects" scope
-npm install
-```
+- replace outdated, expensive-to-host Java/JSP implementation
+- personal playground for new ideas/frameworks
 
 
-## Running Locally
+## Overview
 
-(Note that you'll need to either point this instance at the _production_ back end API (see: 
-[siteconfig.json](./siteconfig.json)), or run the back end locally.)
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Front end (this codebase) on Vercel
+- Back end is Spring Boot hosted on Heroku
 

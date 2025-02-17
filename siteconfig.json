@@ -26,12 +26,12 @@
     }
   },
   "honeycomb": {
-    "apiKey": "hcaik_01jdn2n65j7kfecwmt3902a9gm72gassb392gvxkhxvzbw5gd1nb61zzv5",
+    "apiKey": "{NEXT_PUBLIC_HONEYCOMB_API_KEY)",
     "serviceName": "raser.io"
   },
   "amplitude": {
-    "enabled": "{NEXT_PUBLIC_API_ROOT}",
-    "apiKey": "fb41a11b2a1da56f45839d940d5c28b0",
+    "enabled": "{NEXT_PUBLIC_ANALYTICS_ENABLED}",
+    "apiKey": "{NEXT_PUBLIC_AMPLITUDE_API_KEY}",
     "browser": {
       "options": {
         "autocapture": true
