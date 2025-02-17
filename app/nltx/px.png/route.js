@@ -11,6 +11,8 @@ export async function GET(request) {
     await amplitude.init(apiKey, options);
 
     let eventProperties = {
+        referrer: request.referrer,
+        userAgent: request.headers.get('User-Agent'),
         ...request?.nextUrl?.searchParams
     };
     console.info(`pixel event properties: ${JSON.stringify(eventProperties)}`);

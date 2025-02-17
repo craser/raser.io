@@ -7,9 +7,23 @@ jest.mock('next/server', () => ({
 }));
 
 jest.mock('@amplitude/analytics-node');
-jest.mock('next/router', () => ({
-    useRouter: jest.fn(),
-}));
+
+
+function mockRequest() {
+    const request = {
+        referrer: 'DUMMY_REFERRER',
+        headers: {
+            get: jest.fn(() => 'DUMMY_USER_AGENT')
+        },
+        nextUrl: {
+            searchParams: {
+                foo: 'bar',
+                bim: 'gregory'
+            }
+        }
+    }
+    return request;
+}
 
 describe('Tracking Pixel', () => {
 
@@ -18,23 +32,10 @@ describe('Tracking Pixel', () => {
         track.mockReturnValue({
             promise: Promise.resolve({})
         });
-        useRouter.mockReturnValue({
-            query: {
-                version: 'VERSION',
-                source: 'SOURCE',
-            }
-        });
     });
 
     it('should pass request parameters through to anlytics event', async () => {
-        const request = {
-            nextUrl: {
-                searchParams: {
-                    foo: 'bar',
-                    bim: 'gregory'
-                }
-            }
-        }
+        const request = mockRequest();
         await GET(request);
         expect(track).toHaveBeenCalledWith(
             'pixel',
@@ -45,4 +46,18 @@ describe('Tracking Pixel', () => {
             expect.any(Object)
         );
     });
+
+    it('should pass referrer and user agent from request', async () => {
+        const request = mockRequest();
+        await GET(request);
+        expect(request.headers.get).toHaveBeenCalledWith('User-Agent');
+            expect(track).toHaveBeenCalledWith(
+            'pixel',
+            expect.objectContaining({
+                userAgent: 'DUMMY_USER_AGENT',
+                referrer: 'DUMMY_REFERRER',
+            }),
+            expect.any(Object)
+        );
+    })
 });
