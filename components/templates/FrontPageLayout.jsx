@@ -35,7 +35,7 @@ export default function FrontPageLayout({ content }) {
             <header ref={headerRef} className={styles.header}>
                 <div className={styles.headerContent}>
                     <h1 className={styles.titleBanner}>
-                        <Link href={'/'}>DeathB4Decaf/Link>
+                        <Link href={'/'}>DeathB4Decaf</Link>
                     </h1>
                     <SiteNavigationHeader/>
                 </div>
