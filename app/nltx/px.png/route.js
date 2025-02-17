@@ -5,16 +5,17 @@ import path from 'path';
 import SiteConfig from "@/lib/SiteConfig";
 
 export async function GET(request) {
-    console.log(`route: ${request.url}`);
     const siteConfig = new SiteConfig();
     const apiKey = siteConfig.getValue('amplitude.apiKey');
     const options = siteConfig.getValue('amplitude.server.options');
     await amplitude.init(apiKey, options);
 
+    let eventProperties = {
+        ...request?.nextUrl?.searchParams
+    };
+    console.info(`pixel event properties: ${JSON.stringify(eventProperties)}`);
     const response = await amplitude.track('pixel',
-        {
-            source: 'unknown',
-        },
+        eventProperties,
         {
             user_id: 'guest',
         }).promise;
