@@ -172,6 +172,7 @@ describe('Navigation Search', () => {
         await waitFor(() => {
             expect(completion.textContent).toBe('avor');
         });
+        expect(completion.textContent).toBe('avor');
     });
 
     test('Hitting ENTER should cause the selected result to be shown', async () => {

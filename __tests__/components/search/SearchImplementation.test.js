@@ -64,6 +64,23 @@ describe('Blog Post Search Implementation', () => {
         });
     })
 
+    /**
+     * I am dumb and removed the stop words from the stubs, but not from the search tokens.
+     */
+    test('Should ignore stop words when matching stubs', () => {
+        const STUBS = [
+            {
+                entryId: 101,
+                "datePosted": "2022-06-22T11:00:00.000+00:00",
+                "title": 'over the hump bike race results',
+                "body": null
+            }
+        ];
+        const search = new Search(STUBS);
+        const results = search.search('over the');
+        expect(results.results.length).toBeGreaterThan(0);
+    });
+
     test('Should return "commontwo" as the completion', () => {
         const search = new Search(MOCK_STUBS);
         const results = search.search('commonone commont');
