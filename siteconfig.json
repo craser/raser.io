@@ -40,5 +40,8 @@
     "server": {
       "options": {}
     }
+  },
+  "launchdarkly": {
+    "clientSideId": "{NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID}"
   }
 }

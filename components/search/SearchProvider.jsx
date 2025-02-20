@@ -118,6 +118,7 @@ export default function SearchProvider({ children }) {
         }
     }, [searchTerms]);
 
+
     return (
         <SearchContextObj.Provider value={context}>
             {children}
