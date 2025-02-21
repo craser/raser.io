@@ -1,5 +1,8 @@
 import { useSearchContext } from "@/components/search/SearchProvider";
 import { useEffect, useState } from "react";
+import { Search } from 'lucide-react';
+import { NavButton } from "@/components/navigation/NavButton";
+
 
 // TODO: Make styling consistent with other nav items by pulling in nav styling
 
@@ -19,7 +22,14 @@ export default function SearchButton({ className }) {
     };
 
     // FIXME: Using an <a> here to piggyback on nav styling.
-    return (
-        isSearchAvailable && <a className={className} data-testid="search-button" onClick={showSearchUi}>Search</a>
-    );
+
+    if (!isSearchAvailable) {
+        return null;
+    } else {
+        return (
+            <NavButton data-testid="search-button" Icon={Search} onClick={showSearchUi}>
+                Search
+            </NavButton>
+        )
+    }
 }

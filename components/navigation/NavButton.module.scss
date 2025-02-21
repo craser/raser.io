@@ -1,0 +1,24 @@
+button.navButton {
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+    justify-content: center;
+    align-items: center;
+    text-transform: lowercase;
+    border-radius: 5px;
+    padding: 5px;
+    transition: all 200ms;
+
+    &:hover {
+        /* reverse the colors */
+        background-color: #000;
+        color: #fff;
+    }
+
+    .icon {
+        width: 36px;
+        height: 36px;
+    }
+
+
+}
