@@ -187,4 +187,16 @@ describe('Navigation Search', () => {
         });
     });
 
+    test('The correct URL should be passed to push()', async () => {
+       const result = await renderScaffold();
+       const button = await result.findByTestId('search-button');
+       await userEvent.click(button);
+       const input = await result.findByTestId('search-input');
+       await userEvent.type(input, 'lorem');
+       await userEvent.keyboard('{Enter}');
+       await waitFor(() => {
+           expect(useRouter().push).toHaveBeenCalledWith('/archive/101');
+       });
+    });
+
 });

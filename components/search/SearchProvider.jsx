@@ -40,7 +40,7 @@ export default function SearchProvider({ children }) {
 
     function goToResult(i = selectedResult) {
         setIsUiVisible(false);
-;        const post = (i in searchResults)
+        const { post } = (i in searchResults)
             ? searchResults[i]
             : searchResults[0];
 
