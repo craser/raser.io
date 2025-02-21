@@ -10,24 +10,26 @@ import FeatureDisabled from "@/components/flags/FeatureDisabled";
 
 export default function SiteNavigationHeader(props) {
     return (
-        <ul className={styles.sitenav}>
+        <div className={styles.sitenav}>
             <FeatureEnabled feature="navSearch">
-                <li>
+                <div className={styles.navitem}>
                     {/* I'm really annoyed with myself for blending the components like this. */}
                     <SearchButton className={styles.searchButton}/>
-                </li>
+                </div>
             </FeatureEnabled>
             <FeatureEnabled feature="userLogin">
-                <li>
-                    <AuthRecognized>
+                <AuthRecognized>
+                    <div className={styles.navitem}>
                         <LoginButton className={styles.loginButton}/>
-                    </AuthRecognized>
-                    <AuthLoggedIn>
+                    </div>
+                </AuthRecognized>
+                <AuthLoggedIn>
+                    <div className={styles.navitem}>
                         <Link href={'/create'}>new entry</Link>
                         <LogoutButton>log out</LogoutButton>
-                    </AuthLoggedIn>
-                </li>
+                    </div>
+                </AuthLoggedIn>
             </FeatureEnabled>
-        </ul>
+        </div>
     );
 }
