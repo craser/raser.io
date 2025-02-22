@@ -10,7 +10,7 @@ export function useDataContext() {
 }
 
 export default function DataProvider({ children }) {
-    const postDao = useMemo(() => PostDao.getCachingPostDao());
+    const postDao = useMemo(() => PostDao.getCachingPostDao(), []);
 
     const getPostDao = () => {
         return postDao;

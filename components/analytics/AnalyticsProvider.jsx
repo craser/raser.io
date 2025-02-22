@@ -26,7 +26,7 @@ export default function AnalyticsProvider({ children }) {
         window.addEventListener('load', () => {
             amplitude.init(apiKey, options);
         });
-    }, []);
+    }, [apiKey, options]);
 
     return (
         <AnalyticsContextObj.Provider value={buildAnalyticsContext()}>

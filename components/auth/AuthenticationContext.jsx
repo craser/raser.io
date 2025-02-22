@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import AuthenticationManager from "@/lib/api/AuthenticationManager";
 import LoginModal from "@/components/auth/LoginModal";
 import { auth } from "mysql/lib/protocol/Auth";
@@ -36,7 +36,7 @@ export default function AuthenticationContext({ children }) {
     const [authManager, setAuthManager] = useState(new AuthenticationManager());
     const [loginVisible, setLoginVisible] = useState(false);
     const [loadedFromLocalStorage, setLoadedFromLocalStorage] = useState(false);
-
+    const status = getStatus();
 
     // load values from local storage
     useEffect(() => {
@@ -49,11 +49,10 @@ export default function AuthenticationContext({ children }) {
             setAuthExpiration(newExpiration);
             setLoadedFromLocalStorage(true);
         }
-    }, []);
-
+    }, [authExpiration, authManager, authToken, email, isAuthExpired, logout, setAuthExpirationState, setAuthTokenState, setEmailState]);
     useEffect(() => {
         setLoginVisible(false);
-    }, [getStatus()])
+    }, [status])
 
     useEffect(() => {
         if (isCsr() && loadedFromLocalStorage) {
@@ -76,21 +75,21 @@ export default function AuthenticationContext({ children }) {
                     })
             }
         }
-    }, [loadedFromLocalStorage]);
+    }, [loadedFromLocalStorage, isAuthExpired]);
 
     function isCsr() {
         const csr = `${typeof window}` !== 'undefined';
         return csr;
     }
 
-    function isAuthExpired() {
+    const isAuthExpired = useCallback(() => {
         console.log(`checking expiration - authExpiration: ${authExpiration}`);
         if (!!authExpiration) {
             return new Date().getTime() > authExpiration;
         } else {
             return true;
         }
-    }
+    }, [authExpiration]);
 
     function getAuthToken() {
         return authToken;
@@ -169,7 +168,7 @@ export default function AuthenticationContext({ children }) {
 
     return (
         <>
-            <AuthContextObj.Provider value={{ login, logout, showLoginModal, hideLoginModal, status: getStatus(), isAuthenticated: !!authToken, getAuthToken, getEmail }}>
+            <AuthContextObj.Provider value={{ login, logout, showLoginModal, hideLoginModal, status, isAuthenticated: !!authToken, getAuthToken, getEmail }}>
                 {loginVisible ? <LoginModal onVisibilityChange={(visible) => setLoginVisible(visible)}/> : null}
                 {children}
             </AuthContextObj.Provider>

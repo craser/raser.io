@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './LogEntries.module.scss';
 import LoadingSpinner from "@/components/LoadingSpinner";
 import PostViewContext, { View } from "@/components/PostViewContext";
@@ -13,17 +13,14 @@ export default function LogEntries({ initialPage = 0, pageSize, initialEntries }
     const [intersectionObserver, setIntersectionObserver] = useState(null);
     const [isLoading, setIsLoading] = useState(false); // for now, only controls spinner
     const pageBottomRef = useRef();
+    const isCsr = `${typeof window}` !== 'undefined';
 
     useEffect(() => {
         analytics.firePageView('home');
-    }, []);
+    }, [analytics]);
 
-    function isCsr() {
-        const csr = `${typeof window}` !== 'undefined';
-        return csr;
-    }
 
-    function loadPage(pageNumber) {
+    const loadPage = useCallback((pageNumber) => {
         console.log(`loading page ${pageNumber}`);
         const start = Date.now();
         setIsLoading(true);
@@ -34,11 +31,10 @@ export default function LogEntries({ initialPage = 0, pageSize, initialEntries }
             })
             .then(() => console.log(`fetched page ${pageNumber} in ${Date.now() - start}ms`))
             .catch(e => console.error(e));
-    }
-
+    }, [setEntries, setIsLoading, dataContext, pageSize]);
 
     useEffect(() => {
-        if (!isCsr() || intersectionObserver) return;
+        if (!isCsr || intersectionObserver) return;
         let pageNumber = initialPage;
         let loading = false;
         const observer = new IntersectionObserver((entries) => {
@@ -53,7 +49,7 @@ export default function LogEntries({ initialPage = 0, pageSize, initialEntries }
         }, { threshold: 0.5 });
         setIntersectionObserver(observer);
         return () => observer.disconnect(); // cleanup
-    }, [isCsr()]);
+    }, [isCsr, initialPage, intersectionObserver, loadPage]);
 
 
     useEffect(() => {
@@ -62,12 +58,12 @@ export default function LogEntries({ initialPage = 0, pageSize, initialEntries }
             observer.observe(pageBottomRef.current);
             return () => observer.disconnect();
         }
-    }, [intersectionObserver, pageBottomRef.current]);
+    }, [intersectionObserver]);
 
     return (
         <Fragment>
             {entries.map(e => <PostViewContext key={e.entryId} post={e} initialView={View.ENTRY_LIST}/>)}
-            <div ref={pageBottomRef} className={styles.listingBottom}>{isLoading ? <LoadingSpinner/> : '• • •' }</div>
+            <div ref={pageBottomRef} className={styles.listingBottom}>{isLoading ? <LoadingSpinner/> : '• • •'}</div>
         </Fragment>
     );
 }
