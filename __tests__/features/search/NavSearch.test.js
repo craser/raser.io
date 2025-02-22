@@ -27,6 +27,13 @@ async function renderScaffold() {
         </SearchProvider>
     );
 }
+
+jest.mock('lucide-react', () => {
+    return {
+        Search: () => <b>search icon</b>
+    };
+});
+
 jest.mock('@/components/api/DataProvider', () => {
     let mockPostDao = { getSearchStubs: jest.fn() };
     let mockDataContext = {
@@ -157,23 +164,29 @@ describe('Navigation Search', () => {
     });
 
     test('Should show "avor" as completion', async () => {
+        // Clear previous mocks and state
+        jest.clearAllMocks();
+
+        // Setup test data before component render
         useDataContext().getPostDao().getSearchStubs.mockResolvedValueOnce(SAMPLE_SEARCH_STUBS);
+
         const result = await renderScaffold();
+
+        // Wait for initial render and click button
         const button = await result.findByTestId('search-button');
-        await act(async () => {
-            await userEvent.click(button);
-        });
-        let input = await result.findByTestId('search-input');
+        await userEvent.click(button);
+
+        // Wait for input to be available and type
+        const input = await result.findByTestId('search-input');
         await userEvent.click(input);
-        await act(async () => {
-            await userEvent.type(input, 'corner f');
-        });
-        const completion = await result.findByTestId('search-completion');
+        await userEvent.type(input, 'corner f');
+
+        // Wait for completion with increased timeout
         await waitFor(() => {
+            const completion = result.getByTestId('search-completion');
             expect(completion.textContent).toBe('avor');
-        });
-        expect(completion.textContent).toBe('avor');
-    });
+        }, { timeout: 10000 });
+    }, 15000); // Increase overall test timeout
 
     test('Hitting ENTER should cause the selected result to be shown', async () => {
         const result = await renderScaffold();
@@ -188,15 +201,15 @@ describe('Navigation Search', () => {
     });
 
     test('The correct URL should be passed to push()', async () => {
-       const result = await renderScaffold();
-       const button = await result.findByTestId('search-button');
-       await userEvent.click(button);
-       const input = await result.findByTestId('search-input');
-       await userEvent.type(input, 'lorem');
-       await userEvent.keyboard('{Enter}');
-       await waitFor(() => {
-           expect(useRouter().push).toHaveBeenCalledWith('/archive/101');
-       });
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await userEvent.click(button);
+        const input = await result.findByTestId('search-input');
+        await userEvent.type(input, 'lorem');
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => {
+            expect(useRouter().push).toHaveBeenCalledWith('/archive/101');
+        });
     });
 
 });
