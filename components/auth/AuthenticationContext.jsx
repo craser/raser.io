@@ -99,17 +99,16 @@ export default function AuthenticationContext({ children }) {
         return email;
     }
 
-    function setEmailState(newEmail) {
+    const setEmailState = useCallback((newEmail) => {
         setEmail(newEmail);
-        console.log(`setEmail(${newEmail}) ➤ ${email}`);
         if (newEmail) {
             window.localStorage.setItem(STORAGE_KEYS.user, newEmail);
         } else {
             window.localStorage.removeItem(STORAGE_KEYS.user);
         }
-    }
+    }, [setEmail]);
 
-    function setAuthTokenState(token) {
+    const setAuthTokenState = useCallback((token) => {
         setAuthToken(token);
         console.log(`setAuthToken(${token}) ➤ ${authToken}`);
         if (token) {
@@ -117,9 +116,9 @@ export default function AuthenticationContext({ children }) {
         } else {
             window.localStorage.removeItem(STORAGE_KEYS.token);
         }
-    }
+    }, [setAuthToken]);
 
-    function setAuthExpirationState(timestamp) {
+    const setAuthExpirationState = useCallback((timestamp)=> {
         setAuthExpiration(timestamp)
         console.log(`setAuthExpiration(${timestamp}) ➤ ${authExpiration}`);
         if (timestamp) {
@@ -127,7 +126,7 @@ export default function AuthenticationContext({ children }) {
         } else {
             window.localStorage.removeItem(STORAGE_KEYS.expiration);
         }
-    }
+    }, [setAuthExpiration]);
 
     function login(email, pass) {
         analytics.fireEvent('login attempt', email);
