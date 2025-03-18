@@ -8,10 +8,10 @@ import { getPostLink } from "@/lib/util/Links";
  * @returns {JSX.Element}
  * @constructor
  */
-export const PostLink = ({ post, children }) => {
+export const PostLink = ({ post, children, ...props }) => {
     if (!post) {
         return <span>{children}</span>
     } else {
-        return <Link href={getPostLink(post)}>{children}</Link>
+        return <Link href={getPostLink(post)} {...props}>{children}</Link>
     }
 };

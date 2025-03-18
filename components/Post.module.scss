@@ -115,3 +115,48 @@
     font-weight: bold;
     border-radius: 10px;
 }
+
+
+/* These need to be visually positioned to the sides of the main column. That column is
+ * centered, and has:
+ *   width: 630px;
+ *   max-width: calc(100vw - 20px)
+ *
+ * So, we can position these at the sides of the viewport by setting their left/right
+ * to 50% and then translating them by half the width of the main column.
+ */
+.nextPrevLinksContainer {
+    --post-width: calc(min(630px, calc(100vw - 20px)));
+
+    .nextLink, .prevLink {
+        font-size: 6vw;
+        position: fixed;
+        padding: 1vw 2vw;
+        border: 3px solid var(--theme-color-border-light);
+        color: var(--theme-color-link);
+        line-height: 4vw;
+        bottom: 50vw;
+        border-radius: 1vw;
+
+        &:hover {
+            opacity: 1;
+            background-color: var(--theme-color-link);
+            color: var(--theme-color-pop);
+        }
+
+        transition: all 200ms ease-in-out;
+    }
+
+    .nextLink {
+        right: calc(51vw + var(--post-width) / 2);
+        transform: rotate(-90deg);
+        transform-origin: right bottom;
+    }
+
+    .prevLink {
+        left: calc(51vw + var(--post-width) / 2);
+        transform: rotate(90deg);
+        transform-origin: left bottom;
+    }
+
+}
