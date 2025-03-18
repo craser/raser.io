@@ -127,34 +127,36 @@
  */
 .nextPrevLinksContainer {
     --post-width: calc(min(630px, calc(100vw - 20px)));
+    --button-offset: calc(min((51vw + var(--post-width) / 2), (100vw - 8vw)));
 
     .nextLink, .prevLink {
-        font-size: 6vw;
+        font-size: 8vw;
         position: fixed;
         padding: 1vw 2vw;
         border: 3px solid var(--theme-color-border-light);
-        color: var(--theme-color-link);
-        line-height: 4vw;
+        background-color: var(--theme-color-link);
+        color: var(--theme-color-pop);
+        line-height: 6vw;
         bottom: 50vw;
         border-radius: 1vw;
 
         &:hover {
             opacity: 1;
-            background-color: var(--theme-color-link);
-            color: var(--theme-color-pop);
+            color: var(--theme-color-link);
+            background-color: var(--theme-color-content-text-bg);
         }
 
         transition: all 200ms ease-in-out;
     }
 
     .nextLink {
-        right: calc(51vw + var(--post-width) / 2);
+        right: var(--button-offset);
         transform: rotate(-90deg);
         transform-origin: right bottom;
     }
 
     .prevLink {
-        left: calc(51vw + var(--post-width) / 2);
+        left: var(--button-offset);
         transform: rotate(90deg);
         transform-origin: left bottom;
     }
