@@ -6,6 +6,8 @@
     "dev": "next dev",
     "dev-prod": "cross-env NEXT_PUBLIC_API_ROOT=https://damp-island-38652-5044b8af1a09.herokuapp.com next dev",
     "build": "next build",
+    "build:dev": "next build",
+    "build:prod": "cross-env NODE_ENV=production next build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
