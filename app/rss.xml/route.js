@@ -9,7 +9,7 @@ import { getPostLink } from "@/lib/util/Links";
  * @returns {NextResponse<{derp: string}>}
  * @constructor
  */
-export async function GET(request) {
+export function GET(request) {
     return generateRss()
         .then(rss => new NextResponse(rss, {
             status: 200,
@@ -33,7 +33,7 @@ function generateRss() {
         );
 }
 
-async function renderPosts() {
+function renderPosts() {
     const dao = PostDao.getPostDao();
     return dao.getEntries(0, 20)
         .then(posts => posts.map(post => {
@@ -47,6 +47,11 @@ async function renderPosts() {
                   <guid>${link}</guid>
                 </item>`
                 );
-            }
-        ).join(''))
+            })
+                .join('')
+        )
+        .catch(err => {
+            console.error(err);
+            return '';
+        })
 }
