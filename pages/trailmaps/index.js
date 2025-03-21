@@ -1,4 +1,4 @@
-import FrontPageLayout from "@/components/templates/FrontPageLayout";
+import StandardLayout from "@/components/templates/StandardLayout";
 import TrailHeadMap from "@/components/maps/TrailHeadMap";
 import MapPageLayout from "@/components/templates/MapPageLayout";
 

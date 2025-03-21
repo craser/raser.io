@@ -5,7 +5,7 @@ import Search from "@/components/search/Search";
 import { useEffect, useRef } from "react";
 import { debounce, inIdle } from "@/lib/util/wrappers";
 
-export default function FrontPageLayout({ content }) {
+export default function FrontLandingLayout({ content }) {
     const headerRef = useRef(null);
 
     /**

@@ -1,10 +1,10 @@
-import LogEntries from '@/components/LogEntries';
-import FrontPageLayout from "@/components/templates/FrontPageLayout";
+import FrontLandingLayout from "@/components/templates/FrontLandingLayout";
+import LatestPost from "@/components/frontpage/LatestPost";
 
 export default function Home({ initialEntries }) {
     return (
-        <FrontPageLayout
-            content={<LogEntries initialPage={0} pageSize={30}/>}
+        <FrontLandingLayout
+            content={<LatestPost />}
         />
     )
 }

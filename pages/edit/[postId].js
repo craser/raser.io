@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import EditPostPage from "@/components/pages/EditPostPage";
 import SecurePage from "@/components/auth/SecurePage";
-import FrontPageLayout from "@/components/templates/FrontPageLayout";
+import StandardLayout from "@/components/templates/StandardLayout";
 
 export default function PostIdParamPage(props) {
     const router = useRouter();
@@ -10,7 +10,7 @@ export default function PostIdParamPage(props) {
         return <LoadingSpinner/>
     } else {
         return (
-            <FrontPageLayout content={
+            <StandardLayout content={
                 <SecurePage>
                     <EditPostPage postId={router.query.postId}/>
                 </SecurePage>

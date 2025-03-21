@@ -65,8 +65,12 @@ export default class PostDao {
     }
 
     async getLatestPost() {
-        let url = this.#config.getEndpoint('entries.latest');
-        return this.#cleanFetch(url).then(response => response.json());
+        const page = 0;
+        const pageSize = 1;
+        let url = this.#config.getEndpoint('entries.latest', { page, pageSize });
+        return this.#cleanFetch(url)
+            .then(response => response.json())
+            .then(p=> p[0]);
     }
 
     async getPostById(id) {

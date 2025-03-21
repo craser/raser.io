@@ -3,7 +3,7 @@ import PostDao from '/model/PostDao';
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Post } from "@/components/Post";
 import NextPrevPostLinks from "@/components/NextPrevPostLinks";
-import FrontPageLayout from "@/components/templates/FrontPageLayout";
+import StandardLayout from "@/components/templates/StandardLayout";
 import PostViewContext from "@/components/PostViewContext";
 import { useDataContext } from "@/components/api/DataProvider";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
@@ -43,11 +43,11 @@ export default function SinglePostPage({ postId }) {
 
     if (!post) {
         return (
-            <FrontPageLayout content={<LoadingSpinner/>}/>
+            <StandardLayout content={<LoadingSpinner/>}/>
         );
     } else {
         return (
-            <FrontPageLayout content={
+            <StandardLayout content={
                 <PostViewContext post={post} showBody={true} next={next} prev={prev}/>
             }/>
         );

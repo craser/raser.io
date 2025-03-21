@@ -1,11 +1,20 @@
 import SiteConfig from "@/lib/SiteConfig";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 import { MapImage } from "@/components/maps/MapImage";
+import Image from "next/image";
 
 
 export function getTitleImageUrl(post) {
     const src = new SiteConfig().getValue('images.postcard', post);
     return src;
+}
+
+export function hasMapTitleImage(post) {
+    return /\.gpx$/.test(post.imageFileName);
+}
+
+export function hasTitleImage(post) {
+    return post.imageFileName && post.imageFileType === 'image';
 }
 
 /**
@@ -25,13 +34,13 @@ export default function PostTitleImage({ post, className }) {
         analytics.fireImgFail(src);
     }
 
-    if (/\.gpx$/.test(post.imageFileName)) {
+    if (hasMapTitleImage(post)) {
         return (
             <MapImage className={className || 'titleimage'}
                       onError={() => notifyAnalytics(post.imageFileName)} fileName={post.imageFileName}
             />
         );
-    } else if (post.imageFileName && post.imageFileType === 'image') {
+    } else if (hasTitleImage(post)) {
         let src = getTitleImageUrl(post);
         return (
             <img src={src} className={className || 'titleimage'}
