@@ -25,8 +25,8 @@ export default function LatestPostSection() {
         return (
             <section className="relative w-full h-[500px] overflow-hidden">
                 {/* Vertical "Latest Post" header */}
-                <div className="absolute left-4 top-0 bottom-0 flex items-center z-10">
-                    <h2 className="transform -rotate-90 origin-center whitespace-nowrap text-xl font-bold tracking-wider text-white uppercase">
+                <div className="absolute left-0 top-0 bottom-0 flex items-center z-10">
+                    <h2 className="transform -rotate-90 origin-center whitespace-nowrap text-5xl font-bold tracking-wider text-white uppercase">
                         Latest
                     </h2>
                 </div>
@@ -50,7 +50,9 @@ export default function LatestPostSection() {
                             [[brief intro goes here]]
                         </p>
                         <div className="flex items-center">
-                            <div className="w-10 h-10 rounded-full bg-gray-300 mr-3"></div>
+                            <div className="w-10 h-10 rounded-full bg-gray-300 mr-3">
+                                <img src="/img/chris-social-avatar.png" alt="Chris Raser" className="w-10 h-10 rounded-full" />
+                            </div>
                             <div>
                                 <p className="text-white text-sm font-medium">Chris Raser</p>
                                 <p className="text-white/70 text-xs">
