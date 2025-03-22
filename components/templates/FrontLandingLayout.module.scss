@@ -1,0 +1,107 @@
+@mixin frontPageContentColumn() {
+    width: 800px;
+    max-width: calc(100vw - 20px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.header {
+    border-bottom: 2px solid transparent;
+    width: 100%;
+    z-index: 1; /* strangely, needed to stay above the YouTube iframes... wtf... */
+    @include frontPageContentColumn();
+
+    display: flex;
+    flex-direction: column;
+
+    .titleBanner {
+        font-family: var(--font-title), serif;
+        font-size: 60px;
+        letter-spacing: -10px;
+        margin: 0;
+        padding: 0;
+        top: 0;
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+    }
+
+    /* The UL that holds the navigation links */
+    .sitenav {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 0;
+        padding: 0;
+
+        .navitem {
+            display: inline;
+            list-style-type: none;
+            margin-left: 20px;
+            text-transform: lowercase;
+        }
+
+        a {
+            --icon-square-size: 40px;
+            align-items: center;
+            border-radius: 5px;
+            border: 0;
+            color: #000;
+            display: inline-flex;
+            height: var(--icon-square-size);
+            margin: 3px;
+            padding: 5px;
+
+            &:before {
+                background-repeat: no-repeat;
+                background-size: contain;
+                content: ' ';
+                display: inline-block;
+                font-size: 0;
+                height: var(--icon-square-size);
+                margin-right: 5px;
+                width: var(--icon-square-size);
+            }
+
+            &:hover {
+                color: black;
+                background-color: white;
+            }
+        }
+    }
+
+
+}
+
+.searchButton {
+    &:before {
+        background-image: url(/icons/search-circle-fill.svg);
+    }
+
+    &:hover {
+        color: black;
+        filter: invert(1);
+        transition: all 200ms;
+
+    }
+}
+
+.loginButton {
+    &:before {
+        background-image: url(/icons/login-circle.png);
+    }
+}
+
+
+.content {
+    font-family: HelveticaNeue-condensed, sans-serif;
+    color: #222;
+    background-color: cornflowerblue;
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    @include frontPageContentColumn();
+}
+

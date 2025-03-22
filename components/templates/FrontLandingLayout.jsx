@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styles from './FrontPageLayout.module.scss'
+import styles from './FrontLandingLayout.module.scss'
 import SiteNavigationHeader from "@/components/templates/SiteNavigationHeader";
 import Search from "@/components/search/Search";
 import { useEffect, useRef } from "react";

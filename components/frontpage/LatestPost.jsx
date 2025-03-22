@@ -1,11 +1,11 @@
 import Link from "next/link"
 import { useDataContext } from "@/components/api/DataProvider";
-import PostTitleImage from "@/components/PostTitleImage";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { PostedDate } from "@/components/frontpage/PostedDate";
 import { EstimatedMinutesToRead } from "@/components/frontpage/EstimatedMinutesToRead";
 import FrontPageTitleImage from "@/components/frontpage/FrontPageTitleImage";
+import { PostBriefIntro } from "@/components/frontpage/PostBriefIntro";
 
 export default function LatestPostSection() {
     const postDao = useDataContext().getPostDao();
@@ -46,12 +46,10 @@ export default function LatestPostSection() {
                                 {post.title}
                             </h3>
                         </Link>
-                        <p className="text-white/80 text-sm md:text-base mb-6">
-                            [[brief intro goes here]]
-                        </p>
+                        <PostBriefIntro post={post} className="text-white/80 text-sm md:text-base mb-6" />
                         <div className="flex items-center">
                             <div className="w-10 h-10 rounded-full bg-gray-300 mr-3">
-                                <img src="/img/chris-social-avatar.png" alt="Chris Raser" className="w-10 h-10 rounded-full" />
+                                <img src="/img/chris-social-avatar.png" alt="Chris Raser" className="w-10 h-10 rounded-full"/>
                             </div>
                             <div>
                                 <p className="text-white text-sm font-medium">Chris Raser</p>
