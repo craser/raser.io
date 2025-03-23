@@ -7,6 +7,7 @@ import { EstimatedMinutesToRead } from "@/components/frontpage/EstimatedMinutesT
 import FrontPageTitleImage from "@/components/frontpage/FrontPageTitleImage";
 import { PostBriefIntro } from "@/components/frontpage/PostBriefIntro";
 import styles from './LatestPost.module.scss';
+import PageSection from "@/components/frontpage/PageSection";
 
 export default function LatestPostSection() {
     const postDao = useDataContext().getPostDao();
@@ -24,14 +25,7 @@ export default function LatestPostSection() {
     } else {
 
         return (
-            <section className={`relative w-full h-[500px] overflow-hidden ${styles.latestPost}`}>
-                {/* Vertical "Latest Post" header */}
-                <div className="absolute left-0 top-0 bottom-0 flex items-center z-10">
-                    <h2 className="transform -rotate-90 origin-center whitespace-nowrap text-5xl font-bold tracking-wider text-white uppercase">
-                        Latest
-                    </h2>
-                </div>
-
+            <PageSection title="Latest" hero={true}>
                 {/* Background image */}
                 <div className="absolute inset-0">
                     <FrontPageTitleImage post={post} className={styles.titleImage}/>
@@ -60,7 +54,7 @@ export default function LatestPostSection() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </PageSection>
         )
     }
 }
