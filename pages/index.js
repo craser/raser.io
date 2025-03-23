@@ -3,6 +3,7 @@ import LatestPost from "@/components/frontpage/LatestPost";
 import { useFeatureEnabled, useFeatureFlags } from "@/components/flags/FeatureFlagProvider";
 import StandardLayout from "@/components/templates/StandardLayout";
 import LogEntries from "@/components/LogEntries";
+import GithubActivity from "@/components/github/GithubActivity";
 
 export default function Home() {
     const flags = useFeatureFlags();
@@ -13,7 +14,8 @@ export default function Home() {
     if (showNewLandingPage) {
         return (
             <FrontLandingLayout
-                content={<LatestPost/>}
+                latest={<LatestPost/>}
+                github={<GithubActivity />}
             />
         )
     } else {

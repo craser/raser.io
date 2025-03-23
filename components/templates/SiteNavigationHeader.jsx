@@ -6,7 +6,6 @@ import LogoutButton from "@/components/auth/LogoutButton";
 import AuthRecognized from "@/components/auth/AuthRecognized";
 import SearchButton from "@/components/search/SearchButton";
 import FeatureEnabled from "@/components/flags/FeatureEnabled";
-import FeatureDisabled from "@/components/flags/FeatureDisabled";
 
 export default function SiteNavigationHeader(props) {
     return (

@@ -41,6 +41,10 @@
       "options": {}
     }
   },
+  "github": {
+    "username": "{NEXT_PUBLIC_GITHUB_USERNAME}",
+    "authToken": "{NEXT_PUBLIC_GITHUB_AUTH_TOKEN}"
+  },
   "launchdarkly": {
     "clientSideId": "{NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID}"
   }

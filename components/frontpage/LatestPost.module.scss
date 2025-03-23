@@ -1,0 +1,23 @@
+@keyframes slowZoom {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.1);
+    }
+}
+
+.latestPost {
+     &:hover {
+         .titleImage {
+             transform: rotate(180deg);
+             animation: slowZoom 10s ease-in-out forwards;
+         }
+    }
+}
+
+
+.titleImage {
+    width: 100%;
+    object-fit: cover;
+}
