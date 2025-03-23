@@ -5,7 +5,7 @@ import Search from "@/components/search/Search";
 import { useEffect, useRef } from "react";
 import { debounce, inIdle } from "@/lib/util/wrappers";
 
-export default function FrontLandingLayout({ latest, github }) {
+export default function FrontLandingLayout({ latest, github, social }) {
     const headerRef = useRef(null);
 
     /**
@@ -36,12 +36,15 @@ export default function FrontLandingLayout({ latest, github }) {
                 <h1 className={styles.titleBanner}>
                     <Link href={'/'}>DeathB4Decaf</Link>
                 </h1>
-                <SiteNavigationHeader/>
+                <SiteNavigationHeader styles={styles}/>
             </header>
             <Search/>
             <main className={styles.content}>
                 {latest}
-                {github}
+                <div class={styles.tier2}>
+                    {github}
+                    {social}
+                </div>
             </main>
         </div>
     )

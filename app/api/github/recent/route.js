@@ -1,26 +1,27 @@
 import { NextResponse, NextRequest } from "next/server";
 import { Octokit } from "octokit";
 import SiteConfig from "@/lib/SiteConfig";
+
 class RepoInfo {
     name;
     commits = [];
 
-    constructor(name, commits = []) {
-        this.name = name;
-        this.commits = commits;
-    }
-
-    addCommit(event) {
-        this.commits.push(event);
+    constructor(repo, commits = []) {
+        this.name = repo.name;
+        this.url = repo.html_url;
+        this.description = repo.description;
+        this.commits = commits.splice(0, 5).map((commit) => {
+            return new Commit({
+                message: commit.commit.message,
+                date: commit.commit.author.date,
+                hash: commit.sha,
+                url: commit.html_url,
+            });
+        });
     }
 }
 
 class Commit {
-    message;
-    date;
-    hash;
-    url;
-
     constructor({ message, date, hash, url }) {
         this.message = message;
         this.date = date;
@@ -45,17 +46,7 @@ const fetchGithubActivity = async () => {
                         owner: githubUsername,
                         repo: repo.name,
                     }).then(({ data: commits }) => {
-                        return new RepoInfo(
-                            repo.name,
-                            commits.map((commit) => {
-                                return new Commit({
-                                    message: commit.commit.message,
-                                    date: commit.commit.author.date,
-                                    hash: commit.sha,
-                                    url: commit.html_url,
-                                });
-                            })
-                        );
+                        return new RepoInfo(repo, commits);
                     });
                 }));
             })

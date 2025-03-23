@@ -1,4 +1,4 @@
-import styles from "@/components/templates/StandardLayout.module.scss";
+import standardStyles from "@/components/templates/StandardLayout.module.scss";
 import Link from "next/link";
 import AuthLoggedIn from "@/components/auth/AuthLoggedIn";
 import LoginButton from "@/components/auth/LoginButton";
@@ -7,7 +7,7 @@ import AuthRecognized from "@/components/auth/AuthRecognized";
 import SearchButton from "@/components/search/SearchButton";
 import FeatureEnabled from "@/components/flags/FeatureEnabled";
 
-export default function SiteNavigationHeader(props) {
+export default function SiteNavigationHeader({ styles = standardStyles }) {
     return (
         <div className={styles.sitenav}>
             <FeatureEnabled feature="navSearch">

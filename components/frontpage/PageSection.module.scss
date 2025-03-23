@@ -1,0 +1,27 @@
+.pageSection {
+    --bg-white: rgba(255, 255, 255, 0.2);
+    --bg-dark: rgba(0, 0, 0, 0.5);
+    --text-color: white;
+
+
+    .sectionBackground {
+        --dim: 300px;
+        --border-width: calc(var(--dim) * .07);
+        --color: var(--bg-dark);
+        width: var(--dim);
+        height: var(--dim);
+        border: var(--border-width) solid var(--color);
+        border-radius: 50%;
+        padding: 20px;
+        position: absolute;
+        z-index: -1;
+        top: 12px;
+        left: 12px;
+
+        .icon {
+            width: 100%;
+            height: 100%;
+            color: var(--color);
+        }
+    }
+}

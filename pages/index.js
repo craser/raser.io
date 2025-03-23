@@ -4,6 +4,7 @@ import { useFeatureEnabled, useFeatureFlags } from "@/components/flags/FeatureFl
 import StandardLayout from "@/components/templates/StandardLayout";
 import LogEntries from "@/components/LogEntries";
 import GithubActivity from "@/components/github/GithubActivity";
+import { SocialFeed } from "@/components/frontpage/SocialFeed";
 
 export default function Home() {
     const flags = useFeatureFlags();
@@ -16,6 +17,7 @@ export default function Home() {
             <FrontLandingLayout
                 latest={<LatestPost/>}
                 github={<GithubActivity />}
+                social={<SocialFeed />}
             />
         )
     } else {
