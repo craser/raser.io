@@ -45,7 +45,10 @@ const fetchGithubActivity = async () => {
                     return octokit.rest.repos.listCommits({
                         owner: githubUsername,
                         repo: repo.name,
+                        page: 0,
+                        per_page: 5,
                     }).then(({ data: commits }) => {
+                        console.log(`retrieved ${commits.length} commits for ${repo.name}`);
                         return new RepoInfo(repo, commits);
                     });
                 }));

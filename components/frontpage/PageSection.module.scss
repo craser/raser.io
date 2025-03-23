@@ -2,7 +2,41 @@
     --bg-white: rgba(255, 255, 255, 0.2);
     --bg-dark: rgba(0, 0, 0, 0.5);
     --text-color: white;
+    --title-font-size: 1.5em;
 
+    overflow: hidden;
+
+    position: relative;
+    background-color: var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5vw;
+    padding: 20px;
+    padding-left: calc(40px + var(--title-font-size));
+
+
+
+    .sectionTitle {
+        color: var(--text-color);
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.2rem;
+        align-items: center;
+        font-size: var(--title-font-size);
+        font-weight: 600;
+        height: 1.2em;
+
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        text-transform: uppercase;
+        transform-origin: top left;
+        transform:
+                rotate(-90deg)
+                translate(-100%, 0);
+    }
 
     .sectionBackground {
         --dim: 300px;

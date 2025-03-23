@@ -117,6 +117,13 @@
 
         @media only screen and (min-width: 800px) {
             flex-direction: row;
+            flex-basis: 1;
+
+            section {
+                max-width: 50%;
+                min-width: 50%;
+            }
+
         }
     }
 }
