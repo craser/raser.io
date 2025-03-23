@@ -7,11 +7,12 @@ class RepoInfo {
     name;
     commits = [];
 
-    constructor(name) {
+    constructor(name, commits = []) {
         this.name = name;
+        this.commits = commits;
     }
 
-    addEvent(event) {
+    addCommit(event) {
         this.commits.push(event);
     }
 }
@@ -38,32 +39,38 @@ export default function GithubActivity() {
 
     useEffect(() => {
         const fetchActivity = async () => {
-            const octokit = new Octokit({ auth: githubAuthToken });
-            console.log({ octokit });
-            console.log({ exampleMethod: octokit.rest.repos.getReadmeInDirectory });
             try {
-                const { data: publicRepos } = await octokit.rest.repos.listForAuthenticatedUser();
-                console.log({ publicRepos });
-                const recentRepos = publicRepos.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)).slice(0, 5);
-                console.log({ recentRepos });
-                setRepos(recentRepos.map((repo) => {
-                    const repoInfo = new RepoInfo(repo.name);
-                    octokit.rest.repos.listCommits({
-                        owner: githubUsername,
-                        repo: repo.name,
-                    }).then(({ data }) => {
-                        data.forEach((commit) => {
-                            const commitInfo = new Commit({
-                                message: commit.commit.message,
-                                date: commit.commit.author.date,
-                                hash: commit.sha,
-                                url: commit.html_url,
+                const octokit = new Octokit({ auth: githubAuthToken });
+                octokit.rest.repos.listForAuthenticatedUser()
+                    .then(({ data: publicRepos }) => {
+                        const recentRepos = publicRepos
+                            .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+                            .slice(0, 5);
+                        return Promise.all(recentRepos.map((repo) => {
+                            return octokit.rest.repos.listCommits({
+                                owner: githubUsername,
+                                repo: repo.name,
+                            }).then(({ data: commits }) => {
+                                return new RepoInfo(
+                                    repo.name,
+                                    commits.map((commit) => {
+                                        return new Commit({
+                                            message: commit.commit.message,
+                                            date: commit.commit.author.date,
+                                            hash: commit.sha,
+                                            url: commit.html_url,
+                                        });
+                                    })
+                                );
                             });
-                            repoInfo.addEvent(commitInfo);
-                        });
+                        }))
+                            .then((repos) => {
+                                console.log(`Fetched ${repos.length} repos`);
+                                console.log({ repos });
+                                return repos;
+                            })
+                            .then(setRepos);
                     });
-                    return repoInfo;
-                }))
             } catch (error) {
                 console.error('Error fetching GitHub activity:', error);
             }
