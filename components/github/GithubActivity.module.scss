@@ -21,6 +21,16 @@
         align-items: center;
         font-size: 1.2em;
         font-weight: 600;
+
+        .readmeButton {
+            position: absolute;
+            right: 0;
+
+            &:hover {
+                color: var(--theme-color-pop);
+            }
+        }
+
     }
 
     .repo {
@@ -41,6 +51,7 @@
         .commit {
             display: flex;
             justify-content: space-between;
+            gap: 0.5em;
             align-items: center;
             border: 1px solid transparent;
             border-top: 1px solid var(--bg-white);
@@ -62,11 +73,12 @@
 
                 .commitMessage {
                     color: white;
+                    font-size: 0.8em;
                 }
 
                 .commitDate {
                     color: #ddd;
-                    font-size: 0.8em;
+                    font-size: 0.6em;
                 }
             }
 

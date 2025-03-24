@@ -43,7 +43,11 @@
   },
   "github": {
     "username": "{NEXT_PUBLIC_GITHUB_USERNAME}",
-    "authToken": "{NEXT_PUBLIC_GITHUB_AUTH_TOKEN}"
+    "authToken": "{NEXT_PUBLIC_GITHUB_AUTH_TOKEN}",
+    "endpoints": {
+      "recent": "/api/github/recent",
+      "readme": "/api/github/readme?repo={repo}"
+    }
   },
   "launchdarkly": {
     "clientSideId": "{NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID}"

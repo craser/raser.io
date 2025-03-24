@@ -1,13 +1,14 @@
 .pageSection {
     --bg-white: rgba(255, 255, 255, 0.2);
-    --bg-dark: rgba(0, 0, 0, 0.5);
+    --bg-dark: rgba(0, 0, 0, 0.9);
     --text-color: white;
     --title-font-size: 1.5em;
 
     overflow: hidden;
 
     position: relative;
-    background-color: var(--bg-dark);
+    background: linear-gradient(105deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
+    /* background-color: var(--bg-dark); */
     display: flex;
     flex-direction: column;
     gap: 0.5vw;
@@ -47,7 +48,7 @@
     .sectionBackground {
         --dim: 300px;
         --border-width: calc(var(--dim) * .07);
-        --color: var(--bg-dark);
+        --color: rgba(0, 0, 0, 0.3);
         width: var(--dim);
         height: var(--dim);
         border: var(--border-width) solid var(--color);
