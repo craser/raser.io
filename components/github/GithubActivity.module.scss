@@ -25,9 +25,27 @@
         .readmeButton {
             position: absolute;
             right: 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 0.2rem;
+            align-items: center;
+
+            span {
+                width: 0;
+                overflow: hidden;
+                transition: all 0.3s;
+                font-size: 0.8em;
+                text-align: right;
+                font-weight: 400;
+            }
 
             &:hover {
                 color: var(--theme-color-pop);
+
+                span {
+                    width: 100px;
+                }
             }
         }
 

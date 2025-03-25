@@ -1,8 +1,6 @@
 import styles from './GithubActivity.module.scss';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Github, File } from 'lucide-react';
-import Link from "next/link";
-import { PostedDate } from "@/components/frontpage/PostedDate";
 import CommitDate from "@/components/frontpage/CommitDate";
 import PageSection from "@/components/frontpage/PageSection";
 import RepoReadme from "@/components/github/RepoReadme";
@@ -11,6 +9,7 @@ export default function GithubActivity() {
     const [repos, setRepos] = useState([]);
     const [displayReadme, setDisplayReadme] = useState(false);
     const [readmeRepoName, setReadmeRepoName] = useState(null);
+    const [reposWithoutReadmes, setReposWithoutReadmes] = useState({});
 
     useEffect(() => {
         fetch('/api/github/recent')
@@ -28,20 +27,30 @@ export default function GithubActivity() {
 
     }, []);
 
-    const showReadme = useCallback((repoName) => {
-        setReadmeRepoName(repoName);
-        setDisplayReadme(true);
-    });
+    const showReadme = (repoName) => {
+        console.log(`showing readme for repo ${repoName}`);
+        setReadmeRepoName(() => repoName);
+        setDisplayReadme(() => true);
+    };
 
-    const hideReadme = useCallback(() => {
+    const hideReadme = () => {
+        console.log(`hiding readme (presumably for repo ${readmeRepoName})`);
         setDisplayReadme(false);
         setReadmeRepoName(null);
-    })
+    };
+
+    const onMissingReadme = (repo) => {
+        hideReadme();
+        console.log(`Repo ${repo} has no readme.`);
+        setReposWithoutReadmes((repos) => ({ ...repos, [repo]: true }))
+    };
 
     console.log({ renderingRepos: repos });
     return (
         <>
-            {displayReadme && <RepoReadme repoName={readmeRepoName} onDismiss={() => hideReadme()}/>}
+            {displayReadme &&
+                <RepoReadme repoName={readmeRepoName} onDismiss={() => hideReadme()} onBlankReadme={(r) => onMissingReadme(r)}/>
+            }
             <PageSection title="Recent Github Activity" BgIcon={Github}>
                 <div className={styles.githubActivitySection}>
                     {repos.map((repo) => {
@@ -53,12 +62,14 @@ export default function GithubActivity() {
                                 <div className={styles.repo} key={`repo_${repo.name}`}>
                                     <h2 className={styles.header}>
                                         <Github className={styles.inlineIcon}/><a className={styles.repoLink} href={repo.url}>{repo.name}</a>
-                                        <button className={styles.readmeButton} onClick={() => showReadme(repo.name)}>
-                                            <File className={styles.inlineIcon}/>
-                                        </button>
+                                        {!reposWithoutReadmes[repo.name] &&
+                                            <button className={styles.readmeButton} onClick={() => showReadme(repo.name)}>
+                                                <span>readme</span>
+                                                <File className={styles.inlineIcon}/>
+                                            </button>
+                                        }
                                     </h2>
                                     {repo.commits.slice(0, 3).map((event, i) => {
-                                        console.log({ commit: event });
                                         return (
                                             <div className={styles.commit} key={`commit_${repo.name}_${i}`}>
                                                 <div class={styles.commitInfo}>
