@@ -1,0 +1,22 @@
+
+
+@mixin poptextYellow() {
+    @include poptext(yellow, orange);
+}
+
+@mixin popSvgYellow() {
+    color: yellow;
+
+
+
+}
+
+@mixin poptextSectionHeader() {
+    @include poptext(white, #999);
+}
+
+@mixin poptext($fromColor, $toColor) {
+    background: -webkit-linear-gradient($fromColor, $toColor);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

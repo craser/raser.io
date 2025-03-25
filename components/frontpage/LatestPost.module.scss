@@ -1,3 +1,5 @@
+@import '~/styles/mixins.scss';
+
 @keyframes slowZoom {
     from {
         transform: scale(1);
@@ -8,12 +10,17 @@
 }
 
 .latestPost {
+
      &:hover {
          .titleImage {
              transform: rotate(180deg);
              animation: slowZoom 10s ease-in-out forwards;
          }
     }
+}
+
+.postTitle {
+    @include poptextYellow;
 }
 
 

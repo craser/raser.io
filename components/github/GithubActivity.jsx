@@ -61,7 +61,7 @@ export default function GithubActivity() {
                             return (
                                 <div className={styles.repo} key={`repo_${repo.name}`}>
                                     <h2 className={styles.header}>
-                                        <Github className={styles.inlineIcon}/><a className={styles.repoLink} href={repo.url}>{repo.name}</a>
+                                        <Github className={styles.inlineIcon}/> <a className={styles.repoLink} href={repo.url}>{repo.name}</a>
                                         {!reposWithoutReadmes[repo.name] &&
                                             <button className={styles.readmeButton} onClick={() => showReadme(repo.name)}>
                                                 <span>readme</span>
