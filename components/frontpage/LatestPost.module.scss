@@ -16,15 +16,28 @@
              transform: rotate(180deg);
              animation: slowZoom 10s ease-in-out forwards;
          }
+
+         .continueLink {
+            height: calc(1em + 10px);
+         }
     }
-}
 
-.postTitle {
-    color: white;
-}
+    .postTitle {
+        color: white;
+    }
 
+    .continueLink {
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s;
+        text-align: right;
+        padding: 5px 0;
+        height: 0em;
+        overflow: hidden;
+    }
 
-.titleImage {
-    width: 100%;
-    object-fit: cover;
+    .titleImage {
+        width: 100%;
+        object-fit: cover;
+    }
 }
