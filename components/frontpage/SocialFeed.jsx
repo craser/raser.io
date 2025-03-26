@@ -5,6 +5,7 @@ import { Heart } from 'lucide-react';
 export function SocialFeed() {
     return (
         <PageSection title="Social Feed" BgIcon={Heart}>
+
             <h2>Recent Social Activity</h2>
             <p>Here's what I've been up to lately:</p>
             <ul>

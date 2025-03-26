@@ -4,6 +4,33 @@ import { Github, File } from 'lucide-react';
 import CommitDate from "@/components/frontpage/CommitDate";
 import PageSection from "@/components/frontpage/PageSection";
 import RepoReadme from "@/components/github/RepoReadme";
+import ShowMore from "@/components/ui/ShowMore";
+
+function RepoActivity({ repo, reposWithoutReadmes, onClick }) {
+    return <div className={styles.repo}>
+        <h2 className={styles.header}>
+            <Github className={styles.inlineIcon}/>
+             <a className={styles.repoLink} href={repo.url}>{repo.name}</a>
+            {!reposWithoutReadmes[repo.name] &&
+                <button className={styles.readmeButton} onClick={onClick}>
+                    <span>readme</span>
+                    <File className={styles.inlineIcon}/>
+                </button>
+            }
+        </h2>
+        {repo.commits.slice(0, 3).map((commit, i) => <Commit key={`commit_${repo.name}_${i}`} event={commit}/>)}
+    </div>;
+}
+
+function Commit(props) {
+    return <div className={styles.commit}>
+        <div class={styles.commitInfo}>
+            <a className={styles.commitMessage} href={props.event.url}>{props.event.message}</a>
+            <span className={styles.commitDate}><CommitDate date={props.event.date}/></span>
+        </div>
+        <a href={props.event.url} className={styles.commitHash}>{props.event.hash && props.event.hash.substring(0, 8)}</a>
+    </div>;
+}
 
 export default function GithubActivity() {
     const [repos, setRepos] = useState([]);
@@ -12,19 +39,16 @@ export default function GithubActivity() {
     const [reposWithoutReadmes, setReposWithoutReadmes] = useState({});
 
     useEffect(() => {
-        fetch('/api/github/recent')
+        fetch('/api/github/recent')// TODO: Pull this from SiteConfig
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch GitHub activity');
                 }
                 return response.json();
             })
-            .then((data) => {
-                console.log({ data }); // FIXME: DO NOT COMMIT TO CODE REPOSITORY!
-                return data;
-            })
-            .then(({ repos }) => setRepos(repos));
-
+            .then(({ repos }) => repos)
+            .then((repos) => repos.filter((r) => r.commits.length > 0))
+            .then((repos) => setRepos(repos));
     }, []);
 
     const showReadme = (repoName) => {
@@ -53,37 +77,14 @@ export default function GithubActivity() {
             }
             <PageSection title="Recent Github Activity" BgIcon={Github}>
                 <div className={styles.githubActivitySection}>
-                    {repos.map((repo) => {
-                        console.log({ repo: repo });
-                        if (!repo.commits.length) {
-                            return null;
-                        } else {
-                            return (
-                                <div className={styles.repo} key={`repo_${repo.name}`}>
-                                    <h2 className={styles.header}>
-                                        <Github className={styles.inlineIcon}/> <a className={styles.repoLink} href={repo.url}>{repo.name}</a>
-                                        {!reposWithoutReadmes[repo.name] &&
-                                            <button className={styles.readmeButton} onClick={() => showReadme(repo.name)}>
-                                                <span>readme</span>
-                                                <File className={styles.inlineIcon}/>
-                                            </button>
-                                        }
-                                    </h2>
-                                    {repo.commits.slice(0, 3).map((event, i) => {
-                                        return (
-                                            <div className={styles.commit} key={`commit_${repo.name}_${i}`}>
-                                                <div class={styles.commitInfo}>
-                                                    <a className={styles.commitMessage} href={event.url}>{event.message}</a>
-                                                    <span className={styles.commitDate}><CommitDate date={event.date}/></span>
-                                                </div>
-                                                <a href={event.url} className={styles.commitHash}>{event.hash && event.hash.substring(0, 8)}</a>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            );
-                        }
-                    })}
+                    {repos.slice(0, 3).map((repo) => (
+                        <RepoActivity key={`repo_${repo.name}`} repo={repo} reposWithoutReadmes={reposWithoutReadmes} onClick={() => showReadme(repo.name)}/>
+                    ))}
+                    <ShowMore>
+                    {repos.slice(3).map((repo) => (
+                        <RepoActivity key={`repo_${repo.name}`} repo={repo} reposWithoutReadmes={reposWithoutReadmes} onClick={() => showReadme(repo.name)}/>
+                    ))}
+                    </ShowMore>
                 </div>
                 <div className={styles.footer}>
 

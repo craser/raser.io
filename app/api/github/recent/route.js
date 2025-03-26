@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { Octokit } from "octokit";
 import SiteConfig from "@/lib/SiteConfig";
 
-class RepoInfo {
+export class RepoInfo {
     name;
     commits = [];
 
@@ -21,7 +21,7 @@ class RepoInfo {
     }
 }
 
-class Commit {
+export class Commit {
     constructor({ message, date, hash, url }) {
         this.message = message;
         this.date = date;
