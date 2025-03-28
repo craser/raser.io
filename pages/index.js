@@ -3,7 +3,8 @@ import LatestPost from "@/components/frontpage/LatestPost";
 import StandardLayout from "@/components/templates/StandardLayout";
 import LogEntries from "@/components/LogEntries";
 import GithubActivity from "@/components/github/GithubActivity";
-import { SocialFeed } from "@/components/frontpage/SocialFeed";
+import SocialFeed from "@/components/frontpage/SocialFeed";
+import PreviousPosts from "@/components/frontpage/PreviousPosts";
 import FeatureEnabled from "@/components/flags/FeatureEnabled";
 import FeatureDisabled from "@/components/flags/FeatureDisabled";
 
@@ -15,6 +16,7 @@ export default function Home() {
                     latest={<LatestPost/>}
                     github={<GithubActivity/>}
                     social={<SocialFeed/>}
+                    previous={<PreviousPosts />}
                 />
             </FeatureEnabled>
             <FeatureDisabled feature='showLandingFrontpage'>

@@ -1,0 +1,92 @@
+@import '@/styles/mixins';
+
+.prevPosts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2em;
+
+    .post {
+        $fauxPadding: 12px;
+
+
+        padding: $fauxPadding;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        margin: -$fauxPadding;
+
+        position: relative;
+        overflow: hidden;
+
+
+        &:hover {
+            border-color: white;
+            background-color: rgba(255, 255, 255, 0.2);
+
+            .link {
+                opacity: 1 !important;
+            }
+        }
+
+        .image {
+            width: 38.2%;
+            float: left;
+            border-radius: 5px;
+            margin: 0 0.5em 0.5em 0;
+        }
+
+        .title {
+            background-color: cornflowerblue;
+            font-size: 1.2em;
+            @include poptextYellow;
+        }
+
+        .brief {
+            color: white;
+            padding: 0.5em 0;
+        }
+
+        .footer {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            clear: both;
+
+            .date {
+                font-size: 0.8em;
+                color: #aaa;
+            }
+
+            .link {
+                opacity: 0; /* flips to 1 on hover */
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                font-size: 0.8em;
+                color: white;
+
+                .continueIcon {
+                    width: 2em;
+                    height: 2em;
+                    display: inline-block;
+                }
+            }
+        }
+    }
+
+}
+
+.archiveLink {
+    @include poptextYellow;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 2em 0;
+
+    svg {
+        color: skyblue;
+    }
+}
+

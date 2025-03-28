@@ -5,7 +5,7 @@ import Search from "@/components/search/Search";
 import { useEffect, useRef } from "react";
 import { debounce, inIdle } from "@/lib/util/wrappers";
 
-export default function FrontLandingLayout({ latest, github, social }) {
+export default function FrontLandingLayout({ latest, github, social, previous }) {
     const headerRef = useRef(null);
 
     /**
@@ -43,7 +43,7 @@ export default function FrontLandingLayout({ latest, github, social }) {
                 {latest}
                 <div class={styles.tier2}>
                     {github}
-                    {social}
+                    {previous}
                 </div>
             </main>
         </div>

@@ -20,9 +20,7 @@ export function ModalProvider({ children }) {
     return (
         <ModalContextObj.Provider value={context}>
             <section ref={modalRoot} data-testid="modal-portal"></section>
-            <section style={{ zIndex: 0 }}>
-                {children}
-            </section>
+            {children}
         </ModalContextObj.Provider>
     )
 }

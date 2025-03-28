@@ -2,7 +2,7 @@ import styles from './SocialFeed.module.scss';
 import PageSection from "@/components/frontpage/PageSection";
 import { Heart } from 'lucide-react';
 
-export function SocialFeed() {
+export default function SocialFeed() {
     return (
         <PageSection title="Social Feed" BgIcon={Heart}>
 
