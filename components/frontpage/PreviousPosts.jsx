@@ -11,6 +11,7 @@ import { FileImage, ChevronRight } from 'lucide-react';
 import PostTitleImage from "@/components/PostTitleImage";
 import { PostedDate } from "@/components/frontpage/PostedDate";
 import { EstimatedMinutesToRead } from "@/components/frontpage/EstimatedMinutesToRead";
+import ArchiveLink from "@/components/ArchiveLink";
 
 export default function SocialFeed() {
     const postDao = useDataContext().getPostDao();
@@ -31,8 +32,7 @@ export default function SocialFeed() {
                     <div class={styles.prevPosts}>
                         <PostHeaders posts={posts}/>
                     </div>
-                    <div class={styles.archiveLink}>more <ChevronRight />
-                    </div>
+                    <ArchiveLink className={styles.archiveLink}>more <ChevronRight /></ArchiveLink>
                 </>
             }
         </PageSection>
