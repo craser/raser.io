@@ -2,6 +2,9 @@ import Modal from "@/components/Modal";
 import SiteConfig from "@/lib/SiteConfig";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import styles from './RepoReadme.module.scss';
+import PageSection from "@/components/frontpage/PageSection";
+import { FileImage } from 'lucide-react';
 
 export default function RepoReadme({ repoName, onBlankReadme = () => 0, ...props }) {
     const siteConfig = new SiteConfig();
@@ -33,11 +36,13 @@ export default function RepoReadme({ repoName, onBlankReadme = () => 0, ...props
     }, [repoName]);
 
     return (
-        <Modal {...props}>
-            <div style={{ minHeight: '100px', minWidth: '100px' }}>
-                {!loaded && <LoadingSpinner/>}
-                {loaded && <div dangerouslySetInnerHTML={{ __html: readme }}/>}
-            </div>
+        <Modal className={styles.readmeModal} {...props}>
+            <PageSection title="Readme" BgIcon={FileImage}>
+                <div className={['prose', styles.readme].join(' ')}>
+                    {!loaded && <LoadingSpinner/>}
+                    {loaded && <div dangerouslySetInnerHTML={{ __html: readme }}/>}
+                </div>
+            </PageSection>
         </Modal>
     );
 

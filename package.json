@@ -22,6 +22,7 @@
     "@octokit/rest": "^21.1.1",
     "@opentelemetry/auto-instrumentations-node": "^0.53.0",
     "@opentelemetry/auto-instrumentations-web": "^0.43.0",
+    "@tailwindcss/typography": "^0.5.16",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@vercel/blob": "^0.24.0",

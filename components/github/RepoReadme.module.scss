@@ -1,0 +1,38 @@
+.readmeModal {
+    height: 98vh;
+    width: 98vw;
+
+    /* this is a hack that takes advantage of the fact that I know the PageSection renders a <section> element. */
+    section {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.readme {
+    $textColor: #fffacd;
+    background: darkslategray;
+    color: $textColor;
+    height: 100%;
+    width: 100%;
+    padding: 1em;
+    overflow-y: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    max-width: 100%;
+
+    h1, h2, h3 {
+        color: $textColor;
+        border-bottom: solid 1px $textColor;
+    }
+
+    div[class="markdown-heading"] {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    a[class="anchor"] {
+        display: inline-block;
+    }
+}

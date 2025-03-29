@@ -1,6 +1,6 @@
 import styles from './PageSection.module.scss';
 
-export default function PageSection({ title, BgIcon, hero = false, children }) {
+export default function PageSection({ title, BgIcon, hero = false, children, ...props }) {
     const classes = hero ? [styles.pageSection, styles.hero].join(' ') : styles.pageSection;
     return (
         <section className={classes}>

@@ -9,7 +9,7 @@ import { useModalContext } from "@/components/modal/ModalProvider";
  * @returns {JSX.Element}
  * @constructor
  */
-export default function Modal({ onDismiss, children }) {
+export default function Modal({ onDismiss, children, ...props }) {
     const modalRoot = useModalContext().getModalRoot();
 
     // Stop clicks from propagating to the backdrop - the backdrop will interpret them as dismissal.
@@ -24,11 +24,12 @@ export default function Modal({ onDismiss, children }) {
         }
     }
 
+    const modalClassName = [styles.modal, props?.className].join(' ');
     return (
         <>
             {createPortal(
                 <div data-testid="modal-backdrop" className={styles.backdrop} onClick={onDismiss} onKeyDown={onKeyDown}>
-                    <div data-testid="modal-content" className={styles.modal} onClick={dialogClicked} onKeyDown={onKeyDown}>
+                    <div data-testid="modal-content" className={modalClassName} onClick={dialogClicked} onKeyDown={onKeyDown}>
                         {children}
                     </div>
                 </div>,
