@@ -2,12 +2,15 @@ import React from 'react';
 import Modal from "@/components/Modal";
 import { render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { ModalProvider } from "@/components/modal/ModalProvider";
 
 function renderScaffold({ onDismiss = () => false }) {
     return render(
-        <Modal onDismiss={onDismiss}>
-            I want to be an Air Force Ranger!
-        </Modal>
+        <ModalProvider>
+            <Modal onDismiss={onDismiss}>
+                I want to be an Air Force Ranger!
+            </Modal>
+        </ModalProvider>
     );
 }
 

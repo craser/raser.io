@@ -11,6 +11,7 @@ import SearchButton from "@/components/search/SearchButton";
 import SAMPLE_SEARCH_STUBS from "@/__tests__/components/search/SampleSearchStubs.json"
 import { useDataContext } from "@/components/api/DataProvider";
 import { useRouter } from "next/router";
+import { ModalProvider } from "@/components/modal/ModalProvider";
 
 
 const MOCK_SEARCH_STUBS = [
@@ -21,10 +22,12 @@ const MOCK_SEARCH_STUBS = [
 
 async function renderScaffold() {
     return render(
-        <SearchProvider>
-            <SearchButton/>
-            <Search/>
-        </SearchProvider>
+        <ModalProvider>
+            <SearchProvider>
+                <SearchButton/>
+                <Search/>
+            </SearchProvider>
+        </ModalProvider>
     );
 }
 

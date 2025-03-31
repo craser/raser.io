@@ -13,7 +13,7 @@ export function ModalProvider({ children }) {
     const modalRoot = useRef(null);
 
     const context = {
-        getModalRoot: () => modalRoot.current,
+        getModalRoot: () =>  modalRoot.current,
         getZIndex: () => 0,
     }
 

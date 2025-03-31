@@ -22,12 +22,12 @@ export default function ShowMore({ children }) {
     return (
         <>
             {!expanded && <button className={styles.showMore} onClick={expand}><span>more</span><ChevronDown/></button>}
-            <div ref={contentContainerRef} class={styles.content}>
+            <div ref={contentContainerRef} className={styles.content}>
                 <div ref={contentRef}>
                     {children}
                 </div>
             </div>
-            {expanded && <button class={styles.showLess} onClick={collapse}><span>less</span><ChevronUp/></button>}
+            {expanded && <button className={styles.showLess} onClick={collapse}><span>less</span><ChevronUp/></button>}
         </>
     );
 }

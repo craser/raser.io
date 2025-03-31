@@ -13,7 +13,9 @@ async function renderScaffold() {
 jest.mock('lucide-react', () => {
     return {
         Github: () => <b>github icon</b>,
-        File: () => <b>file icon</b>
+        File: () => <b>file icon</b>,
+        ChevronUp: () => <b>chevron up icon</b>,
+        ChevronDown: () => <b>chevron down icon</b>
     }
 })
 
