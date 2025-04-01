@@ -30,7 +30,7 @@ export class Commit {
     }
 }
 
-const fetchGithubActivity = async () => {
+const fetchGithubActivity = () => {
     const githubAuthToken = new SiteConfig().getValue('github.authToken');
     const githubUsername = new SiteConfig().getValue('github.username');
 
