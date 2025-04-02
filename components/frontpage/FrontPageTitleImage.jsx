@@ -1,15 +1,10 @@
 import PostTitleImage, { hasMapTitleImage, hasTitleImage } from "@/components/PostTitleImage";
+import YouTubeTitleImage, { hasYouTubeEmbed } from "@/components/frontpage/YouTubeTitleImage";
 
-export default function FrontPageTitleImage({ post, ...props })
-{
+export default function FrontPageTitleImage({ post, ...props }) {
     if (hasTitleImage(post) || hasMapTitleImage(post)) {
-        return <PostTitleImage post={post} className="frontpagetitleimage"/>;
-    } else {
-        return (
-            <img src="https://raserio.b-cdn.net/2020-whiteboard.jpg"
-                 onError={() => notifyAnalytics(src)}
-                 {...props}
-            />
-        );
+        return <PostTitleImage post={post} {...props}/>;
+    } else if (hasYouTubeEmbed(post)) {
+        return <YouTubeTitleImage post={post} {...props}/>;
     }
 }

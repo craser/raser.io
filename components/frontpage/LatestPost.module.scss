@@ -15,7 +15,6 @@
 
      &:hover {
          .titleImage {
-             transform: rotate(180deg);
              animation: slowZoom 10s ease-in-out forwards;
          }
 
@@ -54,10 +53,11 @@
 
     .titleImageContainer {
         position: absolute;
-        top: 0;
+        top: 50%;
         left: 0;
         width: 100%;
         z-index: 0;
+        transform: translateY(-50%);
 
         &:after {
             position: absolute;
