@@ -1,15 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from "@/components/Modal";
 import { render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ModalProvider } from "@/components/modal/ModalProvider";
 
+function ExampleComponent({ children }) {
+    const [show, setShow] = useState(false);
+    useEffect(() => {
+        setShow(true);
+    }, []);
+
+    return (
+        <>{show && children}</>
+    )
+}
+
 function renderScaffold({ onDismiss = () => false }) {
     return render(
         <ModalProvider>
-            <Modal onDismiss={onDismiss}>
-                I want to be an Air Force Ranger!
-            </Modal>
+            <ExampleComponent>
+                <Modal onDismiss={onDismiss}>
+                    I want to be an Air Force Ranger!
+                </Modal>
+            </ExampleComponent>
         </ModalProvider>
     );
 }
