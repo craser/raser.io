@@ -1,69 +1,74 @@
-
+import React from 'react';
 import { render } from '@testing-library/react';
-import App from '@/pages/_app';
+import '@testing-library/jest-dom';
 
-// Mock next/head
-jest.mock('next/head', () => {
-    return function NextHead({ children }) { 
-        return <div data-testid="mock-next-head">{children}</div>; 
-    };
-});
-
-/*<FeatureFlagProvider>
-    <AnalyticsProvider>
-        <AuthenticationContext>
-            <DataProvider>
-                <SearchProvider>
-                    <ModalProvider>*/
-
-
+// Mock the components
 jest.mock('@/components/flags/FeatureFlagProvider', () => {
-    return function MockFeatureFlagProvider({ children }) { return (<div data-testid="mock-FeatureFlagProvider">{children}</div>); };
+  return {
+    __esModule: true,
+    default: ({ children }) => <div data-testid="mock-feature-flag-provider">{children}</div>
+  };
 });
 
 jest.mock('@/components/analytics/AnalyticsProvider', () => {
-    return function MockAnalyticsProvider({ children }) { return (<div data-testid="mock-AnalyticsProvider">{children}</div>); };
+  return {
+    __esModule: true,
+    default: ({ children }) => <div data-testid="mock-analytics-provider">{children}</div>
+  };
 });
 
 jest.mock('@/components/auth/AuthenticationContext', () => {
-    return function MockAuthenticationContext({ children }) { return (<div data-testid="mock-AuthenticationContext">{children}</div>); };
+  return {
+    __esModule: true,
+    default: ({ children }) => <div data-testid="mock-auth-context">{children}</div>
+  };
 });
 
 jest.mock('@/components/api/DataProvider', () => {
-    return function MockDataProvider({ children }) { return (<div data-testid="mock-DataProvider">{children}</div>); };
+  return {
+    __esModule: true,
+    default: ({ children }) => <div data-testid="mock-data-provider">{children}</div>
+  };
 });
 
 jest.mock('@/components/search/SearchProvider', () => {
-    return function MockSearchProvider({ children }) { return (<div data-testid="mock-SearchProvider">{children}</div>); };
+  return {
+    __esModule: true,
+    default: ({ children }) => <div data-testid="mock-search-provider">{children}</div>
+  };
 });
 
 jest.mock('@/components/modal/ModalProvider', () => {
-    return function MockModalProvider({ children }) { return (<div data-testid="mock-ModalProvider">{children}</div>); };
+  return {
+    __esModule: true,
+    ModalProvider: ({ children }) => <div data-testid="mock-modal-provider">{children}</div>
+  };
 });
 
-function SampleComponent(props) {
-    return (
-        <div>
-            <h1>Sample Component</h1>
-            {props.children}
-        </div>
+jest.mock('next/head', () => {
+  return {
+    __esModule: true,
+    default: ({ children }) => <div data-testid="mock-next-head">{children}</div>
+  };
+});
+
+// Mock the CSS import
+jest.mock('@/styles/globals.scss', () => {
+  return {};
+});
+
+// Test component
+const MockComponent = () => <div>Mock Page Component</div>;
+
+// Import the component under test after all mocks
+const App = require('@/pages/_app').default;
+
+describe('App Component', () => {
+  it('renders without crashing', () => {
+    const { getByText } = render(
+      <App Component={MockComponent} pageProps={{}} />
     );
-}
-
-function renderScaffold() {
-    return render(
-        <App 
-            Component={(props) => <SampleComponent {...props} />} 
-            pageProps={{}} 
-        />
-    );
-}
-
-describe('_app.js', () => {
-
-    it('should render without error', () => {
-        const { container } = renderScaffold();
-        expect(container).toBeTruthy();
-    });
-
+    
+    expect(getByText('Mock Page Component')).toBeInTheDocument();
+  });
 });
