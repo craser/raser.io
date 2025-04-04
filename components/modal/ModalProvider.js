@@ -9,7 +9,7 @@ export function useModalContext() {
     return useContext(ModalContextObj);
 }
 
-export function ModalProvider({ children }) {
+export default function ModalProvider({ children }) {
     const modalRoot = useRef(null);
 
     const context = {

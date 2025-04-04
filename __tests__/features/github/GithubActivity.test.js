@@ -1,5 +1,5 @@
 import GithubActivity from "@/components/github/GithubActivity";
-import { ModalProvider } from "@/components/modal/ModalProvider";
+import ModalProvider from "@/components/modal/ModalProvider";
 import { render } from "@testing-library/react";
 
 async function renderScaffold() {

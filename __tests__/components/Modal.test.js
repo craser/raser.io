@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from "@/components/Modal";
 import { render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { ModalProvider } from "@/components/modal/ModalProvider";
+import ModalProvider from "@/components/modal/ModalProvider";
 
 function ExampleComponent({ children }) {
     const [show, setShow] = useState(false);

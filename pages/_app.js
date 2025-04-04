@@ -4,7 +4,7 @@ import AnalyticsProvider from "@/components/analytics/AnalyticsProvider";
 import SearchProvider from "@/components/search/SearchProvider";
 import DataProvider from "@/components/api/DataProvider";
 import FeatureFlagProvider from "@/components/flags/FeatureFlagProvider";
-import { ModalProvider } from "@/components/modal/ModalProvider";
+import ModalProvider from "@/components/modal/ModalProvider";
 import Head from 'next/head';
 
 export default function App({ Component, pageProps }) {
