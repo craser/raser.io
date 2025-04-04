@@ -16,11 +16,10 @@
   "moduleNameMapper": {
     "@/(.*)$": "<rootDir>/$1",
     "^/(.*)$": "<rootDir>/$1",
-    "\\.module\\.scss$": "identity-obj-proxy",
-    "\\.scss$": "<rootDir>/__mocks__/styleMock.js"
+    "\\.(css|scss)$": "identity-obj-proxy"
   },
   "transform": {
-    "^.+\\.jsx?$": "babel-jest",
-    "^.+\\.module\\.(css|sass|scss)$": "jest-css-modules-transform"
+    "^.+\\.(js|jsx)$": "babel-jest",
+    "^.+\\.(css|sass|scss)$": "jest-css-modules-transform"
   }
 }

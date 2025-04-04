@@ -51,6 +51,7 @@
     "threads-graph-api": "^0.1.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.25.9",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
     "@testing-library/user-event": "^14.5.2",
