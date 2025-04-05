@@ -33,7 +33,7 @@ function LoginField({ type, placeholder, defaultValue, validate: validateValue, 
     </>;
 }
 
-export default function LoginModal({ onVisibilityChange }) {
+export default function LoginModal({ onVisibilityChange = () => false }) {
     const authContext = useAuthenticationContext();
     const [email, setEmail] = useState(authContext.getEmail());
     const [pass, setPass] = useState(null);
