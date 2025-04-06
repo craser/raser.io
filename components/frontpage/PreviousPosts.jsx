@@ -13,26 +13,29 @@ import { PostedDate } from "@/components/frontpage/PostedDate";
 import { EstimatedMinutesToRead } from "@/components/frontpage/EstimatedMinutesToRead";
 import ArchiveLink from "@/components/ArchiveLink";
 
-export default function SocialFeed() {
+export default function PreviousPosts({ initialPosts = null }) {
     const postDao = useDataContext().getPostDao();
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState(initialPosts || []);
 
     useEffect(() => {
-        postDao.getEntries(0, 5)
-            .then(posts => posts.slice(1)) // the first is, presumably, already in the hero section
-            .then(posts => setPosts(posts));
-    }, []);
-
+        if (!initialPosts) {
+            postDao.getEntries(0, 5)
+                .then(posts => posts.slice(1)) // the first is, presumably, already in the hero section
+                .then(posts => setPosts(posts));
+        }
+    }, [initialPosts, postDao]);
 
     return (
         <PageSection title="Previously" BgIcon={FileImage}>
             {(posts.length == 0) && <LoadingSpinner/>}
             {(posts.length > 0) &&
                 <>
-                    <div class={styles.prevPosts}>
+                    <div className={styles.prevPosts}>
                         <PostHeaders posts={posts}/>
                     </div>
-                    <ArchiveLink className={styles.archiveLink}>more <ChevronRight /></ArchiveLink>
+                    <ArchiveLink className={styles.archiveLink} prefetch={true}>
+                        more <ChevronRight />
+                    </ArchiveLink>
                 </>
             }
         </PageSection>
@@ -50,8 +53,7 @@ function PostHeaders({ posts }) {
 function PostHeader({ post, ...props }) {
     return (
         <div className={styles.post}>
-            <PostLink post={post}>
-
+            <PostLink post={post} prefetch={true}>
                 <PostTitleImage className={styles.image} post={post}/>
                 <h1 className={styles.title} {...props}>{post.title}</h1>
                 <PostBriefIntro className={styles.brief} post={post} maxLength={20}/>

@@ -10,21 +10,21 @@ import styles from './LatestPost.module.scss';
 import PageSection from "@/components/frontpage/PageSection";
 import { PostLink } from "@/components/PostLink";
 
-export default function LatestPostSection() {
+export default function LatestPostSection({ initialPost = null }) {
     const postDao = useDataContext().getPostDao();
-
-    const [post, setPost] = useState(null);
+    const [post, setPost] = useState(initialPost);
 
     useEffect(() => {
-        postDao.getLatestPost().then(setPost);
-    }, []);
+        if (!initialPost) {
+            postDao.getLatestPost().then(setPost);
+        }
+    }, [initialPost, postDao]);
 
     if (!post) {
         return (
             <LoadingSpinner/>
         );
     } else {
-
         return (
             <PageSection title="Latest" hero={true}>
                 <PostLink post={post}>
