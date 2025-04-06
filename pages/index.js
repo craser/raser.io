@@ -21,7 +21,7 @@ export default function Home({ latestPost, recentPosts, entries, isLandingPageEn
                     previous={<PreviousPosts initialPosts={recentPosts} />}
                 />
             </FeatureEnabled>
-            <FeatureDisabled feature='showLandingFrontpage' override={!isLandingPageEnabled}>
+            <FeatureDisabled feature='showLandingFrontpage' override={isLandingPageEnabled}>
                 <StandardLayout
                     content={<LogEntries initialEntries={entries} initialPage={0} pageSize={30}/>}
                 />
@@ -35,20 +35,20 @@ export async function getStaticProps() {
         // Create the PostDao instance
         const postDao = PostDao.getPostDao();
         const config = new SiteConfig();
-        
+
         // Check if landing page feature is enabled
         const isLandingPageEnabled = config.featureFlags?.showLandingFrontpage ?? true;
-        
+
         // Fetch the latest post
         const latestPost = await postDao.getLatestPost();
-        
+
         // Fetch recent posts for previous posts section (skip the first one which is the latest)
         const allRecentPosts = await postDao.getEntries(0, 6);
         const recentPosts = allRecentPosts.slice(1);
-        
+
         // Fetch entries for the standard layout
         const entries = await postDao.getEntries(0, 30);
-        
+
         return {
             props: {
                 latestPost,
