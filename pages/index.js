@@ -32,22 +32,17 @@ export default function Home({ latestPost, recentPosts, entries, isLandingPageEn
 
 export async function getStaticProps() {
     try {
-        // Create the PostDao instance
-        const postDao = PostDao.getPostDao();
         const config = new SiteConfig();
+        const entriesCount = config.getValue('staticGeneration.prerender.archiveEntries') || 30;
+        const recentPostsCount = 6; // Keep this small for the homepage
+        const revalidateSeconds = config.getValue('staticGeneration.prerender.revalidateSeconds') || 3600;
 
-        // Check if landing page feature is enabled
+        // FIXME: This will always return true on pre-render
         const isLandingPageEnabled = config.featureFlags?.showLandingFrontpage ?? true;
-
-        // Fetch the latest post
-        const latestPost = await postDao.getLatestPost();
-
-        // Fetch recent posts for previous posts section (skip the first one which is the latest)
-        const allRecentPosts = await postDao.getEntries(0, 6);
-        const recentPosts = allRecentPosts.slice(1);
-
-        // Fetch entries for the standard layout
-        const entries = await postDao.getEntries(0, 30);
+        const postDao = PostDao.getCachingPostDao();
+        const entries = await postDao.getEntries(0, entriesCount);
+        const recentPosts = entries.slice(1, recentPostsCount);
+        const latestPost = entries[0]; // I may live to regret this.
 
         return {
             props: {
@@ -56,8 +51,7 @@ export async function getStaticProps() {
                 entries,
                 isLandingPageEnabled
             },
-            // Revalidate every hour (3600 seconds)
-            revalidate: 3600
+            revalidate: revalidateSeconds
         };
     } catch (error) {
         console.error('Error fetching initial data:', error);

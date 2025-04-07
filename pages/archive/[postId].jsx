@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import SinglePostPage from "@/components/pages/SinglePostPage"
 import LoadingSpinner from "@/components/LoadingSpinner";
 import PostDao from '@/model/PostDao';
+import SiteConfig from '@/lib/SiteConfig';
 
 export default function PostIdParamPage(props) {
     const router = useRouter();
@@ -30,20 +31,15 @@ export default function PostIdParamPage(props) {
 
 export async function getStaticPaths() {
     // Create the PostDao instance
-    const postDao = PostDao.getPostDao();
-
-    // Fetch the most recent posts (adjust the number as needed)
-    const recentPosts = await postDao.getEntries(0, 20);
+    const postDao = PostDao.getCachingPostDao();
+    const config = new SiteConfig();
+    const postsToPrerender = config.getValue('staticGeneration.prerender.posts') || 20;
+    const recentPosts = await postDao.getEntries(0, postsToPrerender);
 
     // Create paths for each post
     const paths = recentPosts.map(post => ({
-        params: { postId: Number(post.entryId).toString() } // same type it's expected by the router.
+        params: { postId: post.entryId.toString() }
     }));
-
-    // dump to console for debugging
-    console.log("Paths for static generation:");
-    paths.forEach(path => console.log(JSON.stringify(path)));
-
 
     return {
         paths,
@@ -56,8 +52,9 @@ export async function getStaticProps({ params }) {
     const { postId } = params;
 
     try {
-        // Create the PostDao instance
-        const postDao = PostDao.getPostDao();
+        const config = new SiteConfig();
+        const revalidateSeconds = config.getValue('staticGeneration.prerender.revalidateSeconds') || 3600;
+        const postDao = PostDao.getCachingPostDao(); // Use caching DAO for better performance
 
         // Fetch the post and its next/prev posts
         const post = await postDao.getPostById(postId);
@@ -70,8 +67,7 @@ export async function getStaticProps({ params }) {
                 next,
                 prev
             },
-            // Revalidate every hour (3600 seconds)
-            revalidate: 3600
+            revalidate: revalidateSeconds
         };
     } catch (error) {
         console.error(`Error fetching post ${postId}:`, error);

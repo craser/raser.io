@@ -2,6 +2,13 @@
   "images": {
     "postcard": "https://raserio.b-cdn.net/{imageFileName}"
   },
+  "staticGeneration": {
+    "prerender": {
+      "posts": 30,
+      "archiveEntries": 30,
+      "revalidateSeconds": 3600
+    }
+  },
   "api": {
     "root": "{NEXT_PUBLIC_API_ROOT}",
     "endpoints": {

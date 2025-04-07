@@ -14,6 +14,7 @@ export default class PostDao {
         return new EdgeConfigPostDao();
     }
 
+    // TODO: Nobody should still be calling this. Replace with getCachaingPostDao().
     static getPostDao() {
         return new PostDao();
     }

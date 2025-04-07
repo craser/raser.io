@@ -1,6 +1,7 @@
 import LogEntries from '../../components/LogEntries';
 import StandardLayout from "../../components/templates/StandardLayout";
 import PostDao from '@/model/PostDao';
+import SiteConfig from '@/lib/SiteConfig';
 
 export default function Home({ initialEntries }) {
     return (
@@ -12,18 +13,18 @@ export default function Home({ initialEntries }) {
 
 export async function getStaticProps() {
     try {
-        // Create the PostDao instance
-        const postDao = PostDao.getPostDao();
-        
-        // Fetch the first page of entries
-        const initialEntries = await postDao.getEntries(0, 30);
-        
+        // Get config
+        const config = new SiteConfig();
+        const entriesCount = config.getValue('staticGeneration.prerender.archiveEntries') || 30;
+        const revalidateSeconds = config.getValue('staticGeneration.prerender.revalidateSeconds') || 3600;
+        const postDao = PostDao.getCachingPostDao(); // Use caching DAO for better performance
+        const initialEntries = await postDao.getEntries(0, entriesCount);
+
         return {
             props: {
                 initialEntries
             },
-            // Revalidate every hour (3600 seconds)
-            revalidate: 3600
+            revalidate: revalidateSeconds
         };
     } catch (error) {
         console.error('Error fetching initial entries:', error);
