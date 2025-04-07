@@ -5,6 +5,8 @@ import PostTitleImage from "@/components/PostTitleImage";
 import { useEffect, useRef } from "react";
 
 export const Post = ({ post, showBody }) => {
+    console.log(`Post: ${post.entryId} (showBody: ${showBody})`);
+
     const topRef = useRef(null);
 
     // A temporary fix for the problem of YouTube videos being hard-coded to 630px wide.

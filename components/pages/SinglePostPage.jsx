@@ -11,7 +11,14 @@ import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 export default function SinglePostPage({ postId, initialPost = null, initialNext = null, initialPrev = null }) {
     const analytics = useAnalytics();
     const dataContext = useDataContext();
-    const [post, setPost] = useState(initialPost);
+
+    // FIXME: Need to fix this bit. The correct value is being passed for initialPost on next/prev calls, but
+    // it's being ignored because we're passing it along as the initial value for useState instead of
+    // using it directly.
+    const [post, setPost] = useState(initialPost); // FIXME: THIS IS BORKEN. Causes updates to be ignored.
+
+
+
     const [next, setNext] = useState(initialNext);
     const [prev, setPrev] = useState(initialPrev);
 

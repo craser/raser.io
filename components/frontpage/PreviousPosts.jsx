@@ -53,7 +53,7 @@ function PostHeaders({ posts }) {
 function PostHeader({ post, ...props }) {
     return (
         <div className={styles.post}>
-            <PostLink post={post} prefetch={true}>
+            <PostLink post={post}>
                 <PostTitleImage className={styles.image} post={post}/>
                 <h1 className={styles.title} {...props}>{post.title}</h1>
                 <PostBriefIntro className={styles.brief} post={post} maxLength={20}/>
