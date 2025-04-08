@@ -19,7 +19,7 @@ const links = [
     },
     {
         title: 'Blog',
-        href: 'https://www.yourblog.com',
+        href: 'https://raser.io',
         icon: Rss,
         text: 'RSS',
         alt: 'Blog',
