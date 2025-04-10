@@ -20,3 +20,18 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+@mixin unPop($color) {
+    background: unset;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    color: $color;
+}
+
+@mixin gradientBackground() {
+    background: -webkit-linear-gradient(yellow, orange);
+}
+
+@mixin backgroundCrossFade() {
+    background: linear-gradient(105deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
+}

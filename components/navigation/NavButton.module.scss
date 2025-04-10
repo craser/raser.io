@@ -1,3 +1,5 @@
+@import '@/styles/mixins.scss';
+
 button.navButton {
     display: flex;
     flex-direction: row;
@@ -8,16 +10,18 @@ button.navButton {
     border-radius: 5px;
     padding: 5px;
     transition: all 200ms;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    @include poptextYellow();
 
     &:hover {
-        /* reverse the colors */
-        background-color: #000;
-        color: #fff;
+        @include unPop(white);
+        @include gradientBackground();
     }
 
     .icon {
-        width: 36px;
-        height: 36px;
+        width: 24px;
+        height: 24px;
     }
 
 

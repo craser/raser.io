@@ -1,4 +1,4 @@
-@import '~/styles/mixins.scss';
+@import '@/styles/mixins.scss';
 
 .pageSection {
     --bg-white: rgba(255, 255, 255, 0.2);
@@ -11,7 +11,7 @@
     overflow: hidden;
 
     position: relative;
-    background: linear-gradient(105deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
+    @include backgroundCrossFade();
     /* background-color: var(--bg-dark); */
     display: flex;
     flex-direction: column;
