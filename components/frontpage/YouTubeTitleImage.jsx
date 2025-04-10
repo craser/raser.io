@@ -13,9 +13,14 @@ export function getFirstYouTubeVideoId(post) {
     }
 }
 
-export default function YouTubeTitleImage({ post, onError, ...props}) {
+export function getYouTubeTitleImageUrl(post) {
     const videoId = getFirstYouTubeVideoId(post);
     const url = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+    return url;
+}
+
+export default function YouTubeTitleImage({ post, onError, ...props}) {
+    const url = getYouTubeTitleImageUrl(post);
     return <img data-testid="youtube-title-image" src={url}
                 onError={onError}
                 {...props}

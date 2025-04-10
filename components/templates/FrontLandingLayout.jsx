@@ -18,9 +18,9 @@ export default function FrontLandingLayout({ latest, github, social, previous })
      */
     useEffect(() => {
         const setStuck = () => {
-            if (window.scrollY > 100) {
+            if (window.scrollY > 0) {
                 headerRef.current?.classList.add(styles.stuck);
-            } else if (window.scrollY < 20) {
+            } else {
                 headerRef.current?.classList.remove(styles.stuck);
             }
         }

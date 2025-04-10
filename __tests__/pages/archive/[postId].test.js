@@ -1,0 +1,3 @@
+describe('Single-Post Page', () => {
+
+});

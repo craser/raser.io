@@ -1,5 +1,16 @@
-import PostTitleImage, { hasMapTitleImage, hasTitleImage } from "@/components/PostTitleImage";
-import YouTubeTitleImage, { hasYouTubeEmbed } from "@/components/frontpage/YouTubeTitleImage";
+import PostTitleImage, { hasMapTitleImage, hasTitleImage, getTitleImageUrl } from "@/components/PostTitleImage";
+import YouTubeTitleImage, { hasYouTubeEmbed, getYouTubeTitleImageUrl } from "@/components/frontpage/YouTubeTitleImage";
+
+export function getFrontPageTitleImageUrl(post) {
+    if (hasTitleImage(post) || hasMapTitleImage(post)) {
+        return getTitleImageUrl(post);
+    } else if (hasYouTubeEmbed(post)) {
+        return getYouTubeTitleImageUrl(post);
+    } else {
+        return null;
+    }
+}
+
 
 export default function FrontPageTitleImage({ post, ...props }) {
     if (hasTitleImage(post) || hasMapTitleImage(post)) {

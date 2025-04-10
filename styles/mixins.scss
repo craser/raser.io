@@ -1,4 +1,14 @@
+@mixin small() {
+    @media only screen and (max-width: 760px) {
+        @content;
+    }
+}
 
+@mixin large() {
+    @media only screen and (min-width: 761px) {
+        @content;
+    }
+}
 
 @mixin poptextYellow() {
     @include poptext(yellow, orange);
