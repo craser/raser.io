@@ -40,7 +40,9 @@ export default function FrontLandingLayout({ latest, github, social, previous })
             </header>
             <Search/>
             <main className={styles.content}>
-                {latest}
+                <div class={styles.splash}>
+                    {latest}
+                </div>
                 <div class={styles.tier2}>
                     {github}
                     {previous}

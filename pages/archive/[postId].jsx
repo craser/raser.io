@@ -4,26 +4,13 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import PostDao from '@/model/PostDao';
 import SiteConfig from '@/lib/SiteConfig';
 
-export default function PostIdParamPage({ post,  next, prev, ...props }) {
+export default function PostIdParamPage() {
     const router = useRouter();
-
-    console.log(`rendering PostIdParamPage: post: ${post.entryId}, next: ${next.entryId}, prev: ${prev.entryId}`);
-
-    // If we have props from getStaticProps, use those directly
-    if (post) {
-        console.log(`Using props from getStaticProps`);
-        return <SinglePostPage
-                postId={post.entryId}
-                initialPost={post}
-                initialNext={next}
-                initialPrev={prev} />;
-    }
-
-    // Fallback for client-side navigation or if props aren't available
-    if (!router.query.postId) {
+    const postId = !router.query.postId;
+    console.log(`PostIdParamPage: postId ${postId} (fallback? ${router.isFallback})`);
+    if (postId) {
         return <LoadingSpinner />
     } else {
-        console.log(`Rendering on the fly`);
         return <SinglePostPage postId={router.query.postId}/>;
     }
 }
@@ -53,19 +40,9 @@ export async function getStaticProps({ params }) {
     try {
         const config = new SiteConfig();
         const revalidateSeconds = config.getValue('staticGeneration.prerender.revalidateSeconds') || 3600;
-        const postDao = PostDao.getCachingPostDao(); // Use caching DAO for better performance
-
-        // Fetch the post and its next/prev posts
-        const post = await postDao.getPostById(postId);
-        const next = await postDao.getNextPost(post);
-        const prev = await postDao.getPrevPost(post);
 
         return {
-            props: {
-                post,
-                next,
-                prev
-            },
+            props: {},
             revalidate: revalidateSeconds
         };
     } catch (error) {

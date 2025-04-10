@@ -1,18 +1,14 @@
-@mixin frontPageContentColumn() {
-    width: 1000px;
-    max-width: calc(100vw - 1vw);
-    margin-left: auto;
-    margin-right: auto;
-}
+@import '@/styles/mixins.scss';
 
 .header {
+    position: fixed;
     border-bottom: 2px solid transparent;
     width: 100%;
-    z-index: 1; /* strangely, needed to stay above the YouTube iframes... wtf... */
-    @include frontPageContentColumn();
+    z-index: 5; /* strangely, needed to stay above the YouTube iframes... wtf... */
 
     display: flex;
     flex-direction: column;
+    padding: 0 2vw;
 
     .titleBanner {
         font-family: var(--font-title), serif;
@@ -21,6 +17,7 @@
         margin: 0;
         padding: 0;
         top: 0;
+        @include poptextYellow();
 
         a {
             color: black;
@@ -96,7 +93,6 @@
 
 .frontpage {
     z-index: 1;
-    margin-bottom: 3rem;
 
     .content {
         font-family: HelveticaNeue-condensed, sans-serif;
@@ -104,20 +100,38 @@
         background-size: cover;
         background-attachment: fixed;
         background-repeat: no-repeat;
-        @include frontPageContentColumn();
 
         display: flex;
         flex-direction: column;
-        gap: 2vw;
+
+        .splash {
+            width: 100%;
+        }
 
         .tier2 {
+            position: relative;
             display: flex;
             flex-direction: column-reverse;
             justify-content: space-between;
             align-items: flex-start;
 
+            background: url(/img/gold-rush-desktop.jpg);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            padding: 2vw;
+
             gap: 2vw;
             z-index: 1;
+
+            &:before {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                content: '';
+                height: 2vw;
+                background: linear-gradient(#556, transparent);
+            }
 
             @media only screen and (min-width: 800px) {
                 flex-direction: row;

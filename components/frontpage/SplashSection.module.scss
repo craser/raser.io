@@ -1,0 +1,18 @@
+@import '@/styles/mixins.scss';
+
+.splashSection {
+    --bg-white: rgba(255, 255, 255, 0.2);
+    --bg-dark: rgba(0, 0, 0, 0.9);
+    --text-color: white;
+    --title-font-size: 1.5em;
+    --title-padding: 20px;
+    --content-padding: 20px;
+
+    overflow: hidden;
+
+    position: relative;
+    background: linear-gradient(105deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
+    z-index: 1;
+    min-height: calc(var(--title-width) + (var(--content-padding) * 2)); /* Base minimum height on title size */
+    height: auto; /* Allow expansion with content */
+}
