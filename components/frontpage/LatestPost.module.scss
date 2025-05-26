@@ -13,6 +13,7 @@
     --header-height: calc(60px + 2vw);
     display: flex;
     flex-direction: row-reverse;
+    min-height: 60vh; // fill the "splash" area. need a better way to do this... but time is short today.
 
     /* background image set in jsx */
     background-size: cover;

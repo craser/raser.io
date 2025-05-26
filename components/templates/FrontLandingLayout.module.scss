@@ -8,9 +8,13 @@
 
     display: flex;
     flex-direction: row;
+    align-items: end;
     justify-content: space-between;
-    align-items: center;
-    transition: background 400ms ease-in;
+        transition: background 400ms ease-in;
+
+    @include large() {
+        align-items: center;
+    }
 
     &.stuck {
         @include backgroundCrossFade();
@@ -18,12 +22,19 @@
 
     .titleBanner {
         font-family: var(--font-title), serif;
-        font-size: 60px;
-        line-height: 60px;
-        letter-spacing: -10px;
+        font-size: 40px;
+        line-height: 40px;
+        letter-spacing: -6px;
         margin: 0;
         padding: 0 1em 0 0; /* leave room for odd kerning on final f */
         @include poptextYellow();
+
+        @include large() {
+            font-size: 60px;
+            line-height: 60px;
+            letter-spacing: -10px;
+        }
+
     }
 
     /* The UL that holds the navigation links */
