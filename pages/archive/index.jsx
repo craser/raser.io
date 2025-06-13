@@ -2,12 +2,15 @@ import LogEntries from '../../components/LogEntries';
 import StandardLayout from "../../components/templates/StandardLayout";
 import PostDao from '@/model/PostDao';
 import SiteConfig from '@/lib/SiteConfig';
+import SingleSectionContent from '@/components/templates/SingleSectionContent';
 
 export default function Home({ initialEntries }) {
     return (
-        <StandardLayout
-            content={<LogEntries initialEntries={initialEntries} initialPage={0} pageSize={30}/>}
-        />
+        <StandardLayout content={
+            <SingleSectionContent content={
+                <LogEntries initialEntries={initialEntries} initialPage={0} pageSize={30}/>
+            }/>
+        } />
     )
 }
 
