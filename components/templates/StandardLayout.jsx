@@ -1,13 +1,13 @@
 import Link from "next/link";
-import styles from './StandardLayout.module.scss'
+import styles from './FrontLandingLayout.module.scss'
 import SiteNavigationHeader from "@/components/templates/SiteNavigationHeader";
 import Search from "@/components/search/Search";
 import { useEffect, useRef } from "react";
 import { debounce, inIdle } from "@/lib/util/wrappers";
 
-export default function StandardLayout({ content }) {
+export default function FrontLandingLayout({ content }) {
     const headerRef = useRef(null);
-
+    
     /**
      * Shenanigans! Making the CSS styling sensitive to the scroll position!
      * Using two different threshholds here to avoid silly bouncing header
@@ -18,9 +18,9 @@ export default function StandardLayout({ content }) {
      */
     useEffect(() => {
         const setStuck = () => {
-            if (window.scrollY > 100) {
+            if (window.scrollY > 0) {
                 headerRef.current?.classList.add(styles.stuck);
-            } else if (window.scrollY < 20) {
+            } else {
                 headerRef.current?.classList.remove(styles.stuck);
             }
         }
@@ -28,15 +28,15 @@ export default function StandardLayout({ content }) {
         window.addEventListener('scroll', setScrollY, true);
         return () => window.removeEventListener('scroll', setScrollY);
     }, []);
-
-
+    
+    
     return (
         <div className={styles.frontpage}>
             <header ref={headerRef} className={styles.header}>
                 <h1 className={styles.titleBanner}>
                     <Link href={'/'}>DeathB4Decaf</Link>
                 </h1>
-                <SiteNavigationHeader/>
+                <SiteNavigationHeader styles={styles}/>
             </header>
             <Search/>
             <main className={styles.content}>

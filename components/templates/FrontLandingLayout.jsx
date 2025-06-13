@@ -1,7 +1,6 @@
 import Link from "next/link";
 import styles from './FrontLandingLayout.module.scss'
-import SiteNavigationHeader from "@/components/templates/SiteNavigationHeader";
-import Search from "@/components/search/Search";
+import StandardLayout from './StandardLayout'
 import { useEffect, useRef } from "react";
 import { debounce, inIdle } from "@/lib/util/wrappers";
 
@@ -31,15 +30,8 @@ export default function FrontLandingLayout({ latest, github, social, previous })
 
 
     return (
-        <div className={styles.frontpage}>
-            <header ref={headerRef} className={styles.header}>
-                <h1 className={styles.titleBanner}>
-                    <Link href={'/'}>DeathB4Decaf</Link>
-                </h1>
-                <SiteNavigationHeader styles={styles}/>
-            </header>
-            <Search/>
-            <main className={styles.content}>
+        <StandardLayout content={
+            <>
                 <div class={styles.splash}>
                     {latest}
                 </div>
@@ -47,7 +39,7 @@ export default function FrontLandingLayout({ latest, github, social, previous })
                     {github}
                     {previous}
                 </div>
-            </main>
-        </div>
+            </>
+        } />
     )
 }
