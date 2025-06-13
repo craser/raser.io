@@ -7,6 +7,7 @@ import StandardLayout from "@/components/templates/StandardLayout";
 import PostViewContext from "@/components/PostViewContext";
 import { useDataContext } from "@/components/api/DataProvider";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
+import SingleSectionContent from '@/components/templates/SingleSectionContent';
 
 export default function SinglePostPage({ postId }) {
     const analytics = useAnalytics();
@@ -48,7 +49,9 @@ export default function SinglePostPage({ postId }) {
     } else {
         return (
             <StandardLayout content={
-                <PostViewContext post={post} showBody={true} next={next} prev={prev}/>
+                <SingleSectionContent content={
+                    <PostViewContext post={post} showBody={true} next={next} prev={prev}/>
+                }/>
             }/>
         );
     }

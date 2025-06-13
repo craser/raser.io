@@ -1,0 +1,14 @@
+@import '@/styles/mixins.scss';
+
+
+.singleSectionContent {
+    --header-height: calc(60px + 2vw);
+
+    margin-top: var(--header-height);
+
+    @include large() {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
