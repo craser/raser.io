@@ -1,3 +1,5 @@
+@import '@/styles/mixins.scss';
+
 .entry {
     display: block;
     clear: left;
@@ -6,6 +8,9 @@
     background-color: var(--theme-color-content-text-bg);
     border-radius: var(--theme-border-radius-large);
     padding: 15px;
+
+    @include backgroundCrossFade();
+    color: var(--theme-color-text);
 }
 
 .entry .title {
@@ -15,7 +20,7 @@
     border-bottom: 1px solid var(--theme-color-border);
     margin: 0;
     text-align: left;
-
+    @include poptextYellow();
 }
 
 .entry .title a {
@@ -30,7 +35,7 @@
 
 .entrymetainfo, .entryfooter {
     font-size: 0.8em;
-    color: #555;
+    color: var(--theme-color-subtext);
     display: block;
     padding-top: 2px;
     font-family: sans-serif;
@@ -100,6 +105,7 @@
 
 .entryfooter {
     text-align: center;
+    color: yellow;
 }
 
 .entryfooter a {
@@ -126,39 +132,19 @@
  * to 50% and then translating them by half the width of the main column.
  */
 .nextPrevLinksContainer {
+    // TODO: fix this so it's not an embarrassment.
+    display: none;
     --post-width: calc(min(630px, calc(100vw - 20px)));
     --button-offset: calc(min((51vw + var(--post-width) / 2), (100vw - 8vw)));
 
     .nextLink, .prevLink {
-        font-size: 8vw;
-        position: fixed;
-        padding: 1vw 2vw;
-        border: 3px solid var(--theme-color-border-light);
-        background-color: var(--theme-color-link);
-        color: var(--theme-color-pop);
-        line-height: 6vw;
-        bottom: 50vw;
-        border-radius: 1vw;
 
-        &:hover {
-            opacity: 1;
-            color: var(--theme-color-link);
-            background-color: var(--theme-color-content-text-bg);
-        }
-
-        transition: all 200ms ease-in-out;
     }
 
     .nextLink {
-        right: var(--button-offset);
-        transform: rotate(-90deg);
-        transform-origin: right bottom;
     }
 
     .prevLink {
-        left: var(--button-offset);
-        transform: rotate(90deg);
-        transform-origin: left bottom;
     }
 
 }

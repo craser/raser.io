@@ -12,14 +12,14 @@
 :root {
     --font-title: 'Merriweather';
     --font-main: 'Lato';
-    --theme-color-text: #000;
-    --theme-color-pop: #e88c49;
+    --theme-color-text: #fff;
+    --theme-color-pop: lightskyblue;
     --theme-color-border-light: #aaa;
     --theme-color-subtext: #555;
     --theme-color-border: #555;
     --theme-color-content-text-bg: #fff;
     --theme-color-title: var(--theme-color-text);
-    --theme-color-link: #456;
+    --theme-color-link: lightskyblue;
     --theme-color-link-underline: var(--theme-color-pop);
     --theme-color-typeahead-suggestion: var(--theme-color-border-light);
     --theme-border-radius-large: 7px;
