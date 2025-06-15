@@ -8,6 +8,7 @@ export function useFeatureFlags() {
 export function useFeatureEnabled(feature) {
     const flags = useFeatureFlags();
     let enabled = feature in flags && flags[feature];
+    console.log(`feature ${feature} enabled? ${enabled}`);
     return enabled;
 }
 
