@@ -1,0 +1,64 @@
+@import '@/styles/mixins';
+
+.post {
+    $fauxPadding: 12px;
+
+    padding: $fauxPadding;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    margin: -$fauxPadding;
+    overflow: hidden;
+
+    &:hover {
+        border-color: white;
+        background-color: rgba(255, 255, 255, 0.2);
+
+        .link {
+            opacity: 1 !important;
+        }
+    }
+
+    .image {
+        width: 100%; //calc(100% - $fauxPadding);
+        float: left;
+        border-radius: 5px;
+        margin: 0 0 0.2em 0;
+    }
+
+    .title {
+        font-size: 1.2em;
+        line-height: 1.2em;
+        font-weight: 600;
+        margin: 0.2em 0 0 0;
+        @include poptextYellow;
+    }
+
+    .footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        clear: both;
+
+        .date {
+            font-size: 0.8em;
+            color: #aaa;
+        }
+
+        .link {
+            opacity: 0; /* flips to 1 on hover */
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: 0.8em;
+            color: white;
+
+            .continueIcon {
+                width: 2em;
+                height: 2em;
+                display: inline-block;
+            }
+        }
+    }
+}
+

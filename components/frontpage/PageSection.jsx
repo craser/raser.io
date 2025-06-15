@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import styles from './PageSection.module.scss';
 
-export default function PageSection({ title, BgIcon, hero = false, children, ...props }) {
+export default function PageSection({ title, BgIcon, hero = false, children, className, ...props }) {
     const titleRef = useRef(null);
     const sectionRef = useRef(null);
 
@@ -9,7 +9,7 @@ export default function PageSection({ title, BgIcon, hero = false, children, ...
     const baseClasses = hero ? [styles.pageSection, styles.hero] : [styles.pageSection];
 
     // Add dynamic class based on title length
-    const classes = [...baseClasses].join(' ');
+    const classes = [className, ...baseClasses].join(' ');
 
     // Effect to measure title and adjust section height if needed
     useEffect(() => {

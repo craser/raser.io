@@ -136,45 +136,17 @@
     // TODO: fix this so it's not an embarrassment.
     --post-width: calc(min(630px, calc(100vw - 20px)));
     --button-offset: calc(min((51vw + var(--post-width) / 2), (100vw - 8vw)));
+    position: relative; // offset parent for previews
 
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
     padding-bottom: 3em;
-
 
     .nextPrevIcon {
         height: 10vh;
         width: 10vh;
-    }
-
-    .nextLink, .prevLink {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border-radius: var(--theme-border-radius-large);
-        padding: var(--theme-container-padding-s);
-
-        &:before {
-            content: '-';
-            color: transparent;
-            height: 1em;
-            min-height: 1em;
-        }
-
-        &:after {
-            content: '-';
-            color: transparent;
-        }
-
-        &:hover {
-            @include backgroundCrossFade();
-
-            &:after {
-                @include poptextYellow();
-            }
-        }
     }
 
     .nextLink:after {
@@ -185,4 +157,9 @@
         content: 'previous post';
     }
 
+}
+
+.nextPrevPreviewContainer {
+    border-radius: var(--theme-border-radius-large);
+    max-width: 45%;
 }
