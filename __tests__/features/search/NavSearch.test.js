@@ -14,6 +14,8 @@ import { useRouter } from "next/router";
 import ModalProvider from "@/components/modal/ModalProvider";
 
 
+jest.mock('@/components/navigation/NavButton.module.scss', () => ({}));
+
 const MOCK_SEARCH_STUBS = [
     // "lorem" should only appear in ONE of the stubs below - see tests below
     { entryId: 101, datePosted: Date.now(), intro: "Intro 1", body: "lorem ipsum" },
