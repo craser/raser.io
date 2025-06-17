@@ -1,13 +1,11 @@
 @import '@/styles/mixins';
 
 .post {
-    $fauxPadding: 12px;
-
-    padding: $fauxPadding;
     border: 1px solid transparent;
     border-radius: 5px;
-    margin: -$fauxPadding;
     overflow: hidden;
+    height: 100%;
+    width: 100%;
 
     &:hover {
         border-color: white;
@@ -26,6 +24,7 @@
     }
 
     .title {
+        display: inline-block;
         font-size: 1.2em;
         line-height: 1.2em;
         font-weight: 600;

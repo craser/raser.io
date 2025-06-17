@@ -6,7 +6,7 @@ import { EstimatedMinutesToRead } from "@/components/frontpage/EstimatedMinutesT
 import { PostBriefIntro } from "@/components/frontpage/PostBriefIntro";
 import styles from './LatestPost.module.scss';
 import { PostLink } from "@/components/PostLink";
-import { getFrontPageTitleImageUrl } from "@/components/frontpage/FrontPageTitleImage";
+import { getFrontPageTitleImageUrl } from "@/components/frontpage/PreviewTitleImage";
 
 export default function LatestPostSection({ initialPost = null }) {
     const postDao = useDataContext().getPostDao();

@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import styles from './PageSection.module.scss';
 
 export default function PageSection({ title, BgIcon, hero = false, children, className, ...props }) {
+    
     const titleRef = useRef(null);
     const sectionRef = useRef(null);
 
@@ -21,7 +22,7 @@ export default function PageSection({ title, BgIcon, hero = false, children, cla
             sectionRef.current.style.setProperty('--title-width', `${titleWidth}px`);
         }
     }, [title, hero]);
-
+    
     return (
         <section ref={sectionRef} className={classes}>
             <h2 ref={titleRef} className={styles.sectionTitle}>{title}</h2>

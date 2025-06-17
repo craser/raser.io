@@ -143,20 +143,15 @@
     justify-content: space-between;
     align-items: stretch;
     padding-bottom: 3em;
+    flex-basis: 50%;
 
-    .nextPrevIcon {
-        height: 10vh;
-        width: 10vh;
+    &.nextOnly {
+        flex-direction: row;
     }
 
-    .nextLink:after {
-        content: 'next post';
+    &.prevOnly {
+        flex-direction: row-reverse;
     }
-
-    .prevLink:after {
-        content: 'previous post';
-    }
-
 }
 
 .nextPrevPreviewContainer {

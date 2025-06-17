@@ -12,7 +12,7 @@ export function getFrontPageTitleImageUrl(post) {
 }
 
 
-export default function FrontPageTitleImage({ post, ...props }) {
+export default function PreviewTitleImage({ post, ...props }) {
     if (hasTitleImage(post) || hasMapTitleImage(post)) {
         return <PostTitleImage post={post} {...props}/>;
     } else if (hasYouTubeEmbed(post)) {
