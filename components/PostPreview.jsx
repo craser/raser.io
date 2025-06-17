@@ -5,9 +5,9 @@ import { EstimatedMinutesToRead } from '@/components/frontpage/EstimatedMinutesT
 import PreviewTitleImage from '@/components/frontpage/PreviewTitleImage';
 
 export function PostPreview({ post, ...props }) {
-    if (!post) return;
+    if (!post) return null;
     return (
-        <div className={styles.post}>
+        <div className={styles.post} data-testid="postPreview">
             <PostLink post={post}>
                 <PreviewTitleImage post={post} className={styles.image} />
                 <h1 className={styles.title} {...props}>{post.title}</h1>

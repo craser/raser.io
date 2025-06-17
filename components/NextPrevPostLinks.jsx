@@ -1,6 +1,4 @@
-import { PostLink } from "@/components/PostLink";
 import styles from './Post.module.scss';
-import { CircleArrowLeft, CircleArrowRight } from 'lucide-react'
 import { PostPreview } from '@/components/PostPreview';
 import PageSection from '@/components/frontpage/PageSection';
 
