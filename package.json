@@ -12,7 +12,9 @@
     "lint": "next lint",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:coverage:open": "open coverage/lcov-report/index.html"
+    "test:coverage:open": "open coverage/lcov-report/index.html",
+    "coverage:check": "node scripts/check-coverage.js",
+    "coverage:policy": "node scripts/check-coverage.js"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.11",
