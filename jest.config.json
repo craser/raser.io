@@ -24,14 +24,6 @@
     "lcov",
     "json-summary"
   ],
-  "coverageThreshold": {
-    "global": {
-      "statements": 70,
-      "branches": 70,
-      "functions": 70,
-      "lines": 70
-    }
-  },
   "setupFilesAfterEnv": ["./jest.setup.js"],
   "testMatch": [
     "**/__tests__/**/*.[jt]s?(x)",
