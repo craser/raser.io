@@ -7,25 +7,29 @@ on:
 jobs:
   coverage-check:
     runs-on: ubuntu-latest
-    
+    permissions: # Add this block
+      contents: read    # To checkout the repository
+      pull-requests: write # To create/update comments on PRs
+      issues: write      # PRs are issues, sometimes this is also needed for comments
+
     steps:
     - name: Checkout PR branch
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
-    
+
     - name: Install dependencies
       run: npm ci
-    
+
     - name: Run tests with coverage on PR branch
       run: npm run test:coverage
-      
+
     - name: Read PR branch coverage
       id: pr-coverage
       run: |
@@ -41,19 +45,19 @@ jobs:
           echo "coverage=0" >> $GITHUB_OUTPUT
           echo "No coverage file found, setting coverage to 0%"
         fi
-    
+
     - name: Checkout main branch
       run: |
         git checkout main
         git pull origin main
-    
+
     - name: Install dependencies for main branch
       run: npm ci
-    
+
     - name: Run tests with coverage on main branch
       run: npm run test:coverage
       continue-on-error: true
-    
+
     - name: Read main branch coverage
       id: main-coverage
       run: |
@@ -69,11 +73,11 @@ jobs:
           echo "coverage=0" >> $GITHUB_OUTPUT
           echo "No coverage file found on main, setting coverage to 0%"
         fi
-    
+
     - name: Checkout PR branch again
       run: |
         git checkout ${{ github.head_ref }}
-    
+
     - name: Determine if changes are source code only
       id: changed-files
       run: |
@@ -93,7 +97,7 @@ jobs:
           echo "Source code changes detected:"
           echo "$SOURCE_CHANGES"
         fi
-    
+
     - name: Evaluate coverage policy
       id: policy-check
       run: |
@@ -139,7 +143,7 @@ jobs:
             exit 1
           fi
         fi
-    
+
     - name: Create coverage comment
       uses: actions/github-script@v7
       if: always()
@@ -198,7 +202,7 @@ jobs:
               body: commentBody
             });
           }
-    
+
     - name: Set final status
       if: always()
       run: |
