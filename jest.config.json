@@ -1,5 +1,37 @@
 {
   "collectCoverage": true,
+  "collectCoverageFrom": [
+    "components/**/*.{js,jsx}",
+    "lib/**/*.{js,jsx}",
+    "model/**/*.{js,jsx}",
+    "app/**/*.{js,jsx}",
+    "pages/**/*.{js,jsx}",
+    "!**/*.test.{js,jsx}",
+    "!**/*.spec.{js,jsx}",
+    "!**/__tests__/**",
+    "!**/__mocks__/**",
+    "!**/node_modules/**",
+    "!**/coverage/**",
+    "!**/build/**",
+    "!**/dist/**",
+    "!**/*.config.{js,jsx}",
+    "!**/jest.setup.js",
+    "!pages/_app.js",
+    "!pages/_document.js"
+  ],
+  "coverageReporters": [
+    "text",
+    "lcov",
+    "json-summary"
+  ],
+  "coverageThreshold": {
+    "global": {
+      "statements": 70,
+      "branches": 70,
+      "functions": 70,
+      "lines": 70
+    }
+  },
   "setupFilesAfterEnv": ["./jest.setup.js"],
   "testMatch": [
     "**/__tests__/**/*.[jt]s?(x)",
