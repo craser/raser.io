@@ -21,5 +21,44 @@
   "transform": {
     "^.+\\.(js|jsx)$": "babel-jest",
     "^.+\\.(css|sass|scss)$": "jest-css-modules-transform"
+  },
+  "collectCoverageFrom": [
+    "app/**/*.{js,jsx}",
+    "components/**/*.{js,jsx}",
+    "lib/**/*.{js,jsx}",
+    "model/**/*.{js,jsx}",
+    "pages/**/*.{js,jsx}",
+    "!**/__tests__/**",
+    "!**/*.test.{js,jsx}",
+    "!**/*.spec.{js,jsx}",
+    "!**/node_modules/**",
+    "!**/coverage/**",
+    "!**/public/**",
+    "!**/styles/**",
+    "!**/blog/**",
+    "!**/java/**",
+    "!**/__mocks__/**",
+    "!**/babel.config.js",
+    "!**/jest.config.json",
+    "!**/jest.setup.js",
+    "!**/next.config.js",
+    "!**/postcss.config.js",
+    "!**/tailwind.config.js",
+    "!**/jsconfig.json",
+    "!**/siteconfig.json",
+    "!pages/_app.js",
+    "!pages/_document.js"
+  ],
+  "coverageReporters": [
+    "text",
+    "lcov",
+    "html",
+    "json-summary"
+  ],
+  "coverageDirectory": "coverage",
+  "coverageThreshold": {
+    "global": {
+      "statements": 70
+    }
   }
 }
