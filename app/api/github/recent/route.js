@@ -65,6 +65,9 @@ export function GET(request) {
     return fetchGithubActivity()
         .then(json => new NextResponse(JSON.stringify(json), {
             status: 200,
-            headers: { 'Content-Type': 'application/json' }
+            headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'public, s-maxage=43200, stale-while-revalidate=86400'
+            }
         }));
 }
