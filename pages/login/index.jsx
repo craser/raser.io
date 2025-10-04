@@ -2,6 +2,8 @@ import LoginModal from "@/components/auth/LoginModal";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuthenticationContext, STATUS } from "@/components/auth/AuthenticationContext";
+import FeatureEnabled from "@/components/flags/FeatureEnabled";
+import FeatureDisabled from "@/components/flags/FeatureDisabled";
 
 export default function Login() {
     const router = useRouter();
@@ -21,5 +23,16 @@ export default function Login() {
     }, [authManager.status, router])
 
 
-    return <>{loaded && <LoginModal onDismiss={() => null} />}</>;
+    return (
+        <>
+            <FeatureEnabled feature="userLogin">
+                {loaded && <LoginModal onDismiss={() => null} />}
+            </FeatureEnabled>
+            <FeatureDisabled feature="userLogin">
+                <div style={{ padding: '2rem', textAlign: 'center' }}>
+                    <p>Login functionality has been disabled.</p>
+                </div>
+            </FeatureDisabled>
+        </>
+    );
 }
