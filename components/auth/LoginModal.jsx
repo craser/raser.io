@@ -2,6 +2,8 @@ import Modal from "@/components/Modal";
 import styles from './LoginModal.module.scss'
 import { useEffect, useRef, useState } from "react";
 import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
+import FeatureEnabled from "@/components/flags/FeatureEnabled";
+import FeatureDisabled from "@/components/flags/FeatureDisabled";
 
 /**
  *
@@ -61,31 +63,38 @@ export default function LoginModal({ onVisibilityChange = () => false }) {
 
     return (
         <Modal onDismiss={() => onVisibilityChange(false)}>
-            <form onSubmit={onSubmit}>
+            <FeatureEnabled feature="userLogin">
+                <form onSubmit={onSubmit}>
+                    <div className={styles.logincontainer}>
+                        <div className={styles.row}>
+                            <LoginField
+                                type="text"
+                                placeholder="email"
+                                defaultValue={email}
+                                validate={validateUserField}
+                                setValue={setEmail}
+                            />
+                        </div>
+                        <div className={styles.row}>
+                            <LoginField
+                                type="password"
+                                placeholder="password"
+                                validate={validateUserField}
+                                setValue={setPass}
+                            />
+                        </div>
+                        {errorMessage ? <div className={styles.error}>{errorMessage}</div> : null}
+                        <div className={styles.row}>
+                            <button type="submit">Log In</button>
+                        </div>
+                    </div>
+                </form>
+            </FeatureEnabled>
+            <FeatureDisabled feature="userLogin">
                 <div className={styles.logincontainer}>
-                    <div className={styles.row}>
-                        <LoginField
-                            type="text"
-                            placeholder="email"
-                            defaultValue={email}
-                            validate={validateUserField}
-                            setValue={setEmail}
-                        />
-                    </div>
-                    <div className={styles.row}>
-                        <LoginField
-                            type="password"
-                            placeholder="password"
-                            validate={validateUserField}
-                            setValue={setPass}
-                        />
-                    </div>
-                    {errorMessage ? <div className={styles.error}>{errorMessage}</div> : null}
-                    <div className={styles.row}>
-                        <button type="submit">Log In</button>
-                    </div>
+                    <p>Login functionality has been disabled.</p>
                 </div>
-            </form>
+            </FeatureDisabled>
         </Modal>
     );
 }
