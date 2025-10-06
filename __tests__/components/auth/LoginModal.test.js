@@ -4,7 +4,7 @@ import { render } from "@testing-library/react";
 import ModalProvider from "@/components/modal/ModalProvider";
 import FeatureFlagProvider from "@/components/flags/FeatureFlagProvider";
 import { useFlags } from "launchdarkly-react-client-sdk";
-import { AuthenticationProvider } from "@/components/auth/AuthenticationContext";
+import AuthenticationContext from "@/components/auth/AuthenticationContext";
 
 jest.mock('launchdarkly-react-client-sdk', () => {
     return {
@@ -31,13 +31,13 @@ function ExampleComponent({ children }) {
 function renderScaffold({ onVisibilityChange = () => false }) {
     return render(
         <FeatureFlagProvider>
-            <AuthenticationProvider>
+            <AuthenticationContext>
                 <ModalProvider>
                     <ExampleComponent>
                         <LoginModal onVisibilityChange={onVisibilityChange} />
                     </ExampleComponent>
                 </ModalProvider>
-            </AuthenticationProvider>
+            </AuthenticationContext>
         </FeatureFlagProvider>
     );
 }

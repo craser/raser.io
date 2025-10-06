@@ -129,10 +129,10 @@ export default function AuthenticationContext({ children }) {
     }, [setAuthExpiration]);
 
     function login(email, pass) {
-        analytics.fireEvent('login attempt', email);
+        analytics.fire('login attempt', email);
         return authManager.login(email, pass)
             .then(auth => {
-                analytics.fireEvent('login success', email);
+                analytics.fire('login success', email);
                 setLoginVisible(false);
                 setEmailState(email);
                 setAuthTokenState(auth.token);

@@ -11,7 +11,7 @@ const AnalyticsContextObj = createContext({
     fireImgFail: log,
     fireUiEngagement: log,
     fireReferrer: log,
-    fireEvent: log,
+    fire: log,
 })
 
 export function useAnalytics() {
