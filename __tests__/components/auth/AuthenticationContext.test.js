@@ -92,12 +92,11 @@ describe('AuthenticationContext Lifecycle', () => {
 
     it('should report no email, no token, and not authenticated initially', async () => {
         let authContext;
-        renderScaffold({
+        await renderScaffold({
             email: null, token: null, expiration: null, callback: (ctx) => {
                 authContext = ctx;
             }
         });
-        await waitFor(() => expect(authContext).toBeDefined());
         expect(authContext.getEmail()).toBeFalsy();
         expect(authContext.getAuthToken()).toBeFalsy();
         expect(authContext.isAuthenticated).toBe(false);
@@ -108,15 +107,11 @@ describe('AuthenticationContext Lifecycle', () => {
         const token = 'valid-token';
         const expiration = Date.now() + 3600000; // 1 hour in the future
 
-
         let authContext;
         const callback = (ctx) => authContext = ctx;
-        renderScaffold({ email, token, expiration, callback });
-        await waitFor(() => {
-            expect(authContext).toBeDefined();
-            expect(authContext.getEmail()).toBe(email);
-        });
-        // expect(authContext.getEmail()).toBe(email); // redundant, already checked in waitFor
+        await renderScaffold({ email, token, expiration, callback });
+
+        expect(authContext.getEmail()).toBe(email);
         expect(authContext.getAuthToken()).toBe(token);
         expect(authContext.isAuthenticated).toBe(true);
     });
@@ -128,12 +123,10 @@ describe('AuthenticationContext Lifecycle', () => {
 
         let authContext;
         const callback = (ctx) => authContext = ctx;
-        renderScaffold({ email, token, expiration, callback });
-        await waitFor(() => {
-            expect(authContext).toBeDefined();
-            expect(authContext.getAuthToken()).toBeFalsy();
-            expect(authContext.isAuthenticated).toBe(false);
-        });
+        await renderScaffold({ email, token, expiration, callback });
+
+        expect(authContext.getAuthToken()).toBeFalsy();
+        expect(authContext.isAuthenticated).toBe(false);
 
         // should effectively log the user out - email remains, but auth token & expiration are cleared
         expect(authContext.getEmail()).toBe(email);
@@ -185,14 +178,12 @@ describe('AuthenticationContext', () => {
         });
 
         let authContext;
-        renderScaffold({
+        await renderScaffold({
             email: null,
             token: null,
             expiration: null,
             callback: (ctx) => { authContext = ctx; }
         });
-
-        await waitFor(() => expect(authContext).toBeDefined());
 
         await authContext.login(email, password);
 
@@ -209,14 +200,12 @@ describe('AuthenticationContext', () => {
         });
 
         let authContext;
-        renderScaffold({
+        await renderScaffold({
             email: null,
             token: null,
             expiration: null,
             callback: (ctx) => { authContext = ctx; }
         });
-
-        await waitFor(() => expect(authContext).toBeDefined());
 
         await authContext.login(email, password);
 
@@ -230,14 +219,12 @@ describe('AuthenticationContext', () => {
         mockAuthManager.login.mockRejectedValue(new Error('Invalid credentials'));
 
         let authContext;
-        renderScaffold({
+        await renderScaffold({
             email: null,
             token: null,
             expiration: null,
             callback: (ctx) => { authContext = ctx; }
         });
-
-        await waitFor(() => expect(authContext).toBeDefined());
 
         await expect(authContext.login(email, password)).rejects.toThrow();
 
@@ -257,14 +244,12 @@ describe('AuthenticationContext', () => {
         });
 
         let authContext;
-        renderScaffold({
+        await renderScaffold({
             email: null,
             token: null,
             expiration: null,
             callback: (ctx) => { authContext = ctx; }
         });
-
-        await waitFor(() => expect(authContext).toBeDefined());
 
         await authContext.login(email, password);
 
@@ -281,14 +266,12 @@ describe('AuthenticationContext', () => {
         mockAuthManager.login.mockRejectedValue(new Error('Invalid credentials'));
 
         let authContext;
-        renderScaffold({
+        await renderScaffold({
             email: null,
             token: null,
             expiration: null,
             callback: (ctx) => { authContext = ctx; }
         });
-
-        await waitFor(() => expect(authContext).toBeDefined());
 
         await expect(authContext.login(email, password)).rejects.toThrow();
 
@@ -300,14 +283,12 @@ describe('AuthenticationContext', () => {
 
     it('fires "logout" event when logout is called', async () => {
         let authContext;
-        renderScaffold({
+        await renderScaffold({
             email: null,
             token: null,
             expiration: null,
             callback: (ctx) => { authContext = ctx; }
         });
-
-        await waitFor(() => expect(authContext).toBeDefined());
 
         authContext.logout();
 
@@ -316,14 +297,12 @@ describe('AuthenticationContext', () => {
 
     it('removes auth token and expiry from localStorage on logout', async () => {
         let authContext;
-        renderScaffold({
+        await renderScaffold({
             email: null,
             token: null,
             expiration: null,
             callback: (ctx) => { authContext = ctx; }
         });
-
-        await waitFor(() => expect(authContext).toBeDefined());
 
         authContext.logout();
 
@@ -344,26 +323,20 @@ describe('AuthenticationContext', () => {
             expires: testExpires
         });
 
-        // Mock getItem to return null initially (nothing in storage)
-        localStorageMock.getItem.mockReturnValue(null);
-
         let authContext;
-        render(
-            <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => {
-                    authContext = ctx;
-                }} />
-            </AuthenticationContext>
-        );
-
-        await waitFor(() => expect(authContext).toBeDefined());
+        await renderScaffold({
+            email: null,
+            token: null,
+            expiration: null,
+            callback: (ctx) => { authContext = ctx; }
+        });
 
         await authContext.login(email, password);
 
         await waitFor(() => {
-            expect(localStorageMock.setItem).toHaveBeenCalledWith('rio.auth.user', email);
-            expect(localStorageMock.setItem).toHaveBeenCalledWith('rio.auth.token', testToken);
-            expect(localStorageMock.setItem).toHaveBeenCalledWith('rio.auth.expiration', testExpires);
+            expect(localStorageMock.setItem).toHaveBeenCalledWith(STORAGE_KEYS.user, email);
+            expect(localStorageMock.setItem).toHaveBeenCalledWith(STORAGE_KEYS.token, testToken);
+            expect(localStorageMock.setItem).toHaveBeenCalledWith(STORAGE_KEYS.expiration, testExpires);
             expect(authContext.getEmail()).toBe(email);
             expect(authContext.getAuthToken()).toBe(testToken);
         });
@@ -379,15 +352,12 @@ describe('AuthenticationContext', () => {
         });
 
         let authContext;
-        render(
-            <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => {
-                    authContext = ctx;
-                }} />
-            </AuthenticationContext>
-        );
-
-        await waitFor(() => expect(authContext).toBeDefined());
+        await renderScaffold({
+            email: null,
+            token: null,
+            expiration: null,
+            callback: (ctx) => { authContext = ctx; }
+        });
 
         await authContext.login(email, password);
 
