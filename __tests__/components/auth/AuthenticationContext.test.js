@@ -211,4 +211,65 @@ describe('AuthenticationContext', () => {
             expect(localStorageMock.removeItem).toHaveBeenCalledWith('rio.auth.expiration');
         });
     });
+
+    it('getEmail and getAuthToken return correct values after successful login', async () => {
+        const email = 'test@example.com';
+        const password = 'password123';
+        const testToken = 'test-token-xyz';
+        const testExpires = Date.now() + 3600000;
+
+        mockAuthManager.login.mockResolvedValue({
+            token: testToken,
+            expires: testExpires
+        });
+
+        // Mock getItem to return null initially (nothing in storage)
+        localStorageMock.getItem.mockReturnValue(null);
+
+        let authContext;
+        render(
+            <AuthenticationContext>
+                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
+            </AuthenticationContext>
+        );
+
+        await waitFor(() => expect(authContext).toBeDefined());
+
+        await authContext.login(email, password);
+
+        await waitFor(() => {
+            expect(localStorageMock.setItem).toHaveBeenCalledWith('rio.auth.user', email);
+            expect(localStorageMock.setItem).toHaveBeenCalledWith('rio.auth.token', testToken);
+            expect(localStorageMock.setItem).toHaveBeenCalledWith('rio.auth.expiration', testExpires);
+            expect(authContext.getEmail()).toBe(email);
+            expect(authContext.getAuthToken()).toBe(testToken);
+        });
+    });
+
+    it('getAuthToken returns null after logout', async () => {
+        const email = 'test@example.com';
+        const password = 'password123';
+
+        mockAuthManager.login.mockResolvedValue({
+            token: 'test-token',
+            expires: Date.now() + 3600000
+        });
+
+        let authContext;
+        render(
+            <AuthenticationContext>
+                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
+            </AuthenticationContext>
+        );
+
+        await waitFor(() => expect(authContext).toBeDefined());
+
+        await authContext.login(email, password);
+
+        authContext.logout();
+
+        await waitFor(() => {
+            expect(authContext.getAuthToken()).toBeNull();
+        });
+    });
 });

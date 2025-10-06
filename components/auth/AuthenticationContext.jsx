@@ -38,7 +38,7 @@ export default function AuthenticationContext({ children }) {
     const [loadedFromLocalStorage, setLoadedFromLocalStorage] = useState(false);
     const status = getStatus();
 
-    // load values from local storage
+    // on initial load, get values from local storage
     useEffect(() => {
         if (isCsr()) {
             let newEmail = window.localStorage.getItem(STORAGE_KEYS.user);
@@ -49,7 +49,8 @@ export default function AuthenticationContext({ children }) {
             setAuthExpiration(newExpiration);
             setLoadedFromLocalStorage(true);
         }
-    }, [authExpiration, authManager, authToken, email, isAuthExpired, logout, setAuthExpirationState, setAuthTokenState, setEmailState]);
+    }, []);
+
     useEffect(() => {
         setLoginVisible(false);
     }, [status])
