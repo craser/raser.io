@@ -142,6 +142,7 @@ export default function AuthenticationContext({ children }) {
 
     function logout() {
         console.info(`AuthenticationContext: logging out`);
+        analytics.fire('logout');
         setAuthTokenState(null);
         setAuthExpirationState(0);
     }

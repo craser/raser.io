@@ -178,4 +178,37 @@ describe('AuthenticationContext', () => {
             expect.anything()
         );
     });
+
+    it('fires "logout" event when logout is called', async () => {
+        let authContext;
+        render(
+            <AuthenticationContext>
+                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
+            </AuthenticationContext>
+        );
+
+        await waitFor(() => expect(authContext).toBeDefined());
+
+        authContext.logout();
+
+        expect(mockAnalytics.fire).toHaveBeenCalledWith('logout');
+    });
+
+    it('removes auth token and expiry from localStorage on logout', async () => {
+        let authContext;
+        render(
+            <AuthenticationContext>
+                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
+            </AuthenticationContext>
+        );
+
+        await waitFor(() => expect(authContext).toBeDefined());
+
+        authContext.logout();
+
+        await waitFor(() => {
+            expect(localStorageMock.removeItem).toHaveBeenCalledWith('rio.auth.token');
+            expect(localStorageMock.removeItem).toHaveBeenCalledWith('rio.auth.expiration');
+        });
+    });
 });
