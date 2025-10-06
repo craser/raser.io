@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import AuthenticationContext, { useAuthenticationContext } from '@/components/auth/AuthenticationContext';
+import AuthenticationContext, { useAuthenticationContext, STORAGE_KEYS } from '@/components/auth/AuthenticationContext';
 import { useAnalytics } from '@/components/analytics/AnalyticsProvider';
 import AuthenticationManager from '@/lib/api/AuthenticationManager';
 
@@ -12,6 +12,22 @@ jest.mock('@/components/analytics/AnalyticsProvider', () => ({
 }));
 
 jest.mock('@/lib/api/AuthenticationManager');
+
+const MockLocalStorage = jest.fn(() => {
+    const store = {};
+    return {
+        getItem: jest.fn((key) => store[key] || null),
+        setItem: jest.fn((key, value) => {
+            value ? store[key] = (value) : delete store[key];
+        }),
+        removeItem: jest.fn((key) => {
+            delete store[key];
+        }),
+        clear: jest.fn(() => {
+            Object.keys(store).forEach(key => delete store[key]);
+        })
+    };
+});
 
 function TestComponent({ onLogin }) {
     const authContext = useAuthenticationContext();
@@ -25,6 +41,109 @@ function TestComponent({ onLogin }) {
     return null;
 }
 
+async function renderScaffold({ email, token, expiration, callback }) {
+    window.localStorage.setItem(STORAGE_KEYS.user, email);
+    window.localStorage.setItem(STORAGE_KEYS.token, token);
+    window.localStorage.setItem(STORAGE_KEYS.expiration, expiration);
+
+    let done = false;
+    const onLogin = (...args) => {
+        done = true;
+        callback(...args);
+    };
+    const result = render(
+        <AuthenticationContext>
+            <TestComponent onLogin={onLogin} />
+        </AuthenticationContext>
+    );
+    await waitFor(() => expect(done).toBe(true));
+    return result;
+}
+
+describe('AuthenticationContext Lifecycle', () => {
+    let mockAnalytics;
+    let mockAuthManager;
+    let localStorageMock;
+
+    beforeEach(() => {
+        localStorageMock = new MockLocalStorage();
+        Object.defineProperty(window, 'localStorage', {
+            value: localStorageMock,
+            writable: true
+        });
+
+        // Mock analytics
+        mockAnalytics = {
+            fire: jest.fn()
+        };
+        useAnalytics.mockReturnValue(mockAnalytics);
+
+        // Mock AuthenticationManager
+        mockAuthManager = {
+            login: jest.fn(),
+            check: jest.fn().mockResolvedValue(true)
+        };
+        AuthenticationManager.mockImplementation(() => mockAuthManager);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should report no email, no token, and not authenticated initially', async () => {
+        let authContext;
+        renderScaffold({
+            email: null, token: null, expiration: null, callback: (ctx) => {
+                authContext = ctx;
+            }
+        });
+        await waitFor(() => expect(authContext).toBeDefined());
+        expect(authContext.getEmail()).toBeFalsy();
+        expect(authContext.getAuthToken()).toBeFalsy();
+        expect(authContext.isAuthenticated).toBe(false);
+    });
+
+    it('should report email, token, and authenticated when valid token is in localStorage', async () => {
+        const email = 'test@test.com';
+        const token = 'valid-token';
+        const expiration = Date.now() + 3600000; // 1 hour in the future
+
+
+        let authContext;
+        const callback = (ctx) => authContext = ctx;
+        renderScaffold({ email, token, expiration, callback });
+        await waitFor(() => {
+            expect(authContext).toBeDefined();
+            expect(authContext.getEmail()).toBe(email);
+        });
+        // expect(authContext.getEmail()).toBe(email); // redundant, already checked in waitFor
+        expect(authContext.getAuthToken()).toBe(token);
+        expect(authContext.isAuthenticated).toBe(true);
+    });
+
+    it('should report no email, no token, and not authenticated when expired token is in localStorage', async () => {
+        const email = 'test@teset.com';
+        const token = 'expired token';
+        const expiration = Date.now() - 3600000; // 1 hour in the past
+
+        let authContext;
+        const callback = (ctx) => authContext = ctx;
+        renderScaffold({ email, token, expiration, callback });
+        await waitFor(() => {
+            expect(authContext).toBeDefined();
+            expect(authContext.getAuthToken()).toBeFalsy();
+            expect(authContext.isAuthenticated).toBe(false);
+        });
+
+        // should effectively log the user out - email remains, but auth token & expiration are cleared
+        expect(authContext.getEmail()).toBe(email);
+        expect(localStorageMock.getItem(STORAGE_KEYS.token)).toBeNull();
+        expect(localStorageMock.getItem(STORAGE_KEYS.expiration)).toBeNull();
+    });
+
+})
+
+
 describe('AuthenticationContext', () => {
     let mockAnalytics;
     let mockAuthManager;
@@ -32,12 +151,7 @@ describe('AuthenticationContext', () => {
 
     beforeEach(() => {
         // Mock localStorage using Object.defineProperty to ensure it's on the actual window object
-        localStorageMock = {
-            getItem: jest.fn(),
-            setItem: jest.fn(),
-            removeItem: jest.fn(),
-            clear: jest.fn()
-        };
+        localStorageMock = new MockLocalStorage();
         Object.defineProperty(window, 'localStorage', {
             value: localStorageMock,
             writable: true
@@ -71,11 +185,12 @@ describe('AuthenticationContext', () => {
         });
 
         let authContext;
-        render(
-            <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
-            </AuthenticationContext>
-        );
+        renderScaffold({
+            email: null,
+            token: null,
+            expiration: null,
+            callback: (ctx) => { authContext = ctx; }
+        });
 
         await waitFor(() => expect(authContext).toBeDefined());
 
@@ -94,11 +209,12 @@ describe('AuthenticationContext', () => {
         });
 
         let authContext;
-        render(
-            <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
-            </AuthenticationContext>
-        );
+        renderScaffold({
+            email: null,
+            token: null,
+            expiration: null,
+            callback: (ctx) => { authContext = ctx; }
+        });
 
         await waitFor(() => expect(authContext).toBeDefined());
 
@@ -114,11 +230,12 @@ describe('AuthenticationContext', () => {
         mockAuthManager.login.mockRejectedValue(new Error('Invalid credentials'));
 
         let authContext;
-        render(
-            <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
-            </AuthenticationContext>
-        );
+        renderScaffold({
+            email: null,
+            token: null,
+            expiration: null,
+            callback: (ctx) => { authContext = ctx; }
+        });
 
         await waitFor(() => expect(authContext).toBeDefined());
 
@@ -140,19 +257,20 @@ describe('AuthenticationContext', () => {
         });
 
         let authContext;
-        render(
-            <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
-            </AuthenticationContext>
-        );
+        renderScaffold({
+            email: null,
+            token: null,
+            expiration: null,
+            callback: (ctx) => { authContext = ctx; }
+        });
 
         await waitFor(() => expect(authContext).toBeDefined());
 
         await authContext.login(email, password);
 
         await waitFor(() => {
-            expect(localStorageMock.setItem).toHaveBeenCalledWith('rio.auth.token', testToken);
-            expect(localStorageMock.setItem).toHaveBeenCalledWith('rio.auth.expiration', testExpires);
+            expect(localStorageMock.setItem).toHaveBeenCalledWith(STORAGE_KEYS.token, testToken);
+            expect(localStorageMock.setItem).toHaveBeenCalledWith(STORAGE_KEYS.expiration, testExpires);
         });
     });
 
@@ -163,11 +281,12 @@ describe('AuthenticationContext', () => {
         mockAuthManager.login.mockRejectedValue(new Error('Invalid credentials'));
 
         let authContext;
-        render(
-            <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
-            </AuthenticationContext>
-        );
+        renderScaffold({
+            email: null,
+            token: null,
+            expiration: null,
+            callback: (ctx) => { authContext = ctx; }
+        });
 
         await waitFor(() => expect(authContext).toBeDefined());
 
@@ -181,11 +300,12 @@ describe('AuthenticationContext', () => {
 
     it('fires "logout" event when logout is called', async () => {
         let authContext;
-        render(
-            <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
-            </AuthenticationContext>
-        );
+        renderScaffold({
+            email: null,
+            token: null,
+            expiration: null,
+            callback: (ctx) => { authContext = ctx; }
+        });
 
         await waitFor(() => expect(authContext).toBeDefined());
 
@@ -196,19 +316,20 @@ describe('AuthenticationContext', () => {
 
     it('removes auth token and expiry from localStorage on logout', async () => {
         let authContext;
-        render(
-            <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
-            </AuthenticationContext>
-        );
+        renderScaffold({
+            email: null,
+            token: null,
+            expiration: null,
+            callback: (ctx) => { authContext = ctx; }
+        });
 
         await waitFor(() => expect(authContext).toBeDefined());
 
         authContext.logout();
 
         await waitFor(() => {
-            expect(localStorageMock.removeItem).toHaveBeenCalledWith('rio.auth.token');
-            expect(localStorageMock.removeItem).toHaveBeenCalledWith('rio.auth.expiration');
+            expect(localStorageMock.removeItem).toHaveBeenCalledWith(STORAGE_KEYS.token);
+            expect(localStorageMock.removeItem).toHaveBeenCalledWith(STORAGE_KEYS.expiration);
         });
     });
 
@@ -229,7 +350,9 @@ describe('AuthenticationContext', () => {
         let authContext;
         render(
             <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
+                <TestComponent onLogin={(ctx) => {
+                    authContext = ctx;
+                }} />
             </AuthenticationContext>
         );
 
@@ -258,7 +381,9 @@ describe('AuthenticationContext', () => {
         let authContext;
         render(
             <AuthenticationContext>
-                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
+                <TestComponent onLogin={(ctx) => {
+                    authContext = ctx;
+                }} />
             </AuthenticationContext>
         );
 

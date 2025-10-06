@@ -17,7 +17,7 @@ export const STATUS = {
     guest: 'guest'
 };
 
-let STORAGE_KEYS = {
+export const STORAGE_KEYS = {
     user: 'rio.auth.user',
     token: 'rio.auth.token',
     expiration: 'rio.auth.expiration',
