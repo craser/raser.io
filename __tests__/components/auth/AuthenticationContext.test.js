@@ -28,16 +28,20 @@ function TestComponent({ onLogin }) {
 describe('AuthenticationContext', () => {
     let mockAnalytics;
     let mockAuthManager;
+    let localStorageMock;
 
     beforeEach(() => {
-        // Mock localStorage
-        const localStorageMock = {
+        // Mock localStorage using Object.defineProperty to ensure it's on the actual window object
+        localStorageMock = {
             getItem: jest.fn(),
             setItem: jest.fn(),
             removeItem: jest.fn(),
             clear: jest.fn()
         };
-        global.window = { localStorage: localStorageMock };
+        Object.defineProperty(window, 'localStorage', {
+            value: localStorageMock,
+            writable: true
+        });
 
         // Mock analytics
         mockAnalytics = {
@@ -122,5 +126,56 @@ describe('AuthenticationContext', () => {
 
         expect(mockAnalytics.fire).toHaveBeenCalledWith('login attempt', email);
         expect(mockAnalytics.fire).not.toHaveBeenCalledWith('login success', email);
+    });
+
+    it('stores auth token and expiry date in localStorage on successful login', async () => {
+        const email = 'test@example.com';
+        const password = 'password123';
+        const testToken = 'test-token-abc123';
+        const testExpires = Date.now() + 3600000;
+
+        mockAuthManager.login.mockResolvedValue({
+            token: testToken,
+            expires: testExpires
+        });
+
+        let authContext;
+        render(
+            <AuthenticationContext>
+                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
+            </AuthenticationContext>
+        );
+
+        await waitFor(() => expect(authContext).toBeDefined());
+
+        await authContext.login(email, password);
+
+        await waitFor(() => {
+            expect(localStorageMock.setItem).toHaveBeenCalledWith('rio.auth.token', testToken);
+            expect(localStorageMock.setItem).toHaveBeenCalledWith('rio.auth.expiration', testExpires);
+        });
+    });
+
+    it('does NOT store auth token or expiry in localStorage on failed login', async () => {
+        const email = 'test@example.com';
+        const password = 'wrongpassword';
+
+        mockAuthManager.login.mockRejectedValue(new Error('Invalid credentials'));
+
+        let authContext;
+        render(
+            <AuthenticationContext>
+                <TestComponent onLogin={(ctx) => { authContext = ctx; }} />
+            </AuthenticationContext>
+        );
+
+        await waitFor(() => expect(authContext).toBeDefined());
+
+        await expect(authContext.login(email, password)).rejects.toThrow();
+
+        expect(localStorageMock.setItem).not.toHaveBeenCalledWith(
+            expect.stringMatching(/rio\.auth\.(token|expiration)/),
+            expect.anything()
+        );
     });
 });

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import AuthenticationManager from "@/lib/api/AuthenticationManager";
 import LoginModal from "@/components/auth/LoginModal";
 import { auth } from "mysql/lib/protocol/Auth";
@@ -82,14 +82,14 @@ export default function AuthenticationContext({ children }) {
         return csr;
     }
 
-    const isAuthExpired = useCallback(() => {
+    function isAuthExpired() {
         console.log(`checking expiration - authExpiration: ${authExpiration}`);
         if (!!authExpiration) {
             return new Date().getTime() > authExpiration;
         } else {
             return true;
         }
-    }, [authExpiration]);
+    }
 
     function getAuthToken() {
         return authToken;
@@ -99,16 +99,16 @@ export default function AuthenticationContext({ children }) {
         return email;
     }
 
-    const setEmailState = useCallback((newEmail) => {
+    function setEmailState(newEmail) {
         setEmail(newEmail);
         if (newEmail) {
             window.localStorage.setItem(STORAGE_KEYS.user, newEmail);
         } else {
             window.localStorage.removeItem(STORAGE_KEYS.user);
         }
-    }, [setEmail]);
+    }
 
-    const setAuthTokenState = useCallback((token) => {
+    function setAuthTokenState(token) {
         setAuthToken(token);
         console.log(`setAuthToken(${token}) ➤ ${authToken}`);
         if (token) {
@@ -116,9 +116,9 @@ export default function AuthenticationContext({ children }) {
         } else {
             window.localStorage.removeItem(STORAGE_KEYS.token);
         }
-    }, [setAuthToken]);
+    }
 
-    const setAuthExpirationState = useCallback((timestamp)=> {
+    function setAuthExpirationState(timestamp) {
         setAuthExpiration(timestamp)
         console.log(`setAuthExpiration(${timestamp}) ➤ ${authExpiration}`);
         if (timestamp) {
@@ -126,7 +126,7 @@ export default function AuthenticationContext({ children }) {
         } else {
             window.localStorage.removeItem(STORAGE_KEYS.expiration);
         }
-    }, [setAuthExpiration]);
+    }
 
     function login(email, pass) {
         analytics.fire('login attempt', email);
