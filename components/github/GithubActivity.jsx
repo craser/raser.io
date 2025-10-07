@@ -24,7 +24,7 @@ function RepoActivity({ repo, reposWithoutReadmes, onClick }) {
 
 function Commit(props) {
     return <div className={styles.commit}>
-        <div class={styles.commitInfo}>
+        <div className={styles.commitInfo}>
             <a className={styles.commitMessage} href={props.event.url}>{props.event.message}</a>
             <span className={styles.commitDate}><CommitDate date={props.event.date}/></span>
         </div>
