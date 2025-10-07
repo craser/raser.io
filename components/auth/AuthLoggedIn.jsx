@@ -9,6 +9,6 @@ import { useAuthenticationContext } from "@/components/auth/AuthenticationContex
  */
 export default function AuthLoggedIn({ children }) {
     const { isAuthenticated } = useAuthenticationContext();
-    return <>{isAuthenticated ? children : null}</>
+    return <>{isAuthenticated() ? children : null}</>
 }
 
