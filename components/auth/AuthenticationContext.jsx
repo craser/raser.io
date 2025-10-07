@@ -39,23 +39,34 @@ export default function AuthenticationContext({ children }) {
     const status = getStatus();
 
     // on initial load, get values from local storage
-    useEffect(() => {
-        if (isCsr()) {
-            let newEmail = window.localStorage.getItem(STORAGE_KEYS.user);
-            let newAuthToken = window.localStorage.getItem(STORAGE_KEYS.token);
-            let newExpiration = parseInt(window.localStorage.getItem(STORAGE_KEYS.expiration));
-            setEmail(newEmail);
-            setAuthToken(newAuthToken);
-            setAuthExpiration(newExpiration);
-            setLoadedFromLocalStorage(true);
-        }
-    }, []);
+    useEffect(readCredentialsFromLocalStorage, []);
 
+    // once loaded, check authentication expiration
+    useEffect(checkAuthentication, [loadedFromLocalStorage]);
+
+    // when the status changes, hide the login modal
     useEffect(() => {
         setLoginVisible(false);
     }, [status])
 
-    useEffect(() => {
+    function readCredentialsFromLocalStorage() {
+        if (isCsr()) {
+            let email = window.localStorage.getItem(STORAGE_KEYS.user);
+            let authToken = window.localStorage.getItem(STORAGE_KEYS.token);
+            let expiration = window.localStorage.getItem(STORAGE_KEYS.expiration);
+            if (email && authToken && expiration) {
+                setEmail(email);
+                setAuthToken(authToken);
+                setAuthExpiration(expiration);
+                setLoadedFromLocalStorage(true);
+            } else {
+                logout();
+            }
+        }
+    };
+
+
+    function checkAuthentication() {
         if (isCsr() && loadedFromLocalStorage) {
             if (isAuthExpired()) {
                 logout();
@@ -76,7 +87,7 @@ export default function AuthenticationContext({ children }) {
                     })
             }
         }
-    }, [loadedFromLocalStorage, isAuthExpired]);
+    };
 
     function isCsr() {
         const csr = `${typeof window}` !== 'undefined';
