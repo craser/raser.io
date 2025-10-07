@@ -11,18 +11,18 @@ export default function App({ Component, pageProps }) {
     return (
         <FeatureFlagProvider>
             <AnalyticsProvider>
-                <AuthenticationContext>
-                    <DataProvider>
-                        <SearchProvider>
-                            <ModalProvider>
-                                <Head>
-                                    <link rel="alternate" type="application/rss+xml" href="/rss"/>
-                                </Head>
-                                <Component {...pageProps} />
-                            </ModalProvider>
-                        </SearchProvider>
-                    </DataProvider>
-                </AuthenticationContext>
+                <ModalProvider>
+                    <AuthenticationContext>
+                        <DataProvider>
+                            <SearchProvider>
+                                    <Head>
+                                        <link rel="alternate" type="application/rss+xml" href="/rss"/>
+                                    </Head>
+                                    <Component {...pageProps} />
+                            </SearchProvider>
+                        </DataProvider>
+                    </AuthenticationContext>
+                </ModalProvider>
             </AnalyticsProvider>
         </FeatureFlagProvider>
     );
