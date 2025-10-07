@@ -28,6 +28,7 @@ export function useAuthenticationContext() {
 }
 
 export default function AuthenticationContext({ children }) {
+    console.log('AuthenticationContext: rendering');
     const analytics = useAnalytics();
     const [authManager, setAuthManager] = useState(new AuthenticationManager());
     const [loginVisible, setLoginVisible] = useState(false);
@@ -37,6 +38,7 @@ export default function AuthenticationContext({ children }) {
     useEffect(loadCredentialsFromLocalStorage, []);
 
     function loadCredentialsFromLocalStorage() {
+        console.log('AuthenticationContext: loading credentials from local storage');
         if (isCsr()) {
             let email = window.localStorage.getItem(STORAGE_KEYS.user);
             let authToken = window.localStorage.getItem(STORAGE_KEYS.token);
@@ -53,6 +55,7 @@ export default function AuthenticationContext({ children }) {
 
 
     function checkAuthentication() {
+        console.log('AuthenticationContext: checking authentication');
         if (isAuthExpired()) {
             logout();
         } else {
@@ -78,7 +81,7 @@ export default function AuthenticationContext({ children }) {
     }
 
     function isAuthExpired() {
-        console.log(`checking expiration - authExpiration: ${getAuthExpiration()}`);
+        console.log(`AuthenticationContext: checking expiration - authExpiration: ${getAuthExpiration()}`);
         const authExpiration = getAuthExpiration();
         if (!!authExpiration) {
             return new Date().getTime() > authExpiration;
@@ -99,6 +102,10 @@ export default function AuthenticationContext({ children }) {
         return parseInt(window.localStorage.getItem(STORAGE_KEYS.expiration)) || 0;
     }
 
+    function getStatus() {
+        return status;
+    }
+
     function setLocalStorageItem(key, value) {
         if (value) {
             window.localStorage.setItem(key, value);
@@ -108,21 +115,26 @@ export default function AuthenticationContext({ children }) {
     }
 
     function setEmail(newEmail) {
+        console.log(`AuthenticationContext: setting email to ${newEmail}`);
         setLocalStorageItem(STORAGE_KEYS.user, newEmail);
     }
 
     function setAuthToken(token) {
+        console.log(`AuthenticationContext: setting auth token to ${token}`); // FIXME: REMOVE THIS
         setLocalStorageItem(STORAGE_KEYS.token, token);
     }
 
     function setAuthExpiration(timestamp) {
+        console.log(`AuthenticationContext: setting auth expiration to ${timestamp}`);
         setLocalStorageItem(STORAGE_KEYS.expiration, timestamp);
     }
 
     function login(email, pass) {
+        console.log(`AuthenticationContext: logging in with email ${email}`);
         analytics.fire('login attempt', email);
         return authManager.login(email, pass)
             .then(auth => {
+                console.log(`AuthenticationContext: login successful with email ${email}`);
                 analytics.fire('login success', email);
                 setLoginVisible(false);
                 setEmail(email);
@@ -140,16 +152,12 @@ export default function AuthenticationContext({ children }) {
         setStatus(STATUS.recognized);
     }
 
-    function getStatus() {
-        return status;
-    }
-
     function showLoginModal() {
         setLoginVisible(true);
     }
 
     function hideLoginModal() {
-        console.log('setting loginVisible to FALSE');
+        console.log('AuthenticationContext: hiding login modal');
         setLoginVisible(false);
     }
 
@@ -160,7 +168,7 @@ export default function AuthenticationContext({ children }) {
         hideLoginModal,
         getStatus,
         status,
-        isAuthenticated: (status === STATUS.authenticated),
+        isAuthenticated: () => (status === STATUS.authenticated),
         getAuthToken,
         getEmail
     };
