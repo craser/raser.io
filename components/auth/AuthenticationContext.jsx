@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AuthenticationManager from "@/lib/api/AuthenticationManager";
 import LoginModal from "@/components/auth/LoginModal";
-import { auth } from "mysql/lib/protocol/Auth";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 
 const AuthContextObj = createContext({
@@ -28,64 +27,51 @@ export function useAuthenticationContext() {
     return useContext(AuthContextObj);
 }
 
+let debuggignId = 0;
+
 export default function AuthenticationContext({ children }) {
     const analytics = useAnalytics();
-    const [email, setEmail] = useState(null);
-    const [authToken, setAuthToken] = useState(false);
-    const [authExpiration, setAuthExpiration] = useState(0);
     const [authManager, setAuthManager] = useState(new AuthenticationManager());
     const [loginVisible, setLoginVisible] = useState(false);
-    const [loadedFromLocalStorage, setLoadedFromLocalStorage] = useState(false);
-    const status = getStatus();
+    const [status, setStatus] = useState(STATUS.guest); // we use this to trigger re-renders
+    const debugId = debuggignId++;
 
     // on initial load, get values from local storage
-    useEffect(readCredentialsFromLocalStorage, []);
+    useEffect(loadCredentialsFromLocalStorage, []);
 
-    // once loaded, check authentication expiration
-    useEffect(checkAuthentication, [loadedFromLocalStorage]);
-
-    // when the status changes, hide the login modal
-    useEffect(() => {
-        setLoginVisible(false);
-    }, [status])
-
-    function readCredentialsFromLocalStorage() {
+    function loadCredentialsFromLocalStorage() {
         if (isCsr()) {
             let email = window.localStorage.getItem(STORAGE_KEYS.user);
             let authToken = window.localStorage.getItem(STORAGE_KEYS.token);
             let expiration = window.localStorage.getItem(STORAGE_KEYS.expiration);
             if (email && authToken && expiration) {
-                setEmail(email);
-                setAuthToken(authToken);
-                setAuthExpiration(expiration);
-                setLoadedFromLocalStorage(true);
+                checkAuthentication();
+            } else if (email) {
+                logout(); // incomplete credentials - log out & clean up
             } else {
-                logout();
+                setStatus(STATUS.guest);
             }
         }
     };
 
 
     function checkAuthentication() {
-        if (isCsr() && loadedFromLocalStorage) {
-            if (isAuthExpired()) {
-                logout();
-            } else {
-                authManager.check(email, authToken)
-                    .then(valid => {
-                        if (!valid) {
-                            logout();
-                        } else {
-                            setEmailState(email);
-                            setAuthTokenState(authToken);
-                            setAuthExpirationState(authExpiration);
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
+        if (isAuthExpired()) {
+            logout();
+        } else {
+            authManager.check(getEmail(), getAuthToken())
+                .then(valid => {
+                    if (!valid) {
                         logout();
-                    })
-            }
+                    } else {
+                        setStatus(STATUS.authenticated);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    logout();
+                })
+
         }
     };
 
@@ -95,7 +81,8 @@ export default function AuthenticationContext({ children }) {
     }
 
     function isAuthExpired() {
-        console.log(`checking expiration - authExpiration: ${authExpiration}`);
+        console.log(`checking expiration - authExpiration: ${getAuthExpiration()}`);
+        const authExpiration = getAuthExpiration();
         if (!!authExpiration) {
             return new Date().getTime() > authExpiration;
         } else {
@@ -104,40 +91,35 @@ export default function AuthenticationContext({ children }) {
     }
 
     function getAuthToken() {
-        return authToken;
+        return window.localStorage.getItem(STORAGE_KEYS.token) || null;
     }
 
     function getEmail() {
-        return email;
+        return window.localStorage.getItem(STORAGE_KEYS.user) || null;
     }
 
-    function setEmailState(newEmail) {
-        setEmail(newEmail);
-        if (newEmail) {
-            window.localStorage.setItem(STORAGE_KEYS.user, newEmail);
+    function getAuthExpiration() {
+        return parseInt(window.localStorage.getItem(STORAGE_KEYS.expiration)) || 0;
+    }
+
+    function setLocalStorageItem(key, value) {
+        if (value) {
+            window.localStorage.setItem(key, value);
         } else {
-            window.localStorage.removeItem(STORAGE_KEYS.user);
+            window.localStorage.removeItem(key);
         }
     }
 
-    function setAuthTokenState(token) {
-        setAuthToken(token);
-        console.log(`setAuthToken(${token}) ➤ ${authToken}`);
-        if (token) {
-            window.localStorage.setItem(STORAGE_KEYS.token, token);
-        } else {
-            window.localStorage.removeItem(STORAGE_KEYS.token);
-        }
+    function setEmail(newEmail) {
+        setLocalStorageItem(STORAGE_KEYS.user, newEmail);
     }
 
-    function setAuthExpirationState(timestamp) {
-        setAuthExpiration(timestamp)
-        console.log(`setAuthExpiration(${timestamp}) ➤ ${authExpiration}`);
-        if (timestamp) {
-            window.localStorage.setItem(STORAGE_KEYS.expiration, timestamp);
-        } else {
-            window.localStorage.removeItem(STORAGE_KEYS.expiration);
-        }
+    function setAuthToken(token) {
+        setLocalStorageItem(STORAGE_KEYS.token, token);
+    }
+
+    function setAuthExpiration(timestamp) {
+        setLocalStorageItem(STORAGE_KEYS.expiration, timestamp);
     }
 
     function login(email, pass) {
@@ -146,27 +128,24 @@ export default function AuthenticationContext({ children }) {
             .then(auth => {
                 analytics.fire('login success', email);
                 setLoginVisible(false);
-                setEmailState(email);
-                setAuthTokenState(auth.token);
-                setAuthExpirationState(auth.expires);
+                setEmail(email);
+                setAuthToken(auth.token);
+                setAuthExpiration(auth.expires);
+                setStatus(STATUS.authenticated);
             })
     }
 
     function logout() {
         console.info(`AuthenticationContext: logging out`);
         analytics.fire('logout');
-        setAuthTokenState(null);
-        setAuthExpirationState(0);
+        setAuthToken(null);
+        setAuthExpiration(null);
+        setStatus(STATUS.recognized);
     }
 
     function getStatus() {
-        if (!!authToken) {
-            return STATUS.authenticated;
-        } else if (!!email) {
-            return STATUS.recognized;
-        } else {
-            return STATUS.guest
-        }
+        console.log(`debuggingId=${debugId} - getStatus returning ${status}`);
+        return status;
     }
 
     function showLoginModal() {
@@ -178,10 +157,22 @@ export default function AuthenticationContext({ children }) {
         setLoginVisible(false);
     }
 
+    console.log(`debuggingId=${debugId} - rendering - status=${status} - isAuthExpired=${isAuthExpired()} - authToken=${getAuthToken()}`);
+    const ctx = {
+        login,
+        logout,
+        showLoginModal,
+        hideLoginModal,
+        getStatus,
+        isAuthenticated: () => !!getAuthToken(),
+        getAuthToken,
+        getEmail,
+        debugId
+    };
     return (
         <>
-            <AuthContextObj.Provider value={{ login, logout, showLoginModal, hideLoginModal, status, isAuthenticated: !!authToken, getAuthToken, getEmail }}>
-                {loginVisible ? <LoginModal onVisibilityChange={(visible) => setLoginVisible(visible)}/> : null}
+            <AuthContextObj.Provider value={ctx}>
+                {loginVisible ? <LoginModal onVisibilityChange={(visible) => setLoginVisible(visible)} /> : null}
                 {children}
             </AuthContextObj.Provider>
         </>
