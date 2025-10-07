@@ -27,14 +27,11 @@ export function useAuthenticationContext() {
     return useContext(AuthContextObj);
 }
 
-let debuggignId = 0;
-
 export default function AuthenticationContext({ children }) {
     const analytics = useAnalytics();
     const [authManager, setAuthManager] = useState(new AuthenticationManager());
     const [loginVisible, setLoginVisible] = useState(false);
     const [status, setStatus] = useState(STATUS.guest); // we use this to trigger re-renders
-    const debugId = debuggignId++;
 
     // on initial load, get values from local storage
     useEffect(loadCredentialsFromLocalStorage, []);
@@ -144,7 +141,6 @@ export default function AuthenticationContext({ children }) {
     }
 
     function getStatus() {
-        console.log(`debuggingId=${debugId} - getStatus returning ${status}`);
         return status;
     }
 
@@ -157,17 +153,16 @@ export default function AuthenticationContext({ children }) {
         setLoginVisible(false);
     }
 
-    console.log(`debuggingId=${debugId} - rendering - status=${status} - isAuthExpired=${isAuthExpired()} - authToken=${getAuthToken()}`);
     const ctx = {
         login,
         logout,
         showLoginModal,
         hideLoginModal,
         getStatus,
-        isAuthenticated: () => !!getAuthToken(),
+        status,
+        isAuthenticated: (status === STATUS.authenticated),
         getAuthToken,
-        getEmail,
-        debugId
+        getEmail
     };
     return (
         <>
