@@ -10,6 +10,7 @@ import AuthenticationContext, {
 } from '@/components/auth/AuthenticationContext';
 import { useAnalytics } from '@/components/analytics/AnalyticsProvider';
 import AuthenticationManager from '@/lib/api/AuthenticationManager';
+import { MockLocalStorage } from '@/__tests__/mocks/LocalStorage';
 
 const TEST_EMAIL = 'test@test.com';
 const TEST_PASSWORD = 'test-password';
@@ -21,22 +22,6 @@ jest.mock('@/components/analytics/AnalyticsProvider', () => ({
 }));
 
 jest.mock('@/lib/api/AuthenticationManager');
-
-const MockLocalStorage = jest.fn(() => {
-    const store = {};
-    return {
-        getItem: jest.fn((key) => store[key] || null),
-        setItem: jest.fn((key, value) => {
-            value ? store[key] = (value) : delete store[key];
-        }),
-        removeItem: jest.fn((key) => {
-            delete store[key];
-        }),
-        clear: jest.fn(() => {
-            Object.keys(store).forEach(key => delete store[key]);
-        })
-    };
-});
 
 function TestComponent({ onLogin }) {
     const authContext = useAuthenticationContext();
@@ -100,10 +85,13 @@ async function renderAuthenticatedScaffold(callback) {
 
 async function expectFreshState(authContext, localStorage = window.localStorage) {
     await waitFor(() => {
-        expect(authContext.getEmail()).toBeFalsy();
-        expect(authContext.getAuthToken()).toBeFalsy();
+        expect(authContext.getEmail()).toBeNull();
+        expect(authContext.getAuthToken()).toBeNull();
         expect(authContext.isAuthenticated()).toBe(false);
         expect(authContext.getStatus()).toBe(STATUS.guest);
+        expect(authContext.status).toBe(STATUS.guest)
+
+
 
         expect(localStorage.getItem(STORAGE_KEYS.user)).toBeFalsy();
         expect(localStorage.getItem(STORAGE_KEYS.token)).toBeFalsy();
@@ -389,3 +377,4 @@ describe('AuthenticationContext Analytics', () => {
     });
 
 })
+
