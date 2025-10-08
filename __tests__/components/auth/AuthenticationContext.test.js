@@ -2,7 +2,7 @@
 // ABOUTME: Ensures analytics events are fired correctly during login attempts and success/failure scenarios
 
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { cleanup, render, waitFor } from '@testing-library/react';
 import AuthenticationContext, {
     STATUS,
     STORAGE_KEYS,
@@ -362,36 +362,37 @@ describe('User Authentication Check Components', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
+        cleanup();
     });
 
     it('AuthLoggedIn, Guest → hide', async () => {
         let { result, authContext, waitForStatus } = await renderFreshScaffold(
             <AuthLoggedIn>
-                <div data-testid="example-content-fresh-context" />
+                <div data-testid="example-content" />
             </AuthLoggedIn>
         );
         await expectFreshState(authContext);
-        expect(result.findByTestId('example-content-fresh-context')).resolves.toBeFalsy();
+        expect(result.queryByTestId('example-content')).toBeFalsy();
     })
 
     it('AuthLoggedIn, Recognized → hide', async () => {
         let { result, authContext } = await renderRecognizedScaffold(
             <AuthLoggedIn>
-                <div data-testid="example-content-recognized-context" />
+                <div data-testid="example-content" />
             </AuthLoggedIn>
         );
         await expectRecognizedState(authContext);
-        expect(result.findByTestId('example-content-recognized-context')).resolves.toBeFalsy();
+        expect(result.queryByTestId('example-content')).toBeFalsy();
     });
 
     it('AuthLoggedIn, Authenticated → show', async () => {
         let { result, authContext } = await renderAuthenticatedScaffold(
             <AuthLoggedIn>
-                <div data-testid="example-content-authorized-context" />
+                <div data-testid="example-content" />
             </AuthLoggedIn>
         );
         await expectAuthenticatedState(authContext);
-        expect(result.findByTestId('example-content-authorized-context')).resolves.toBeTruthy();
+        expect(result.queryByTestId('example-content')).toBeTruthy();
     })
 
     it('AuthGuest, Guest → show', async () => {
@@ -400,7 +401,7 @@ describe('User Authentication Check Components', () => {
                 <div data-testid="example-content" />
             </AuthGuest>
         );
-        expect(result.findByTestId('example-content')).resolves.toBeTruthy();
+        expect(result.queryByTestId('example-content')).toBeTruthy();
     })
 
     it('AuthGuest, Recognized → hide', async () => {
@@ -410,7 +411,7 @@ describe('User Authentication Check Components', () => {
             </AuthGuest>
         );
         await expectAuthenticatedState(authContext);
-        expect(result.findByTestId('example-content')).resolves.toBeFalsy();
+        expect(result.queryByTestId('example-content')).toBeFalsy();
     });
 
     it('AuthGuest, Authenticated → hide', async () => {
@@ -419,7 +420,7 @@ describe('User Authentication Check Components', () => {
                 <div data-testid="example-content" />
             </AuthGuest>
         );
-        expect(result.findByTestId('example-content')).resolves.toBeFalsy();
+        expect(result.queryByTestId('example-content')).toBeFalsy();
     })
 
     it('AuthRecognized, Guest → hide', async () => {
@@ -428,26 +429,26 @@ describe('User Authentication Check Components', () => {
                 <div data-testid="example-content" />
             </AuthRecognized>
         );
-        expect(result.findByTestId('example-content')).resolves.toBeFalsy();
+        expect(result.queryByTestId('example-content')).toBeFalsy();
     })
 
     it('AuthRecognized, Recognized → show', async () => {
-        let { result, authContext } = await renderAuthenticatedScaffold(
+        let { result, authContext } = await renderRecognizedScaffold(
             <AuthRecognized>
                 <div data-testid="example-content" />
             </AuthRecognized>
         );
-        await expectAuthenticatedState(authContext);
-        expect(result.findByTestId('example-content')).resolves.toBeTruthy();
+        await expectRecognizedState(authContext);
+        expect(result.queryByTestId('example-content')).toBeTruthy();
     });
 
     it('AuthRecognized, Authenticated → hide', async () => {
-        let { result, authContext, waitForStatus } = await renderRecognizedScaffold(
+        let { result, authContext, waitForStatus } = await renderAuthenticatedScaffold(
             <AuthRecognized>
                 <div data-testid="example-content" />
             </AuthRecognized>
         );
-        expect(result.findByTestId('example-content')).resolves.toBeFalsy();
+        expect(result.queryByTestId('example-content')).toBeFalsy();
     })
 
 });
