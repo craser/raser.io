@@ -32,10 +32,10 @@ export default function FrontLandingLayout({ latest, github, social, previous })
     return (
         <StandardLayout content={
             <>
-                <div class={styles.splash}>
+                <div className={styles.splash}>
                     {latest}
                 </div>
-                <div class={styles.tier2}>
+                <div className={styles.tier2}>
                     {github}
                     {previous}
                 </div>

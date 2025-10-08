@@ -17,20 +17,23 @@ import FeatureDisabled from "@/components/flags/FeatureDisabled";
  */
 function LoginField({ type, placeholder, defaultValue, validate: validateValue, setValue }) {
     const ref = useRef();
-    const [visited, setVisited] = useState(false);
     let [errorMessage, setErrorMessage] = useState(null);
 
-
     function validate() {
-        if (visited) {
-            let value = ref.current.valueOf().value;
-            setValue(value);
-            setErrorMessage(validateValue(value));
-        }
+        let value = ref.current.valueOf().value;
+        setValue(value);
+        setErrorMessage(validateValue(value));
     }
 
     return <>
-        <input ref={ref} type={type} placeholder={placeholder} defaultValue={defaultValue} onChange={validate} onBlur={validate} onFocus={() => setVisited(true)}/>
+        <input
+            ref={ref}
+            type={type}
+            placeholder={placeholder}
+            defaultValue={defaultValue}
+            onChange={validate}
+            onBlur={validate}
+        />
         {errorMessage && <div className={styles.error}>{errorMessage}</div>}
     </>;
 }

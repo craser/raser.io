@@ -37,3 +37,8 @@ next-env.d.ts
 .aider*
 .env.production
 .env.development
+test-results
+playwright-report
+CLAUDE.md
+.claude
+.mcp.json

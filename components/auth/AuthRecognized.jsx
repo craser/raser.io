@@ -1,7 +1,7 @@
-import { useAuthenticationContext } from "@/components/auth/AuthenticationContext";
+import { useAuthenticationContext, STATUS } from "@/components/auth/AuthenticationContext";
 
 export default function AuthRecognized({ children }) {
     const { status } = useAuthenticationContext();
-    return <>{ (status === 'recognized') ? children : null}</>
+    return <>{ (status === STATUS.recognized) ? children : null}</>
 }
 

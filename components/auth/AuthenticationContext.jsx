@@ -1,7 +1,6 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import AuthenticationManager from "@/lib/api/AuthenticationManager";
 import LoginModal from "@/components/auth/LoginModal";
-import { auth } from "mysql/lib/protocol/Auth";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 
 const AuthContextObj = createContext({
@@ -17,7 +16,7 @@ export const STATUS = {
     guest: 'guest'
 };
 
-let STORAGE_KEYS = {
+export const STORAGE_KEYS = {
     user: 'rio.auth.user',
     token: 'rio.auth.token',
     expiration: 'rio.auth.expiration',
@@ -29,131 +28,128 @@ export function useAuthenticationContext() {
 }
 
 export default function AuthenticationContext({ children }) {
+    console.log('AuthenticationContext: rendering');
     const analytics = useAnalytics();
-    const [email, setEmail] = useState(null);
-    const [authToken, setAuthToken] = useState(false);
-    const [authExpiration, setAuthExpiration] = useState(0);
     const [authManager, setAuthManager] = useState(new AuthenticationManager());
     const [loginVisible, setLoginVisible] = useState(false);
-    const [loadedFromLocalStorage, setLoadedFromLocalStorage] = useState(false);
-    const status = getStatus();
+    const [status, setStatus] = useState(STATUS.guest); // we use this to trigger re-renders
 
-    // load values from local storage
-    useEffect(() => {
+    // on initial load, get values from local storage
+    useEffect(loadCredentialsFromLocalStorage, []);
+
+    function loadCredentialsFromLocalStorage() {
+        console.log('AuthenticationContext: loading credentials from local storage');
         if (isCsr()) {
-            let newEmail = window.localStorage.getItem(STORAGE_KEYS.user);
-            let newAuthToken = window.localStorage.getItem(STORAGE_KEYS.token);
-            let newExpiration = parseInt(window.localStorage.getItem(STORAGE_KEYS.expiration));
-            setEmail(newEmail);
-            setAuthToken(newAuthToken);
-            setAuthExpiration(newExpiration);
-            setLoadedFromLocalStorage(true);
-        }
-    }, [authExpiration, authManager, authToken, email, isAuthExpired, logout, setAuthExpirationState, setAuthTokenState, setEmailState]);
-    useEffect(() => {
-        setLoginVisible(false);
-    }, [status])
-
-    useEffect(() => {
-        if (isCsr() && loadedFromLocalStorage) {
-            if (isAuthExpired()) {
-                logout();
+            let email = window.localStorage.getItem(STORAGE_KEYS.user);
+            let authToken = window.localStorage.getItem(STORAGE_KEYS.token);
+            let expiration = window.localStorage.getItem(STORAGE_KEYS.expiration);
+            if (email && authToken && expiration) {
+                checkAuthentication();
+            } else if (email) {
+                logout(); // incomplete credentials - log out & clean up
             } else {
-                authManager.check(email, authToken)
-                    .then(valid => {
-                        if (!valid) {
-                            logout();
-                        } else {
-                            setEmailState(email);
-                            setAuthTokenState(authToken);
-                            setAuthExpirationState(authExpiration);
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        logout();
-                    })
+                setStatus(STATUS.guest);
             }
         }
-    }, [loadedFromLocalStorage, isAuthExpired]);
+    };
+
+
+    function checkAuthentication() {
+        console.log('AuthenticationContext: checking authentication');
+        if (isAuthExpired()) {
+            logout();
+        } else {
+            authManager.check(getEmail(), getAuthToken())
+                .then(valid => {
+                    if (!valid) {
+                        logout();
+                    } else {
+                        setStatus(STATUS.authenticated);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    logout();
+                })
+
+        }
+    };
 
     function isCsr() {
         const csr = `${typeof window}` !== 'undefined';
         return csr;
     }
 
-    const isAuthExpired = useCallback(() => {
-        console.log(`checking expiration - authExpiration: ${authExpiration}`);
+    function isAuthExpired() {
+        console.log(`AuthenticationContext: checking expiration - authExpiration: ${getAuthExpiration()}`);
+        const authExpiration = getAuthExpiration();
         if (!!authExpiration) {
             return new Date().getTime() > authExpiration;
         } else {
             return true;
         }
-    }, [authExpiration]);
+    }
 
     function getAuthToken() {
-        return authToken;
+        return window.localStorage.getItem(STORAGE_KEYS.token) || null;
     }
 
     function getEmail() {
-        return email;
+        return window.localStorage.getItem(STORAGE_KEYS.user) || null;
     }
 
-    const setEmailState = useCallback((newEmail) => {
-        setEmail(newEmail);
-        if (newEmail) {
-            window.localStorage.setItem(STORAGE_KEYS.user, newEmail);
-        } else {
-            window.localStorage.removeItem(STORAGE_KEYS.user);
-        }
-    }, [setEmail]);
+    function getAuthExpiration() {
+        return parseInt(window.localStorage.getItem(STORAGE_KEYS.expiration)) || 0;
+    }
 
-    const setAuthTokenState = useCallback((token) => {
-        setAuthToken(token);
-        console.log(`setAuthToken(${token}) ➤ ${authToken}`);
-        if (token) {
-            window.localStorage.setItem(STORAGE_KEYS.token, token);
-        } else {
-            window.localStorage.removeItem(STORAGE_KEYS.token);
-        }
-    }, [setAuthToken]);
+    function getStatus() {
+        return status;
+    }
 
-    const setAuthExpirationState = useCallback((timestamp)=> {
-        setAuthExpiration(timestamp)
-        console.log(`setAuthExpiration(${timestamp}) ➤ ${authExpiration}`);
-        if (timestamp) {
-            window.localStorage.setItem(STORAGE_KEYS.expiration, timestamp);
+    function setLocalStorageItem(key, value) {
+        if (value) {
+            window.localStorage.setItem(key, value);
         } else {
-            window.localStorage.removeItem(STORAGE_KEYS.expiration);
+            window.localStorage.removeItem(key);
         }
-    }, [setAuthExpiration]);
+    }
+
+    function setEmail(newEmail) {
+        console.log(`AuthenticationContext: setting email to ${newEmail}`);
+        setLocalStorageItem(STORAGE_KEYS.user, newEmail);
+    }
+
+    function setAuthToken(token) {
+        console.log(`AuthenticationContext: setting auth token to ${token}`); // FIXME: REMOVE THIS
+        setLocalStorageItem(STORAGE_KEYS.token, token);
+    }
+
+    function setAuthExpiration(timestamp) {
+        console.log(`AuthenticationContext: setting auth expiration to ${timestamp}`);
+        setLocalStorageItem(STORAGE_KEYS.expiration, timestamp);
+    }
 
     function login(email, pass) {
+        console.log(`AuthenticationContext: logging in with email ${email}`);
         analytics.fire('login attempt', email);
         return authManager.login(email, pass)
             .then(auth => {
+                console.log(`AuthenticationContext: login successful with email ${email}`);
                 analytics.fire('login success', email);
                 setLoginVisible(false);
-                setEmailState(email);
-                setAuthTokenState(auth.token);
-                setAuthExpirationState(auth.expires);
+                setEmail(email);
+                setAuthToken(auth.token);
+                setAuthExpiration(auth.expires);
+                setStatus(STATUS.authenticated);
             })
     }
 
     function logout() {
         console.info(`AuthenticationContext: logging out`);
-        setAuthTokenState(null);
-        setAuthExpirationState(0);
-    }
-
-    function getStatus() {
-        if (!!authToken) {
-            return STATUS.authenticated;
-        } else if (!!email) {
-            return STATUS.recognized;
-        } else {
-            return STATUS.guest
-        }
+        analytics.fire('logout');
+        setAuthToken(null);
+        setAuthExpiration(null);
+        setStatus(STATUS.recognized);
     }
 
     function showLoginModal() {
@@ -161,14 +157,25 @@ export default function AuthenticationContext({ children }) {
     }
 
     function hideLoginModal() {
-        console.log('setting loginVisible to FALSE');
+        console.log('AuthenticationContext: hiding login modal');
         setLoginVisible(false);
     }
 
+    const ctx = {
+        login,
+        logout,
+        showLoginModal,
+        hideLoginModal,
+        getStatus,
+        status,
+        isAuthenticated: () => (status === STATUS.authenticated),
+        getAuthToken,
+        getEmail
+    };
     return (
         <>
-            <AuthContextObj.Provider value={{ login, logout, showLoginModal, hideLoginModal, status, isAuthenticated: !!authToken, getAuthToken, getEmail }}>
-                {loginVisible ? <LoginModal onVisibilityChange={(visible) => setLoginVisible(visible)}/> : null}
+            <AuthContextObj.Provider value={ctx}>
+                {loginVisible ? <LoginModal onVisibilityChange={(visible) => setLoginVisible(visible)} /> : null}
                 {children}
             </AuthContextObj.Provider>
         </>
