@@ -4,13 +4,16 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import AuthenticationContext, {
-    STORAGE_KEYS,
     STATUS,
+    STORAGE_KEYS,
     useAuthenticationContext
 } from '@/components/auth/AuthenticationContext';
 import { useAnalytics } from '@/components/analytics/AnalyticsProvider';
 import AuthenticationManager from '@/lib/api/AuthenticationManager';
 import { MockLocalStorage } from '@/__tests__/mocks/LocalStorage';
+import AuthGuest from '@/components/auth/AuthGuest';
+import AuthRecognized from '@/components/auth/AuthRecognized';
+import AuthLoggedIn from '@/components/auth/AuthLoggedIn';
 
 const TEST_EMAIL = 'test@test.com';
 const TEST_PASSWORD = 'test-password';
@@ -23,63 +26,69 @@ jest.mock('@/components/analytics/AnalyticsProvider', () => ({
 
 jest.mock('@/lib/api/AuthenticationManager');
 
-function TestComponent({ onLogin }) {
+function ContextSpy({ setContext }) {
     const authContext = useAuthenticationContext();
-
-    React.useEffect(() => {
-        if (onLogin) {
-            onLogin(authContext);
-        }
-    }, [authContext, onLogin]);
-
+    React.useEffect(() => setContext(authContext), [authContext, setContext]);
     return null;
 }
 
-async function renderScaffold({ email, token, expiration, callback, expectedStatus }) {
+async function renderScaffold({ email, token, expiration, expectedStatus, children }) {
     window.localStorage.setItem(STORAGE_KEYS.user, email);
     window.localStorage.setItem(STORAGE_KEYS.token, token);
     window.localStorage.setItem(STORAGE_KEYS.expiration, expiration);
 
     let authContext;
-    const onLogin = (ctx) => {
+    const setContext = (ctx) => {
         authContext = ctx;
-        callback(ctx);
     };
+
+    const waitForStatus = async (status) => {
+        await waitFor(() => {
+            expect(authContext.getStatus()).toBe(status);
+        });
+        return authContext;
+    }
+
     const result = render(
         <AuthenticationContext>
-            <TestComponent onLogin={onLogin} />
+            <ContextSpy setContext={setContext} />
+            <div id="example-wrapper">
+                <div data-expected-status={expectedStatus} />
+                {children}
+            </div>
         </AuthenticationContext>
     );
-    await waitFor(() => expect(authContext.getStatus()).toBe(expectedStatus));
-    return result;
+    await waitForStatus(expectedStatus);
+    return { result, authContext, waitForStatus };
 }
 
-async function renderFreshScaffold(callback) {
+async function renderFreshScaffold(children) {
     return renderScaffold({
         email: null,
         token: null,
         expiration: null,
-        callback,
-        expectedStatus: STATUS.guest });
+        expectedStatus: STATUS.guest,
+        children
+    });
 }
 
-async function renderRecognizedScaffold(callback) {
+async function renderRecognizedScaffold(children) {
     return renderScaffold({
         email: TEST_EMAIL,
         token: TEST_TOKEN,
         expiration: Date.now() - 3600000, // 1 hour in the past - EXPIRED
-        callback,
-        expectedStatus: STATUS.recognized
+        expectedStatus: STATUS.recognized,
+        children
     });
 }
 
-async function renderAuthenticatedScaffold(callback) {
+async function renderAuthenticatedScaffold(children) {
     return renderScaffold({
         email: TEST_EMAIL,
         token: TEST_TOKEN,
         expiration: Date.now() + 3600000, // 1 hour in the future - VALID
-        callback,
-        expectedStatus: STATUS.authenticated
+        expectedStatus: STATUS.authenticated,
+        children
     });
 }
 
@@ -90,7 +99,6 @@ async function expectFreshState(authContext, localStorage = window.localStorage)
         expect(authContext.isAuthenticated()).toBe(false);
         expect(authContext.getStatus()).toBe(STATUS.guest);
         expect(authContext.status).toBe(STATUS.guest)
-
 
 
         expect(localStorage.getItem(STORAGE_KEYS.user)).toBeFalsy();
@@ -176,25 +184,17 @@ describe('AuthenticationContext Initialization', () => {
     });
 
     it('fresh state', async () => {
-        let authContext;
-        const callback = (ctx) => {
-            authContext = ctx;
-        };
-        await renderFreshScaffold(callback);
+        const { authContext } = await renderFreshScaffold();
         await expectFreshState(authContext);
     });
 
     it('authenticated state', async () => {
-        let authContext;
-        const callback = (ctx) => authContext = ctx;
-        await renderAuthenticatedScaffold(callback);
+        const { authContext } = await renderAuthenticatedScaffold();
         await expectAuthenticatedState(authContext);
     });
 
     it('recognized (formerly logged-in, now expired)', async () => {
-        let authContext;
-        const callback = (ctx) => authContext = ctx;
-        await renderRecognizedScaffold(callback);
+        const { authContext } = await renderRecognizedScaffold();
         await expectRecognizedState(authContext);
     });
 
@@ -241,38 +241,23 @@ describe('AuthenticationContext Transitions', () => {
         const expires = Date.now() + 3600000;
         mockAuthManager.login.mockResolvedValue({ token: TEST_TOKEN, expires });
 
-        let authContext;
-        let callback = (ctx) => {
-            authContext = ctx;
-        };
-        await renderFreshScaffold(callback);
+        let { authContext, waitForStatus } = await renderFreshScaffold();
         await expectFreshState(authContext, localStorageMock);
         await authContext.login(TEST_EMAIL, TEST_PASSWORD);
-        const oldCtx = authContext;
-        await waitFor(() => {
-            expect(authContext).not.toBe(oldCtx);
-        });
+        authContext = await waitForStatus(STATUS.authenticated);
         await expectAuthenticatedState(authContext, localStorageMock);
         await expectLocalStorageValues(localStorageMock, TEST_EMAIL, TEST_TOKEN, expires);
     });
 
     it('login failed: fresh → fresh', async () => {
         mockAuthManager.login.mockRejectedValue(new Error('Invalid credentials'));
-        let authContext;
-        const callback = (ctx) => {
-            authContext = ctx;
-        };
-        await renderFreshScaffold(callback);
+        const { authContext } = await renderFreshScaffold();
         await expect(authContext.login(TEST_EMAIL, TEST_PASSWORD)).rejects.toThrow();
         await expectFreshState(authContext, localStorageMock);
     });
 
     it('logout: authenticated → recognized', async () => {
-        let authContext;
-        const callback = (ctx) => {
-            authContext = ctx;
-        };
-        await renderAuthenticatedScaffold(callback);
+        const { authContext } = await renderAuthenticatedScaffold();
         authContext.logout();
         expectRecognizedState(authContext, localStorageMock);
     });
@@ -313,68 +298,157 @@ describe('AuthenticationContext Analytics', () => {
     });
 
     it('fires "login attempt" event when login is called', async () => {
-        const email = 'test@example.com';
-        const password = TEST_PASSWORD;
-
         mockAuthManager.login.mockResolvedValue({
             token: 'test-token',
             expires: Date.now() + 3600000
         });
-
-        let authContext;
-        let callback = (ctx) => {
-            authContext = ctx;
-        };
-        await renderFreshScaffold(callback);
-        await authContext.login(email, password);
-
-        expect(mockAnalytics.fire).toHaveBeenCalledWith('login attempt', email);
+        const { authContext } = await renderFreshScaffold();
+        await authContext.login(TEST_EMAIL, TEST_PASSWORD);
+        expect(mockAnalytics.fire).toHaveBeenCalledWith('login attempt', TEST_EMAIL);
     });
 
     it('fires "login success" event when login succeeds', async () => {
-        const email = 'test@example.com';
-        const password = TEST_PASSWORD;
-
         mockAuthManager.login.mockResolvedValue({
-            token: 'test-token',
+            token: TEST_TOKEN,
             expires: Date.now() + 3600000
         });
-
-        let authContext;
-        const callback = (ctx) => {
-            authContext = ctx;
-        };
-        await renderFreshScaffold(callback);
-
-        await authContext.login(email, password);
-
-        expect(mockAnalytics.fire).toHaveBeenCalledWith('login success', email);
+        const { authContext } = await renderFreshScaffold();
+        await authContext.login(TEST_EMAIL, TEST_PASSWORD);
+        expect(mockAnalytics.fire).toHaveBeenCalledWith('login success', TEST_EMAIL);
     });
 
     it('does NOT fire "login success" event when login fails', async () => {
-        const email = 'test@example.com';
-        const password = 'wrongpassword';
-
         mockAuthManager.login.mockRejectedValue(new Error('Invalid credentials'));
-
-        let authContext;
-        const callback = (ctx) => {
-            authContext = ctx;
-        };
-        await renderFreshScaffold(callback);
-        await expect(authContext.login(email, password)).rejects.toThrow();
-        expect(mockAnalytics.fire).toHaveBeenCalledWith('login attempt', email);
-        expect(mockAnalytics.fire).not.toHaveBeenCalledWith('login success', email);
+        const { authContext } = await renderFreshScaffold();
+        await expect(authContext.login(TEST_EMAIL, 'wrongpassword')).rejects.toThrow();
+        expect(mockAnalytics.fire).toHaveBeenCalledWith('login attempt', TEST_EMAIL);
+        expect(mockAnalytics.fire).not.toHaveBeenCalledWith('login success', TEST_EMAIL);
     });
 
     it('fires "logout" event when logout is called', async () => {
-        let authContext;
-        const callback = (ctx) => { authContext = ctx; };
-        await renderFreshScaffold(callback);
+        const { authContext } = await renderFreshScaffold();
         authContext.logout();
-
         expect(mockAnalytics.fire).toHaveBeenCalledWith('logout');
     });
+});
 
-})
+
+describe('User Authentication Check Components', () => {
+    let mockAnalytics;
+    let mockAuthManager;
+    let localStorageMock;
+
+    beforeEach(() => {
+        // Mock localStorage using Object.defineProperty to ensure it's on the actual window object
+        localStorageMock = new MockLocalStorage();
+        Object.defineProperty(window, 'localStorage', {
+            value: localStorageMock,
+            writable: true
+        });
+
+        // Mock analytics
+        mockAnalytics = {
+            fire: jest.fn()
+        };
+        useAnalytics.mockReturnValue(mockAnalytics);
+
+        // Mock AuthenticationManager
+        mockAuthManager = {
+            login: jest.fn(),
+            check: jest.fn().mockResolvedValue(true)
+        };
+        AuthenticationManager.mockImplementation(() => mockAuthManager);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('AuthLoggedIn, Guest → hide', async () => {
+        let { result, authContext, waitForStatus } = await renderFreshScaffold(
+            <AuthLoggedIn>
+                <div data-testid="example-content-fresh-context" />
+            </AuthLoggedIn>
+        );
+        await expectFreshState(authContext);
+        expect(result.findByTestId('example-content-fresh-context')).resolves.toBeFalsy();
+    })
+
+    it('AuthLoggedIn, Recognized → hide', async () => {
+        let { result, authContext } = await renderRecognizedScaffold(
+            <AuthLoggedIn>
+                <div data-testid="example-content-recognized-context" />
+            </AuthLoggedIn>
+        );
+        await expectRecognizedState(authContext);
+        expect(result.findByTestId('example-content-recognized-context')).resolves.toBeFalsy();
+    });
+
+    it('AuthLoggedIn, Authenticated → show', async () => {
+        let { result, authContext } = await renderAuthenticatedScaffold(
+            <AuthLoggedIn>
+                <div data-testid="example-content-authorized-context" />
+            </AuthLoggedIn>
+        );
+        await expectAuthenticatedState(authContext);
+        expect(result.findByTestId('example-content-authorized-context')).resolves.toBeTruthy();
+    })
+
+    it('AuthGuest, Guest → show', async () => {
+        let { result, authContext, waitForStatus } = await renderFreshScaffold(
+            <AuthGuest>
+                <div data-testid="example-content" />
+            </AuthGuest>
+        );
+        expect(result.findByTestId('example-content')).resolves.toBeTruthy();
+    })
+
+    it('AuthGuest, Recognized → hide', async () => {
+        let { result, authContext } = await renderAuthenticatedScaffold(
+            <AuthGuest>
+                <div data-testid="example-content" />
+            </AuthGuest>
+        );
+        await expectAuthenticatedState(authContext);
+        expect(result.findByTestId('example-content')).resolves.toBeFalsy();
+    });
+
+    it('AuthGuest, Authenticated → hide', async () => {
+        let { result, authContext, waitForStatus } = await renderRecognizedScaffold(
+            <AuthGuest>
+                <div data-testid="example-content" />
+            </AuthGuest>
+        );
+        expect(result.findByTestId('example-content')).resolves.toBeFalsy();
+    })
+
+    it('AuthRecognized, Guest → hide', async () => {
+        let { result, authContext, waitForStatus } = await renderFreshScaffold(
+            <AuthRecognized>
+                <div data-testid="example-content" />
+            </AuthRecognized>
+        );
+        expect(result.findByTestId('example-content')).resolves.toBeFalsy();
+    })
+
+    it('AuthRecognized, Recognized → show', async () => {
+        let { result, authContext } = await renderAuthenticatedScaffold(
+            <AuthRecognized>
+                <div data-testid="example-content" />
+            </AuthRecognized>
+        );
+        await expectAuthenticatedState(authContext);
+        expect(result.findByTestId('example-content')).resolves.toBeTruthy();
+    });
+
+    it('AuthRecognized, Authenticated → hide', async () => {
+        let { result, authContext, waitForStatus } = await renderRecognizedScaffold(
+            <AuthRecognized>
+                <div data-testid="example-content" />
+            </AuthRecognized>
+        );
+        expect(result.findByTestId('example-content')).resolves.toBeFalsy();
+    })
+
+});
 
