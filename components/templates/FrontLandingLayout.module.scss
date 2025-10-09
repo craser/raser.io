@@ -129,6 +129,7 @@
 
             position: relative;
             background: linear-gradient(105deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
+            border-bottom: 1px solid #002; /* FIXME: use theme color here */
             z-index: 1;
             height: auto; /* Allow expansion with content */
         }
@@ -154,7 +155,6 @@
                 content: '';
                 height: 2vw;
                 border-top: 1px solid #333;
-                background: linear-gradient(#555, transparent);
             }
 
             @media only screen and (min-width: 800px) {
