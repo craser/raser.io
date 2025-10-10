@@ -451,5 +451,31 @@ describe('User Authentication Check Components', () => {
         expect(result.queryByTestId('example-content')).toBeFalsy();
     })
 
+    it('AuthRecognized: authenticated → recognized: show', async () => {
+        let { result, authContext, waitForStatus } = await renderAuthenticatedScaffold(
+            <AuthRecognized>
+                <div data-testid="example-content" />
+            </AuthRecognized>
+        );
+        authContext.logout();
+        await waitForStatus(STATUS.recognized);
+        await waitFor(() => {
+            expect(result.queryByTestId('example-content')).toBeTruthy();
+        });
+    })
+
+    it('AuthLoggedIn: authenticated → recognized: hide', async () => {
+        let { result, authContext, waitForStatus } = await renderAuthenticatedScaffold(
+            <AuthLoggedIn>
+                <div data-testid="example-content" />
+            </AuthLoggedIn>
+        );
+        authContext.logout();
+        waitForStatus(STATUS.recognized);
+        await waitFor(() => {
+            expect(result.queryByTestId('example-content')).toBeFalsy();
+        });
+    })
+
 });
 

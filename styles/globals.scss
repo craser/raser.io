@@ -57,10 +57,7 @@ $screen-small-max: ($screen-breakpoint - 1);
 
 body {
     font-family: var(--font-main), HelveticaNeue-condensed, sans-serif;
-    background-image: url(/img/gold-rush-desktop.jpg);
-    background-size: cover;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+    background-color: #363c47;
     margin: 0;
     max-width: 100vw;
     overflow-x: hidden;
