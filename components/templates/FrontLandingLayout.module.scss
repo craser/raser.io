@@ -139,12 +139,14 @@
             display: flex;
             flex-direction: column-reverse;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: stretch;
 
-            background-color: #363c47;
-            padding: 2vw;
+            background: url(/img/gold-rush-desktop.jpg);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            padding: 1vw;
 
-            gap: 2vw;
+            gap: 1vw;
             z-index: 1;
 
             &:before {
@@ -159,7 +161,6 @@
 
             @media only screen and (min-width: 800px) {
                 flex-direction: row;
-                flex-basis: 1;
 
                 section {
                     width: 100%;
