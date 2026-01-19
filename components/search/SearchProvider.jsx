@@ -52,6 +52,7 @@ export default function SearchProvider({ children }) {
     }
 
     const context = {
+        minSearchTermLength: MIN_SEARCH_TERM_LENGTH,
         isSearchAvailable: () => isSearchAvailable,
         showSearchUi: (show) => {
             console.log(`showSearchUi(${show})`);
