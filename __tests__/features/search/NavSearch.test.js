@@ -217,4 +217,28 @@ describe('Navigation Search', () => {
         });
     });
 
+    test('Should show the keep typing placeholder once user starts typing', async () => {
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await userEvent.click(button);
+        const input = await result.findByTestId('search-input');
+        await userEvent.type(input, 'l');
+        await waitFor(async () => {
+            const placeholder = await result.findByTestId('search-placeholder');
+            expect(placeholder.textContent.trim().toLowerCase()).toBe('no results yet');
+        });
+    })
+
+    test('Should show the no results placeholder when user has entered 3 or more chars and there are no results', async () => {
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await userEvent.click(button);
+        const input = await result.findByTestId('search-input');
+        await userEvent.type(input, 'one two three and to the four');
+        await waitFor(async () => {
+            const placeholder = await result.findByTestId('search-placeholder');
+            expect(placeholder.textContent.trim().toLowerCase()).toBe('no results :(');
+        });
+    })
+
 });

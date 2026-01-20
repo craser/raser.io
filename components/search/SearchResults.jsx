@@ -4,7 +4,7 @@ import { useSearchContext } from "@/components/search/SearchProvider";
 
 function SearchResultPlaceHolder({ children }) {
     return (
-        <div className={styles.emptySearchResult}>
+        <div data-testid="search-placeholder" className={styles.emptySearchResult}>
             {children}
         </div>
     )
