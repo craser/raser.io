@@ -101,7 +101,7 @@ function SearchResultNumber({ number, numResults }) {
     return (
         <div className={styles.resultNumber}>
             <span className={styles.numerator}>{number}</span>
-            <span calssName={styles.denominator}>{numResults}</span>
+            <span>{numResults}</span>
         </div>
     );
 }

@@ -17,7 +17,7 @@
     width: 100%;
     padding: 1em;
     overflow-y: auto;
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: var(--font-monospace);
     max-width: 100%;
 
     h1, h2, h3 {

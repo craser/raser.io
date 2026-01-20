@@ -81,7 +81,7 @@
             background-color: var(--theme-color-pop);
             border-radius: var(--theme-border-radius-large);
             padding: var(--theme-container-padding-s);
-            font-family: "JetBrains Mono", "IBM Plex Mono", monospace;
+            font-family: var(--font-monospace);
             z-index: 1;
 
             .numerator {
@@ -93,7 +93,6 @@
                     content: '/';
                 }
             }
-
         }
 
         .emptySearchResult {
