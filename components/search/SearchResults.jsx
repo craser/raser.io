@@ -51,7 +51,7 @@ export default function SearchResults() {
         <div ref={containerRef} data-testid="search-results" className={styles.searchResults}>
             {selectedIndex >= 0 && <SearchResultSelectionIndicator />}
             {(terms.length > 0) && (terms.length >= searchContext.minSearchTermLength) && (results.length === 0) && (
-                <SearchResultPlaceHolder>no results :(</SearchResultPlaceHolder>
+                <SearchResultPlaceHolder>no results <span className={styles.nobreak}>:(</span> </SearchResultPlaceHolder>
             )}
             {(terms.length > 0) && (terms.length < searchContext.minSearchTermLength) && (
                 <SearchResultPlaceHolder>no results yet</SearchResultPlaceHolder>
