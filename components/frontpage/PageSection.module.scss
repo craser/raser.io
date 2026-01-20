@@ -8,8 +8,6 @@
     --title-padding: 20px;
     --content-padding: 20px;
 
-    overflow: hidden;
-
     position: relative;
     @include backgroundCrossFade();
     /* background-color: var(--bg-dark); */
