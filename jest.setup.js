@@ -1,3 +1,6 @@
+// Mock scrollIntoView - not implemented in jsdom
+Element.prototype.scrollIntoView = jest.fn();
+
 // mock out console so we're not spewing to test logs
 global.console = ((original) => ({
     ...original,
