@@ -18,8 +18,8 @@ jest.mock('@/components/navigation/NavButton.module.scss', () => ({}));
 
 const MOCK_SEARCH_STUBS = [
     // "lorem" should only appear in ONE of the stubs below - see tests below
-    { entryId: 101, datePosted: Date.now(), intro: "Intro 1", body: "lorem ipsum" },
-    { entryId: 102, datePosted: Date.now(), intro: "Intro 2", body: "dolor sit amet" }
+    { entryId: 101, datePosted: Date.now(), intro: "Intro 1", body: "lorem ipsum faucibus" },
+    { entryId: 102, datePosted: Date.now(), intro: "Intro 2", body: "dolor sit amet faucibus" }
 ];
 
 async function renderScaffold() {
@@ -135,6 +135,62 @@ describe('Navigation Search', () => {
         expect(input.value).toBe('lorem');
     });
 
+    test('Typing into the search input, then hitting the UP/DOWN keys should update the selected result', async () => {
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await act(async () => {
+            await userEvent.click(button);
+        });
+        let input = await result.findByTestId('search-input');
+        await userEvent.click(input);
+        await userEvent.type(input, 'faucib'); // beginning of 'faucibus'
+
+        const searchResults = await result.container.querySelectorAll('[data-testclass="search-result"]');
+
+        // should select first search result
+        await userEvent.keyboard('{ArrowDown}');
+        expect(searchResults[0].classList.contains('selectedResult')).toBeTruthy();
+        expect(searchResults[1].classList.contains('selectedResult')).toBeFalsy();
+
+        // should select second search result
+        await userEvent.keyboard('{ArrowDown}');
+        expect(searchResults[0].classList.contains('selectedResult')).toBeFalsy();
+        expect(searchResults[1].classList.contains('selectedResult')).toBeTruthy();
+
+        // should go back to first result
+        await userEvent.keyboard('{ArrowUp}');
+        expect(searchResults[0].classList.contains('selectedResult')).toBeTruthy();
+        expect(searchResults[1].classList.contains('selectedResult')).toBeFalsy();
+    })
+
+    test('Typing into the search input, then hitting Ctrl+N/P should update the selected result', async () => {
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await act(async () => {
+            await userEvent.click(button);
+        });
+        let input = await result.findByTestId('search-input');
+        await userEvent.click(input);
+        await userEvent.type(input, 'faucib'); // beginning of 'faucibus'
+
+        const searchResults = await result.container.querySelectorAll('[data-testclass="search-result"]');
+
+        // Ctrl-N should select first search result
+        await userEvent.keyboard('{Control>}n{/Control}');
+        expect(searchResults[0].classList.contains('selectedResult')).toBeTruthy();
+        expect(searchResults[1].classList.contains('selectedResult')).toBeFalsy();
+
+        // should select second search result
+        await userEvent.keyboard('{Control>}n{/Control}');
+        expect(searchResults[0].classList.contains('selectedResult')).toBeFalsy();
+        expect(searchResults[1].classList.contains('selectedResult')).toBeTruthy();
+
+        // should go back to first result
+        await userEvent.keyboard('{Control>}p{/Control}');
+        expect(searchResults[0].classList.contains('selectedResult')).toBeTruthy();
+        expect(searchResults[1].classList.contains('selectedResult')).toBeFalsy();
+    })
+
     test('If search stubs cannot be retrieved, do not show search button or UI.', async () => {
         useDataContext().getPostDao().getSearchStubs.mockReturnValueOnce(new Promise(function () {
             throw new Error('nope!');
@@ -216,5 +272,29 @@ describe('Navigation Search', () => {
             expect(useRouter().push).toHaveBeenCalledWith('/archive/101');
         });
     });
+
+    test('Should show the keep typing placeholder once user starts typing', async () => {
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await userEvent.click(button);
+        const input = await result.findByTestId('search-input');
+        await userEvent.type(input, 'l');
+        await waitFor(async () => {
+            const placeholder = await result.findByTestId('search-placeholder');
+            expect(placeholder.textContent.trim().toLowerCase()).toBe('no results yet');
+        });
+    })
+
+    test('Should show the no results placeholder when user has entered 3 or more chars and there are no results', async () => {
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await userEvent.click(button);
+        const input = await result.findByTestId('search-input');
+        await userEvent.type(input, 'one two three and to the four');
+        await waitFor(async () => {
+            const placeholder = await result.findByTestId('search-placeholder');
+            expect(placeholder.textContent.trim().toLowerCase()).toBe('no results :(');
+        });
+    })
 
 });

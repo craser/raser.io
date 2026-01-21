@@ -2,10 +2,10 @@ import styles from './Search.module.scss'
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchContext } from "@/components/search/SearchProvider";
 
-function SearchResultPlaceHolder({ text }) {
+function SearchResultPlaceHolder({ children }) {
     return (
-        <div className={styles.emptySearchResult}>
-            {text}
+        <div data-testid="search-placeholder" className={styles.emptySearchResult}>
+            {children}
         </div>
     )
 }
@@ -50,11 +50,14 @@ export default function SearchResults() {
     return (
         <div ref={containerRef} data-testid="search-results" className={styles.searchResults}>
             {selectedIndex >= 0 && <SearchResultSelectionIndicator />}
-            {(terms.length > 0) && (results.length === 0) && (
-                <SearchResultPlaceHolder text={"no results :("}/>
+            {(terms.length > 0) && (terms.length >= searchContext.minSearchTermLength) && (results.length === 0) && (
+                <SearchResultPlaceHolder>no results <span className={styles.nobreak}>:(</span> </SearchResultPlaceHolder>
+            )}
+            {(terms.length > 0) && (terms.length < searchContext.minSearchTermLength) && (
+                <SearchResultPlaceHolder>no results yet</SearchResultPlaceHolder>
             )}
             {(terms.length === 0) && (results.length === 0) && (
-                <SearchResultPlaceHolder text={"enter search terms"}/>
+                <SearchResultPlaceHolder>enter search terms</SearchResultPlaceHolder>
             )}
             {results.map(({ post, text }, i) => (
                 <SearchResult data-testclass="search-result" index={i} key={i} post={post} terms={terms} text={text}/>
@@ -70,6 +73,7 @@ function SearchResultSelectionIndicator() {
 
     return (
         <div className={styles.selectionIndicator}>
+            <span>result </span>
             <span className={styles.numerator}>{selectedIndex + 1}</span>
             <span className={styles.denominator}>{numResults}</span>
         </div>
@@ -97,7 +101,7 @@ function SearchResultNumber({ number, numResults }) {
     return (
         <div className={styles.resultNumber}>
             <span className={styles.numerator}>{number}</span>
-            <span calssName={styles.denominator}>{numResults}</span>
+            <span>{numResults}</span>
         </div>
     );
 }

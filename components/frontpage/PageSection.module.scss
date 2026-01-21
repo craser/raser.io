@@ -8,8 +8,6 @@
     --title-padding: 20px;
     --content-padding: 20px;
 
-    overflow: hidden;
-
     position: relative;
     @include backgroundCrossFade();
     /* background-color: var(--bg-dark); */
@@ -37,26 +35,19 @@
         color: var(--text-color);
         @include poptextSectionHeader;
 
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: center;
-        gap: 0.2rem;
-        align-items: center;
         font-size: var(--title-font-size);
         font-weight: 600;
         height: 1.2em;
-        /* no wrap */
         white-space: nowrap;
+        width: fit-content;
 
-        position: absolute;
-        top: 20px;
-        left: 20px;
+        position: sticky;
+        top: calc(60px + 2vw);
         text-transform: uppercase;
         transform-origin: top left;
         transform:
                 rotate(-90deg)
-                translate(-100%, 0);
+                translate(-100%, -2em);
         z-index: 2;
     }
 
