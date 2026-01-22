@@ -1,3 +1,6 @@
+// ABOUTME: Search input field with terminal-style placeholder and typeahead.
+// ABOUTME: Handles keyboard navigation (arrows, Tab for completion, Enter to select).
+
 import styles from './Search.module.scss'
 import React, { useEffect, useRef } from 'react';
 import { useSearchContext } from "@/components/search/SearchProvider";
@@ -47,7 +50,7 @@ export default function SearchInput(props) {
                 <span className={styles.existingQuery}>{inputRef.current?.value || searchTerms}</span>
                 <span data-testid="search-completion" className={styles.suggestedCompletion}>{completion}</span>
             </div>
-            <input type="search" data-testid="search-input" ref={inputRef} placeholder={'search...'} onKeyUp={onKeyUp} onKeyDown={onKeyDown} />
+            <input type="search" data-testid="search-input" ref={inputRef} placeholder={'ENTER QUERY_'} onKeyUp={onKeyUp} onKeyDown={onKeyDown} />
         </div>
     );
 }

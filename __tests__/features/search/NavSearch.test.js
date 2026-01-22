@@ -281,7 +281,7 @@ describe('Navigation Search', () => {
         await userEvent.type(input, 'l');
         await waitFor(async () => {
             const placeholder = await result.findByTestId('search-placeholder');
-            expect(placeholder.textContent.trim().toLowerCase()).toBe('no results yet');
+            expect(placeholder.textContent.trim().toLowerCase()).toBe('scanning...');
         });
     })
 
@@ -293,7 +293,7 @@ describe('Navigation Search', () => {
         await userEvent.type(input, 'one two three and to the four');
         await waitFor(async () => {
             const placeholder = await result.findByTestId('search-placeholder');
-            expect(placeholder.textContent.trim().toLowerCase()).toBe('no results :(');
+            expect(placeholder.textContent.trim().toLowerCase()).toBe('no matches found');
         });
     })
 
