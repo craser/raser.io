@@ -1,3 +1,15 @@
+// ABOUTME: Styles for the Search modal UI with a retro terminal aesthetic.
+// ABOUTME: Uses CSS variables for easy color customization.
+
+/* Terminal color scheme - easily tweakable */
+$search-bg: #1a1a1a;
+$search-text-primary: #c0c0c0;
+$search-text-secondary: #707070;
+$search-text-input: #ffffff;
+$search-highlight: #33ff33;
+$search-selected-bg: #2a2a2a;
+$search-border: #333333;
+
 /* Used to create a fade-in effect for the search interface */
 @keyframes fadeIn {
     from {
@@ -8,18 +20,38 @@
     }
 }
 
+/* Blinking cursor animation for input placeholder */
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0;
+    }
+}
+
 /**
  * this contains the actual UI
  */
 .searchInterface {
+    --search-bg: #{$search-bg};
+    --search-text-primary: #{$search-text-primary};
+    --search-text-secondary: #{$search-text-secondary};
+    --search-text-input: #{$search-text-input};
+    --search-highlight: #{$search-highlight};
+    --search-selected-bg: #{$search-selected-bg};
+    --search-border: #{$search-border};
+
     animation: fadeIn 150ms ease-in-out;
-    background-color: var(--theme-color-content-text-bg);
+    background-color: var(--search-bg);
     height: fit-content;
     max-width: calc(100vw - 20px);
     min-height: 90vh;
     max-height: 90vh;
     width: 630px;
     z-index: 1;
+    border: 1px solid var(--search-border);
+    font-family: var(--font-monospace);
 
     display: flex;
     flex-direction: column;
@@ -27,17 +59,20 @@
 
 
     .searchInput {
-        font-size: 3em;
+        font-size: 1.5em;
         z-index: 1;
-        color: black;
-        background: var(--theme-color-content-text-bg);
-        border-bottom: 1px solid var(--theme-color-border);
+        color: var(--search-text-input);
+        background: var(--search-bg);
+        border-bottom: 1px solid var(--search-border);
+        position: relative;
 
         input, .typeAhead {
             font-size: inherit;
+            font-family: var(--font-monospace);
             padding: var(--theme-container-padding-lg);
             text-wrap: nowrap;
             max-width: calc(100% - (2 * var(--theme-container-padding-lg)));
+            letter-spacing: 0.05em;
         }
 
         input {
@@ -46,6 +81,13 @@
             width: 100%;
             font-size: inherit;
             background-color: transparent;
+            color: var(--search-text-input);
+            caret-color: var(--search-highlight);
+
+            &::placeholder {
+                color: var(--search-text-secondary);
+                opacity: 1;
+            }
         }
 
         .typeAhead {
@@ -60,7 +102,7 @@
             }
 
             .suggestedCompletion {
-                color: var(--theme-color-typeahead-suggestion);
+                color: var(--search-text-secondary);
             }
         }
 
@@ -68,8 +110,9 @@
 
 
     .searchResults {
-        background-color: var(--theme-color-content-text-bg);
+        background-color: var(--search-bg);
         padding: var(--theme-container-padding-s);
+        color: var(--search-text-primary);
 
         flex: 1;
         overflow-y: auto;
@@ -78,27 +121,23 @@
             position: absolute;
             bottom: 2vh;
             right: 4vh;
-            background-color: var(--theme-color-pop);
-            border-radius: var(--theme-border-radius-large);
+            background-color: var(--search-selected-bg);
+            border: 1px solid var(--search-border);
             padding: var(--theme-container-padding-s);
             font-family: var(--font-monospace);
+            color: var(--search-highlight);
             z-index: 1;
-
-            .numerator {
-                &:before {
-                    content: '#';
-                }
-
-                &:after {
-                    content: '/';
-                }
-            }
+            font-size: 0.9em;
+            letter-spacing: 0.1em;
         }
 
         .emptySearchResult {
-            font-size: 11em;
-            color: #363c47;
-            line-height: 0.8em;
+            font-size: 3em;
+            color: var(--search-text-secondary);
+            line-height: 1.2em;
+            padding: var(--theme-container-padding-lg);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
 
             // supporting one little use case where we need this
             .nobreak {
@@ -107,15 +146,15 @@
         }
 
         .searchResult {
-            border-bottom: 1px dotted var(--theme-color-border-light);
+            border-bottom: 1px solid var(--search-border);
             padding: var(--theme-container-padding-lg);
             cursor: pointer;
             position: relative;
+            color: var(--search-text-primary);
 
             &.selectedResult, &:hover {
-                border-color: transparent;
-                background-color: var(--theme-color-pop);
-                border-radius: var(--theme-border-radius-large);
+                border-color: var(--search-border);
+                background-color: var(--search-selected-bg);
             }
 
             &:last-child {
@@ -123,9 +162,12 @@
             }
 
             .searchResultTitle {
-                font-family: var(--font-title);
-                font-size: 1.4em;
-                font-weight: bold;
+                font-family: var(--font-monospace);
+                font-size: 1.1em;
+                font-weight: normal;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--search-text-primary);
             }
 
             .searchResultsMetaData {
@@ -133,28 +175,31 @@
                 flex-direction: row;
                 justify-content: space-between;
                 padding-top: var(--theme-container-padding-s);
+                font-size: 0.85em;
 
                 .searchResultDate {
-
+                    color: var(--search-text-secondary);
+                    text-transform: uppercase;
+                    letter-spacing: 0.1em;
                 }
 
                 .searchResultMatchedTerms {
                     &:before, &:after {
-                        content: '(matches:';
-                        color: var(--theme-color-border-light);
+                        content: '[';
+                        color: var(--search-text-secondary);
                         padding-top: var(--theme-container-padding-lg);
                         padding-right: 0.2em;
                         padding-left: 0;
                     }
 
                     &:after {
-                        content: ')';
+                        content: ']';
                     }
 
                     .searchResultTerm {
                         padding: var(--theme-container-padding-xs);
-                        border-radius: var(--theme-container-padding-xs);
-
+                        color: var(--search-highlight);
+                        text-transform: uppercase;
                     }
                 }
 
@@ -171,7 +216,8 @@
 
 
                     .resultTokenMatch {
-                        background-color: chartreuse;
+                        background-color: var(--search-highlight);
+                        color: var(--search-bg);
                     }
                 }
             }

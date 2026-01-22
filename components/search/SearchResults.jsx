@@ -1,11 +1,15 @@
+// ABOUTME: Renders search results with terminal-style placeholder messages.
+// ABOUTME: Uses ScrambleText for animated text transitions.
+
 import styles from './Search.module.scss'
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchContext } from "@/components/search/SearchProvider";
+import ScrambleText from "@/components/search/ScrambleText";
 
 function SearchResultPlaceHolder({ children }) {
     return (
         <div data-testid="search-placeholder" className={styles.emptySearchResult}>
-            {children}
+            <ScrambleText text={children} duration={800} />
         </div>
     )
 }
@@ -51,13 +55,13 @@ export default function SearchResults() {
         <div ref={containerRef} data-testid="search-results" className={styles.searchResults}>
             {selectedIndex >= 0 && <SearchResultSelectionIndicator />}
             {(terms.length > 0) && (terms.length >= searchContext.minSearchTermLength) && (results.length === 0) && (
-                <SearchResultPlaceHolder>no results <span className={styles.nobreak}>:(</span> </SearchResultPlaceHolder>
+                <SearchResultPlaceHolder>NO MATCHES FOUND</SearchResultPlaceHolder>
             )}
             {(terms.length > 0) && (terms.length < searchContext.minSearchTermLength) && (
-                <SearchResultPlaceHolder>no results yet</SearchResultPlaceHolder>
+                <SearchResultPlaceHolder>SCANNING...</SearchResultPlaceHolder>
             )}
             {(terms.length === 0) && (results.length === 0) && (
-                <SearchResultPlaceHolder>enter search terms</SearchResultPlaceHolder>
+                <SearchResultPlaceHolder>AWAITING INPUT...</SearchResultPlaceHolder>
             )}
             {results.map(({ post, text }, i) => (
                 <SearchResult data-testclass="search-result" index={i} key={i} post={post} terms={terms} text={text}/>
@@ -71,11 +75,12 @@ function SearchResultSelectionIndicator() {
     const selectedIndex = searchContext.getSelectedResult();
     const numResults = searchContext.getSearchResults().length;
 
+    // Format as [001/005] style
+    const padNum = (n) => String(n).padStart(3, '0');
+
     return (
         <div className={styles.selectionIndicator}>
-            <span>result </span>
-            <span className={styles.numerator}>{selectedIndex + 1}</span>
-            <span className={styles.denominator}>{numResults}</span>
+            [{padNum(selectedIndex + 1)}/{padNum(numResults)}]
         </div>
     )
 }
@@ -108,7 +113,11 @@ function SearchResultNumber({ number, numResults }) {
 
 function SearchResultPostedDate({ datePosted }) {
     const date = new Date(datePosted);
-    const formatted = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    // Format as military style: 22-JUN-2024
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+    const year = date.getFullYear();
+    const formatted = `${day}-${month}-${year}`;
     return <div className={styles.searchResultDate}>{formatted}</div>;
 }
 
