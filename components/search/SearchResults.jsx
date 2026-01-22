@@ -93,7 +93,9 @@ export function SearchResult({ terms, post, text, index }) {
         <div ref={elementRef} data-testclass="search-result" className={styles.searchResult}
              onClick={() => searchContext.goToResult(index)}
         >
-            <div className={styles.searchResultTitle}>{post.title}</div>
+            <div className={styles.searchResultTitle}>
+                <ScrambleText text={(post.title || '').toUpperCase()} duration={800} />
+            </div>
             <div className={styles.searchResultsMetaData}>
                 <SearchResultPostedDate datePosted={post.datePosted}/>
                 <SearchResultMatchedTerms terms={terms} text={text}/>
