@@ -1,3 +1,5 @@
+// ABOUTME: Renders metadata for a blog post: tags, date posted, and comment count link.
+// ABOUTME: Used by ReadPostView as the meta row beneath the post title.
 import styles from "@/components/Post.module.scss";
 import DatePosted from "@/components/DatePosted";
 import CommentsLink from "@/components/CommentsLink";
