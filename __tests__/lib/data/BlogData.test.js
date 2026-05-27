@@ -123,3 +123,28 @@ describe('getSearchStubs()', () => {
         expect(BlogData.getInstance().getSearchStubs(1000)).toHaveLength(3);
     });
 });
+
+describe('imageFileType normalization', () => {
+    test('converts numeric imageFileType values to their string equivalents', () => {
+        jest.resetModules();
+        jest.doMock('fs', () => ({
+            readFileSync: jest.fn().mockReturnValue(JSON.stringify([
+                { entryId: '10', title: 'Map',      datePosted: '2023-01-04', imageFileType: 0,    attachments: [] },
+                { entryId: '1',  title: 'Image',    datePosted: '2023-01-01', imageFileType: 1,    attachments: [] },
+                { entryId: '2',  title: 'Document', datePosted: '2023-01-02', imageFileType: 2,    attachments: [] },
+                { entryId: '3',  title: 'Null',     datePosted: '2023-01-03', imageFileType: null, attachments: [] },
+            ])),
+        }));
+        jest.doMock('path', () => ({ join: jest.fn().mockReturnValue('/mock/posts.json') }));
+        const BD = require('@/lib/data/BlogData').default;
+        const posts = BD.getInstance().getEntries(0, 10);
+        const mapPost  = posts.find(p => p.entryId === '10');
+        const imgPost  = posts.find(p => p.entryId === '1');
+        const docPost  = posts.find(p => p.entryId === '2');
+        const nullPost = posts.find(p => p.entryId === '3');
+        expect(mapPost.imageFileType).toBe('map');
+        expect(imgPost.imageFileType).toBe('image');
+        expect(docPost.imageFileType).toBe('document');
+        expect(nullPost.imageFileType).toBeNull();
+    });
+});
