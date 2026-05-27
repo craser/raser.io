@@ -1,6 +1,6 @@
 import LogEntries from '../../components/LogEntries';
 import StandardLayout from "../../components/templates/StandardLayout";
-import PostDao from '@/model/PostDao';
+import BlogData from '@/lib/data/BlogData';
 import SiteConfig from '@/lib/SiteConfig';
 import SingleSectionContent from '@/components/templates/SingleSectionContent';
 
@@ -20,8 +20,7 @@ export async function getStaticProps() {
         const config = new SiteConfig();
         const entriesCount = config.getValue('staticGeneration.prerender.archiveEntries') || 30;
         const revalidateSeconds = config.getValue('staticGeneration.prerender.revalidateSeconds') || 3600;
-        const postDao = PostDao.getCachingPostDao(); // Use caching DAO for better performance
-        const initialEntries = await postDao.getEntries(0, entriesCount);
+        const initialEntries = BlogData.getInstance().getEntries(0, entriesCount);
 
         return {
             props: {

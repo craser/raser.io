@@ -7,7 +7,7 @@ import SocialFeed from "@/components/frontpage/SocialFeed";
 import PreviousPosts from "@/components/frontpage/PreviousPosts";
 import FeatureEnabled from "@/components/flags/FeatureEnabled";
 import FeatureDisabled from "@/components/flags/FeatureDisabled";
-import PostDao from '@/model/PostDao';
+import BlogData from '@/lib/data/BlogData';
 import SiteConfig from '@/lib/SiteConfig';
 
 export default function Home({ latestPost, recentPosts, entries, isLandingPageEnabled }) {
@@ -39,8 +39,7 @@ export async function getStaticProps() {
 
         // FIXME: This will always return true on pre-render
         const isLandingPageEnabled = config.featureFlags?.showLandingFrontpage ?? true;
-        const postDao = PostDao.getCachingPostDao();
-        const entries = await postDao.getEntries(0, entriesCount);
+        const entries = BlogData.getInstance().getEntries(0, entriesCount);
         const recentPosts = entries.slice(1, recentPostsCount);
         const latestPost = entries[0]; // I may live to regret this.
 

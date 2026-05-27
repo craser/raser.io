@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import SinglePostPage from "@/components/pages/SinglePostPage"
 import LoadingSpinner from "@/components/LoadingSpinner";
-import PostDao from '@/model/PostDao';
+import BlogData from '@/lib/data/BlogData';
 import SiteConfig from '@/lib/SiteConfig';
 
 export default function PostIdParamPage() {
@@ -16,11 +16,9 @@ export default function PostIdParamPage() {
 }
 
 export async function getStaticPaths() {
-    // Create the PostDao instance
-    const postDao = PostDao.getCachingPostDao();
     const config = new SiteConfig();
     const postsToPrerender = config.getValue('staticGeneration.prerender.posts') || 20;
-    const recentPosts = await postDao.getEntries(0, postsToPrerender);
+    const recentPosts = BlogData.getInstance().getEntries(0, postsToPrerender);
 
     // Create paths for each post
     const paths = recentPosts.map(post => ({
