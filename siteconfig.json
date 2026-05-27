@@ -12,19 +12,11 @@
   "api": {
     "root": "{NEXT_PUBLIC_API_ROOT}",
     "endpoints": {
-      "auth": {
-        "login": "/auth/login?email={email}&pass={pass}",
-        "check": "/auth/check?email={email}&token={token}"
-      },
       "entries": {
-        "create": "/entries/create",
-        "delete": "/delete?id={id}&auth={authToken}",
         "entry": "/entries/{id}",
         "latest": "/entries/latest/{page}?pageSize={pageSize}",
         "next": "/entries/{id}/next",
         "previous": "/entries/{id}/prev",
-        "publish": "/entries/publish",
-        "update": "/entries/update",
         "bulk": "/entries/search/{numEntries}"
       },
       "maps": {
