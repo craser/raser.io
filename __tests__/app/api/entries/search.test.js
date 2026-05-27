@@ -30,3 +30,13 @@ test('returns all available when numEntries exceeds total', async () => {
     );
     expect(await res.json()).toHaveLength(50);
 });
+
+test('defaults to 1000 entries when numEntries is not a number', async () => {
+    const res = await GET(
+        new Request('http://x/api/entries/search/invalid'),
+        { params: { numEntries: 'invalid' } }
+    );
+    expect(res.status).toBe(200);
+    // Mock has 50 entries; 1000 default means all 50 are returned
+    expect(await res.json()).toHaveLength(50);
+});

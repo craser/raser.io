@@ -5,7 +5,8 @@ import { NextResponse } from 'next/server';
 import BlogData from '@/lib/data/BlogData';
 
 export function GET(request, { params }) {
-    const page = parseInt(params.page, 10) || 0;
+    const parsed = parseInt(params.page, 10);
+    const page = isNaN(parsed) ? 0 : parsed;
     const pageSize = parseInt(new URL(request.url).searchParams.get('pageSize'), 10) || 10;
     return NextResponse.json(BlogData.getInstance().getEntries(page, pageSize));
 }

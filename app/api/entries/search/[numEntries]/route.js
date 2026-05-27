@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import BlogData from '@/lib/data/BlogData';
 
 export function GET(request, { params }) {
-    const numEntries = parseInt(params.numEntries, 10) || 1000;
+    const parsed = parseInt(params.numEntries, 10);
+    const numEntries = isNaN(parsed) ? 1000 : parsed;
     return NextResponse.json(BlogData.getInstance().getSearchStubs(numEntries));
 }

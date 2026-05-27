@@ -41,3 +41,10 @@ test('defaults pageSize to 10', async () => {
     const res = await GET(new Request('http://x/api/entries/latest/0'), { params: { page: '0' } });
     expect(await res.json()).toHaveLength(10);
 });
+
+test('defaults to page 0 when page is not a number', async () => {
+    const res = await GET(new Request('http://x/api/entries/latest/invalid?pageSize=10'), { params: { page: 'invalid' } });
+    const data = await res.json();
+    expect(data).toHaveLength(10);
+    expect(data[0].entryId).toBe('1');
+});
