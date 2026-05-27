@@ -1,9 +1,9 @@
-import { createContext, useContext, useState } from "react";
-import EditPostView from "@/components/EditPostView";
+// ABOUTME: Context provider for post view state, shared across post sub-components.
+// ABOUTME: Renders the appropriate ReadPostView variant based on the initialView prop.
+import { createContext, useContext } from "react";
 import ReadPostView from "@/components/ReadPostView"
 
 const PostViewContextObject = createContext({
-    toReaderView: () => false,
     toEditView: () => false,
 });
 
@@ -15,48 +15,18 @@ export function usePostViewContext() {
 export const View = {
     ENTRY_LIST: 'ENTRY_LIST',
     SINGLE_ENTRY: 'SINGLE_ENTRY',
-    EDIT: 'EDIT'
 }
 
 export default function PostViewContext({ initialView, post, showBody, next, prev, children }) {
-    const [views, setViews] = useState([]);
-    const [view, setView] = useState(initialView || View.SINGLE_ENTRY);
-
-    function pushView(v) {
-        let vs = [...views, view];
-        setViews(vs);
-        setView(v);
-    }
-
-    function popView() {
-        if (views.length) {
-            let vs = views;
-            let v = vs.pop();
-            setViews(vs);
-            setView(v);
-        } else {
-            setView(initialView);
-        }
-    }
-
-    function toReaderView() {
-        pushView(View.SINGLE_ENTRY);
-    }
-
-    function toEditView() {
-        pushView(View.EDIT);
-    }
+    const view = initialView || View.SINGLE_ENTRY;
 
     return (
-        <PostViewContextObject.Provider value={{ toReaderView, toEditView }}>
+        <PostViewContextObject.Provider value={{ toEditView: () => false }}>
             {(view === View.SINGLE_ENTRY) &&
                 <ReadPostView post={post} showBody={showBody} next={next} prev={prev} showNextPrev={true}/>
             }
             {(view === View.ENTRY_LIST) &&
                 <ReadPostView post={post} showBody={showBody} next={next} prev={prev} showNextPrev={false}/>
-            }
-            {(view === View.EDIT) &&
-                <EditPostView post={post} onPostSave={popView} onCancel={popView} />
             }
         </PostViewContextObject.Provider>
     );

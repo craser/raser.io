@@ -4,7 +4,6 @@ import CommentsLink from "@/components/CommentsLink";
 import PostTagsList from "@/components/PostTagsList";
 import AuthLoggedIn from "@/components/auth/AuthLoggedIn";
 import EditLink from "@/components/EditLink";
-import DeleteLink from "@/components/DeleteLink";
 import { usePostViewContext } from "@/components/PostViewContext";
 import FeatureEnabled from '@/components/flags/FeatureEnabled';
 
@@ -23,8 +22,6 @@ export default function PostMetaInfo(props) {
                 <div className={styles.entrymetainfo}>
                     <>(</>
                     <EditLink onClick={toEditView}>edit</EditLink>
-                    <> | </>
-                    <DeleteLink post={post}>delete</DeleteLink>
                     <>)</>
                 </div>
             </AuthLoggedIn>
