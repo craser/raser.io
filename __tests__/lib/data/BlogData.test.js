@@ -33,6 +33,12 @@ describe('getInstance()', () => {
 });
 
 describe('getEntries()', () => {
+    test('returns entries with default arguments', () => {
+        const entries = BlogData.getInstance().getEntries();
+        expect(entries).toHaveLength(3);
+        expect(entries[0].entryId).toBe('3');
+    });
+
     test('returns entries sorted newest-first', () => {
         const entries = BlogData.getInstance().getEntries(0, 10);
         expect(entries[0].entryId).toBe('3');
@@ -101,6 +107,12 @@ describe('getPrevPost()', () => {
 });
 
 describe('getSearchStubs()', () => {
+    test('returns entries with default arguments', () => {
+        const stubs = BlogData.getInstance().getSearchStubs();
+        expect(stubs).toHaveLength(3);
+        expect(stubs[0].entryId).toBe('3');
+    });
+
     test('returns up to numEntries posts, newest-first', () => {
         const stubs = BlogData.getInstance().getSearchStubs(2);
         expect(stubs).toHaveLength(2);
