@@ -3,9 +3,7 @@
 import { createContext, useContext } from "react";
 import ReadPostView from "@/components/ReadPostView"
 
-const PostViewContextObject = createContext({
-    toEditView: () => false,
-});
+const PostViewContextObject = createContext({});
 
 export function usePostViewContext() {
     const context = useContext(PostViewContextObject);
@@ -21,7 +19,7 @@ export default function PostViewContext({ initialView, post, showBody, next, pre
     const view = initialView || View.SINGLE_ENTRY;
 
     return (
-        <PostViewContextObject.Provider value={{ toEditView: () => false }}>
+        <PostViewContextObject.Provider value={{}}>
             {(view === View.SINGLE_ENTRY) &&
                 <ReadPostView post={post} showBody={showBody} next={next} prev={prev} showNextPrev={true}/>
             }
