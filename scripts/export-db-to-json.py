@@ -51,6 +51,7 @@ def mysql_cmd(args, stdin_path=None):
 
 
 def get_columns(db, table):
+    """Return column names for the given table as a list."""
     out = mysql_cmd(['--batch', '--skip-column-names', db, '-e',
                      f'SHOW COLUMNS FROM `{table}`'])
     return [line.split('\t')[0] for line in out.strip().split('\n') if line]
@@ -72,8 +73,9 @@ def main():
 
     print('Starting MySQL...')
     subprocess.run(['brew', 'services', 'start', 'mysql'], check=True)
-    time.sleep(3)
+    time.sleep(3)  # give MySQL time to finish starting up
 
+    stripped = None
     try:
         stripped = strip_blobs(SQL_FILE)
         print(f'Blob data stripped → {stripped}')
@@ -90,6 +92,7 @@ def main():
         entries = fetch_json(DB_NAME, 'blog_entries', get_columns(DB_NAME, 'blog_entries'))
 
         print('Fetching attachments...')
+        # Attachments are nested into posts.json by entryId, not exported as a standalone file
         attachments = fetch_json(DB_NAME, 'attachments', get_columns(DB_NAME, 'attachments'))
 
         att_by_entry = {}
@@ -103,7 +106,7 @@ def main():
             json.dump(entries, f, ensure_ascii=False)
         print(f'Exported {len(entries)} entries → {posts_path}')
 
-        # Export remaining tables
+        # Export remaining tables (attachments are handled above, nested in posts.json)
         for table in ('comments', 'tags', 'links'):
             rows = fetch_json(DB_NAME, table, get_columns(DB_NAME, table))
             out_path = os.path.join(OUTPUT_DIR, f'{table}.json')
@@ -112,8 +115,12 @@ def main():
             print(f'Exported {len(rows)} rows → {out_path}')
 
     finally:
+        if stripped and os.path.exists(stripped):
+            os.unlink(stripped)
         mysql_cmd(['-e', f'DROP DATABASE IF EXISTS `{DB_NAME}`'])
-        subprocess.run(['brew', 'services', 'stop', 'mysql'])
+        result = subprocess.run(['brew', 'services', 'stop', 'mysql'], capture_output=True)
+        if result.returncode != 0:
+            print(f'Warning: brew services stop mysql failed: {result.stderr.decode().strip()}')
         print('Done.')
 
 
