@@ -86,15 +86,4 @@ export default class CachingPostDao {
         return this.#dao.getSearchStubs(numEntries);
     }
 
-    async createPost(...args) {
-        return this.#dao.createPost(...args);
-    }
-
-    async publishPost(...args) {
-        return this.#dao.publishPost(...args);
-    }
-
-    async updatePost(...args) {
-        return this.#dao.updatePost(...args);
-    }
 }
