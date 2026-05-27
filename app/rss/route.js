@@ -1,14 +1,10 @@
-import { NextResponse, NextRequest } from "next/server";
-import PostDao from "@/model/PostDao";
+// ABOUTME: RSS feed route — returns the 20 most recent blog entries as RSS 2.0 XML.
+// ABOUTME: Reads directly from BlogData (server-side) without going through the HTTP API.
 
-import { getPostLink } from "@/lib/util/Links";
+import { NextResponse } from 'next/server';
+import BlogData from '@/lib/data/BlogData';
+import { getPostLink } from '@/lib/util/Links';
 
-/**
- *
- * @param request {NextRequest}
- * @returns {NextResponse<{derp: string}>}
- * @constructor
- */
 export function GET(request) {
     return generateRss()
         .then(rss => new NextResponse(rss, {
@@ -34,24 +30,23 @@ function generateRss() {
 }
 
 function renderPosts() {
-    const dao = PostDao.getPostDao();
-    return dao.getEntries(0, 20)
-        .then(posts => posts.map(post => {
-                const link = getPostLink(post);
-                return (
-                    `<item>
+    try {
+        const posts = BlogData.getInstance().getEntries(0, 20);
+        const postsXml = posts.map(post => {
+            const link = getPostLink(post);
+            return (
+                `<item>
                   <title><![CDATA[${post.title}]]></title>
                   <link>${link}</link>
                   <description><![CDATA[${post.intro}]]></description>
                   <pubDate>${new Date(post.datePosted).toUTCString()}</pubDate>
                   <guid>${link}</guid>
                 </item>`
-                );
-            })
-                .join('')
-        )
-        .catch(err => {
-            console.error(err);
-            return '';
-        })
+            );
+        }).join('');
+        return Promise.resolve(postsXml);
+    } catch (err) {
+        console.error(err);
+        return Promise.resolve('');
+    }
 }
