@@ -1,16 +1,12 @@
+// ABOUTME: Renders metadata for a blog post: tags, date posted, and comment count link.
+// ABOUTME: Used by ReadPostView as the meta row beneath the post title.
 import styles from "@/components/Post.module.scss";
 import DatePosted from "@/components/DatePosted";
 import CommentsLink from "@/components/CommentsLink";
 import PostTagsList from "@/components/PostTagsList";
-import AuthLoggedIn from "@/components/auth/AuthLoggedIn";
-import EditLink from "@/components/EditLink";
-import DeleteLink from "@/components/DeleteLink";
-import { usePostViewContext } from "@/components/PostViewContext";
 import FeatureEnabled from '@/components/flags/FeatureEnabled';
 
 export default function PostMetaInfo(props) {
-    const { toEditView } = usePostViewContext();
-    
     let { post } = props;
     return (
         <div className={styles.entryMetaInfoContainer}>
@@ -19,15 +15,6 @@ export default function PostMetaInfo(props) {
                 <DatePosted post={post}/>
                 <FeatureEnabled feature="postCommentCount"> • <CommentsLink post={post}/></FeatureEnabled>
             </div>
-            <AuthLoggedIn>
-                <div className={styles.entrymetainfo}>
-                    <>(</>
-                    <EditLink onClick={toEditView}>edit</EditLink>
-                    <> | </>
-                    <DeleteLink post={post}>delete</DeleteLink>
-                    <>)</>
-                </div>
-            </AuthLoggedIn>
         </div>
     );
 }

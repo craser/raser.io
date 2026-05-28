@@ -1,7 +1,9 @@
+// ABOUTME: Read-only data access object for blog post entries.
+// ABOUTME: Fetches posts from the API; use getCachingPostDao() for cached access.
+
 import SiteConfig from "@/lib/SiteConfig";
 import CachingPostDao from "@/model/CachingPostDao";
 import { formatUrl } from "@/lib/util/StringFormatter"
-import EdgeConfigPostDao from "@/model/EdgeConfigPostDao";
 
 export default class PostDao {
     #config = new SiteConfig();
@@ -10,16 +12,6 @@ export default class PostDao {
         return new CachingPostDao(new PostDao());
     }
 
-    static getEdgePostDao() {
-        return new EdgeConfigPostDao();
-    }
-
-    // TODO: Nobody should still be calling this. Replace with getCachaingPostDao().
-    static getPostDao() {
-        return new PostDao();
-    }
-
-
     constructor() {
     }
 
@@ -27,15 +19,6 @@ export default class PostDao {
         let template = `${this.#config.api.root}${path}`;
         let url = formatUrl(template, params);
         return url;
-    }
-
-    #auth(name, { authToken, email }) {
-        let uri = this.#config.getEndpoint(name);
-        let params = new URLSearchParams({ auth: authToken });
-        if (email) {
-            params.set('email', email);
-        }
-        return `${uri}?${params}`;
     }
 
     #cleanFetch(...args) {
@@ -50,19 +33,6 @@ export default class PostDao {
             .catch(e => {
                 console.error({ e, arguments });
             });
-    }
-
-    #sendPost(endpointName, post, attachments, authToken) {
-        let formData = new FormData();
-        let blob = new Blob([JSON.stringify(post)], { type: 'application/json' });
-        formData.append('entry', blob);
-        if (attachments) {
-            attachments.forEach(a => formData.append('attachments', a));
-        }
-        return this.#cleanFetch(this.#auth(endpointName, { authToken }), {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json());
     }
 
     async getLatestPost() {
@@ -111,24 +81,5 @@ export default class PostDao {
         let url = this.#config.getEndpoint('entries.bulk', { numEntries });
         return this.#cleanFetch(url)
             .then(response => response.json());
-    }
-
-    async createPost(email, authToken) {
-        let url = this.#auth('entries.create', { email, authToken });
-        return this.#cleanFetch(url, { method: "POST" })
-            .then(response => response.json());
-    }
-
-    async publishPost(post, attachments, authToken) {
-        return this.#sendPost('entries.publish', post, attachments, authToken);
-    }
-
-    async updatePost(post, attachments, authToken) {
-        return this.#sendPost('entries.update', post, attachments, authToken);
-    }
-
-    async deletePost(post, authToken) {
-        let url = this.#api(this.#config.api.endpoints.entries.delete, { id: post.entryId, authToken });
-        return this.#cleanFetch(url);
     }
 }

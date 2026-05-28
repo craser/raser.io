@@ -58,3 +58,26 @@ test('Should cache next/prev relations when loading pages', async () => {
     });
     expect(mockDao.getNext).not.toHaveBeenCalled();
 })
+
+describe('CachingPostDao write methods are removed', () => {
+    const mockDao = {
+        getLatestPost: jest.fn(),
+        getPostById: jest.fn(),
+        getNextPost: jest.fn(),
+        getPrevPost: jest.fn(),
+        getEntries: jest.fn(),
+        getSearchStubs: jest.fn(),
+    };
+
+    test('createPost does not exist', () => {
+        expect(new CachingPostDao(mockDao).createPost).toBeUndefined();
+    });
+
+    test('publishPost does not exist', () => {
+        expect(new CachingPostDao(mockDao).publishPost).toBeUndefined();
+    });
+
+    test('updatePost does not exist', () => {
+        expect(new CachingPostDao(mockDao).updatePost).toBeUndefined();
+    });
+});
