@@ -1,5 +1,8 @@
-// Mock scrollIntoView - not implemented in jsdom
-Element.prototype.scrollIntoView = jest.fn();
+// Mock scrollIntoView - not implemented in jsdom. Absent entirely under the node
+// test environment, which the server-side data and route tests run in.
+if (typeof Element !== 'undefined') {
+    Element.prototype.scrollIntoView = jest.fn();
+}
 
 // mock out console so we're not spewing to test logs
 global.console = ((original) => ({
