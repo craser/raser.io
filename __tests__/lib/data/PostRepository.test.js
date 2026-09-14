@@ -23,19 +23,18 @@ import PostRepository from '@/lib/data/PostRepository';
 import Database from '@/lib/data/Database';
 
 /**
- * data/posts.json is the reference for the shape the API returns, but three fields in it
+ * data/posts.json is the reference for the shape the API returns, but two fields in it
  * disagree with the database. The repository reports what the database holds, so those
  * fields are reconciled to the stored values before they are used as expectations.
  *
  *  - entry 4 body: posts.json has a stray "asdf" typed into "little"; the database is correct.
- *  - entries 1234 and 2655 datePosted: posts.json carries deliberate date corrections that
- *    have not been applied to the database, which still holds the values from the dump.
+ *  - entry 2655 datePosted: posts.json corrects the year to 2012, but the database still
+ *    holds the 0012 from the dump.
  *
- * Applying the two date corrections to the database would let these entries be removed.
+ * Correcting entry 2655 in the database would let its entry be removed.
  */
 const STORED_VALUES = {
     4: { body: body => body.replace('littasdfle', 'little') },
-    1234: { datePosted: () => '2023-11-19 22:52:03.000000' },
     2655: { datePosted: () => '0012-04-25 08:16:43.000000' },
 };
 
