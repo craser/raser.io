@@ -2,6 +2,11 @@
   "images": {
     "postcard": "https://raserio.b-cdn.net/{imageFileName}"
   },
+  "maps": {
+    "googleApiKey": "{GOOGLE_API_KEY}",
+    "gpxSource": "https://raserio.b-cdn.net/{fileName}",
+    "maxPathPoints": 85
+  },
   "staticGeneration": {
     "prerender": {
       "posts": 30,
@@ -28,7 +33,7 @@
         "bulk": "/entries/search/{numEntries}"
       },
       "maps": {
-        "mapimageuri": "/attachments/maps/mapimageuri/{fileName}"
+        "mapimageuri": "/maps/mapimageuri/{fileName}"
       }
     }
   },

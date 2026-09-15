@@ -8,10 +8,15 @@ export function MapImage({ fileName, className, onError }) {
     useEffect(() => {
         const url = siteConfig.getEndpoint('maps.mapimageuri', { fileName });
         fetch(url)
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Map image URI request failed: ${response.status}`);
+                }
+                return response.text();
+            })
             .then(src => setImgSrc(src))
             .catch(error => console.error('Error fetching image source:', error));
     }, [fileName]);
 
-    return <img src={imgSrc} alt={`Map ${fileName}`} className={className} onError={onError} />;
+    return <img src={imgSrc} alt={`Map ${fileName}`} className={className} onError={onError} data-testid="map-image" />;
 }
