@@ -5,7 +5,14 @@
   "maps": {
     "googleApiKey": "{GOOGLE_API_KEY}",
     "gpxSource": "https://raserio.b-cdn.net/{fileName}",
-    "maxPathPoints": 85
+    "maxPathPoints": 85,
+    "imageStore": {
+      "host": "{BUNNY_STORAGE_HOST}",
+      "zone": "{BUNNY_STORAGE_ZONE}",
+      "accessKey": "{BUNNY_STORAGE_ACCESS_KEY}",
+      "path": "maps",
+      "publicUrl": "https://raserio.b-cdn.net/maps/{name}"
+    }
   },
   "staticGeneration": {
     "prerender": {
