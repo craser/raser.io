@@ -41,8 +41,8 @@ test('includes the api key', () => {
     expect(urlFor(TRACK)).toContain(`key=${API_KEY}`);
 });
 
-test('requests the image over https', () => {
-    expect(urlFor(TRACK).startsWith('https://maps.googleapis.com/maps/api/staticmap?')).toBe(true);
+test('leaves the protocol to the page showing the image', () => {
+    expect(urlFor(TRACK).startsWith('//maps.googleapis.com/maps/api/staticmap?')).toBe(true);
 });
 
 test('draws the track as a red path', () => {

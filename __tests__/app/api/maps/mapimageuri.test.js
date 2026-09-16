@@ -46,7 +46,7 @@ describe('a track that exists', () => {
         const url = await response.text();
 
         expect(response.status).toBe(200);
-        expect(url.startsWith('https://maps.googleapis.com/maps/api/staticmap?')).toBe(true);
+        expect(url.startsWith('//maps.googleapis.com/maps/api/staticmap?')).toBe(true);
     });
 
     test('sizes the image as a postcard and draws the track', async () => {
