@@ -4,7 +4,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import PostRepository from "@/lib/data/PostRepository";
 
-import { getPostLink } from "@/lib/util/Links";
+import SiteConfig from "@/lib/SiteConfig";
+import { getAbsoluteUrl, getPostLink } from "@/lib/util/Links";
 
 /**
  *
@@ -27,7 +28,7 @@ function generateRss() {
             <rss version="2.0">
               <channel>
                 <title>DeathB4Decaf</title>
-                <link>https://raser.io</link>
+                <link>${new SiteConfig().getValue('site.url')}</link>
                 <description>Chris Raser's Personal Blog</description>
                 <language>en-us</language>
                 ${postsXml}
@@ -39,7 +40,7 @@ function generateRss() {
 function renderPosts() {
     return PostRepository.getInstance().getEntries(0, 20)
         .then(posts => posts.map(post => {
-                const link = getPostLink(post);
+                const link = getAbsoluteUrl(getPostLink(post));
                 return (
                     `<item>
                   <title><![CDATA[${post.title}]]></title>

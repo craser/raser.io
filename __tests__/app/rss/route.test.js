@@ -18,7 +18,10 @@ jest.setTimeout(30000);
 
 import Database from '@/lib/data/Database';
 import PostRepository from '@/lib/data/PostRepository';
+import SiteConfig from '@/lib/SiteConfig';
 import { GET } from '@/app/rss/route';
+
+const SITE_URL = new SiteConfig().getValue('site.url');
 
 afterAll(async () => {
     await Database.getInstance().close();
@@ -41,7 +44,21 @@ describe('GET /rss', () => {
         const [newest] = await PostRepository.getInstance().getEntries(0, 1);
         const xml = await (await GET(new Request('http://localhost/rss'))).text();
         expect(xml).toContain(`<![CDATA[${newest.title}]]>`);
-        expect(xml).toContain(`<link>/archive/${newest.entryId}</link>`);
+        expect(xml).toContain(`<link>${SITE_URL}/archive/${newest.entryId}</link>`);
         expect(xml).toContain(`<pubDate>${new Date(newest.datePosted).toUTCString()}</pubDate>`);
+    });
+
+    it('gives every item an absolute link and guid, which feed readers require', async () => {
+        const xml = await (await GET(new Request('http://localhost/rss'))).text();
+        const links = [...xml.matchAll(/<link>([^<]*)<\/link>/g)].map(m => m[1]);
+        const guids = [...xml.matchAll(/<guid>([^<]*)<\/guid>/g)].map(m => m[1]);
+        expect(guids).toHaveLength(20);
+        expect(links.every(link => link.startsWith(`${SITE_URL}/`) || link === SITE_URL)).toBe(true);
+        expect(guids.every(guid => guid.startsWith(`${SITE_URL}/archive/`))).toBe(true);
+    });
+
+    it('points the channel link at the configured site URL', async () => {
+        const xml = await (await GET(new Request('http://localhost/rss'))).text();
+        expect(xml).toContain(`<link>${SITE_URL}</link>`);
     });
 });
