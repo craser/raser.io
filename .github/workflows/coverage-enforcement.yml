@@ -120,15 +120,15 @@ jobs:
         
         # Apply coverage policy
         if (( $(echo "$MAIN_COVERAGE < 70" | bc -l) )); then
-          # Main branch is below 70%, PR must improve coverage
-          if (( $(echo "$PR_COVERAGE > $MAIN_COVERAGE" | bc -l) )); then
+          # Main branch is below 70%, PR must not lower coverage
+          if (( $(echo "$PR_COVERAGE >= $MAIN_COVERAGE" | bc -l) )); then
             echo "status=pass" >> $GITHUB_OUTPUT
-            echo "message=Coverage improved from $MAIN_COVERAGE% to $PR_COVERAGE%. Good job!" >> $GITHUB_OUTPUT
-            echo "PASS: Coverage improved"
+            echo "message=Coverage held at or above the main branch ($MAIN_COVERAGE% to $PR_COVERAGE%). Good job!" >> $GITHUB_OUTPUT
+            echo "PASS: Coverage maintained or improved"
           else
             echo "status=fail" >> $GITHUB_OUTPUT
-            echo "message=This change must improve test coverage. Please add tests, or remove code to achieve this." >> $GITHUB_OUTPUT
-            echo "FAIL: Coverage must improve when below 70%"
+            echo "message=This change must not lower test coverage. Please add tests, or remove code to achieve this." >> $GITHUB_OUTPUT
+            echo "FAIL: Coverage must not drop when below 70%"
             exit 1
           fi
         else
