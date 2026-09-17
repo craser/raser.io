@@ -12,10 +12,9 @@
     @include backgroundCrossFade();
     /* background-color: var(--bg-dark); */
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.5vw;
     padding: var(--content-padding);
-    padding-left: calc(var(--title-padding) * 2 + var(--title-font-size));
     z-index: 1;
     min-height: calc(var(--title-width) + (var(--content-padding) * 2)); /* Base minimum height on title size */
     height: auto; /* Allow expansion with content */
@@ -31,24 +30,31 @@
 
 
 
-    .sectionTitle {
-        color: var(--text-color);
-        @include poptextSectionHeader;
+    .sectionTitleContainer {
+        width: 2.5em;
 
-        font-size: var(--title-font-size);
-        font-weight: 600;
-        height: 1.2em;
-        white-space: nowrap;
-        width: fit-content;
+        .sectionTitle {
+            color: var(--text-color);
+            @include poptextSectionHeader;
 
-        position: sticky;
-        top: calc(60px + 2vw);
-        text-transform: uppercase;
-        transform-origin: top left;
-        transform:
-                rotate(-90deg)
-                translate(-100%, -2em);
-        z-index: 2;
+            font-size: var(--title-font-size);
+            font-weight: 600;
+            white-space: nowrap;
+            width: fit-content;
+
+            position: sticky;
+            top: calc(60px + 2vw);
+            text-transform: uppercase;
+            transform-origin: top left;
+
+            display: block;
+            aspect-ratio: 1;
+
+            transform:
+                    rotate(-90deg)
+                    translate(-100%, 0);
+            z-index: 2;
+        }
     }
 
     .sectionBackground {
