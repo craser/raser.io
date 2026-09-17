@@ -1,5 +1,8 @@
+// ABOUTME: GET /rss - renders the twenty newest blog entries as an RSS 2.0 feed.
+// ABOUTME: Reads posts straight from the database so the feed never calls back into the site's own API.
+
 import { NextResponse, NextRequest } from "next/server";
-import PostDao from "@/model/PostDao";
+import PostRepository from "@/lib/data/PostRepository";
 
 import { getPostLink } from "@/lib/util/Links";
 
@@ -34,8 +37,7 @@ function generateRss() {
 }
 
 function renderPosts() {
-    const dao = PostDao.getPostDao();
-    return dao.getEntries(0, 20)
+    return PostRepository.getInstance().getEntries(0, 20)
         .then(posts => posts.map(post => {
                 const link = getPostLink(post);
                 return (
