@@ -1,4 +1,7 @@
 {
+  "site": {
+    "url": "https://raser.io"
+  },
   "images": {
     "postcard": "https://raserio.b-cdn.net/{imageFileName}"
   },

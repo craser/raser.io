@@ -1,7 +1,11 @@
-import { NextResponse, NextRequest } from "next/server";
-import PostDao from "@/model/PostDao";
+// ABOUTME: GET /rss - renders the twenty newest blog entries as an RSS 2.0 feed.
+// ABOUTME: Reads posts straight from the database so the feed never calls back into the site's own API.
 
-import { getPostLink } from "@/lib/util/Links";
+import { NextResponse, NextRequest } from "next/server";
+import PostRepository from "@/lib/data/PostRepository";
+
+import SiteConfig from "@/lib/SiteConfig";
+import { getAbsoluteUrl, getPostLink } from "@/lib/util/Links";
 
 /**
  *
@@ -24,7 +28,7 @@ function generateRss() {
             <rss version="2.0">
               <channel>
                 <title>DeathB4Decaf</title>
-                <link>https://raser.io</link>
+                <link>${new SiteConfig().getValue('site.url')}</link>
                 <description>Chris Raser's Personal Blog</description>
                 <language>en-us</language>
                 ${postsXml}
@@ -34,10 +38,9 @@ function generateRss() {
 }
 
 function renderPosts() {
-    const dao = PostDao.getPostDao();
-    return dao.getEntries(0, 20)
+    return PostRepository.getInstance().getEntries(0, 20)
         .then(posts => posts.map(post => {
-                const link = getPostLink(post);
+                const link = getAbsoluteUrl(getPostLink(post));
                 return (
                     `<item>
                   <title><![CDATA[${post.title}]]></title>
