@@ -15,7 +15,6 @@
     flex-direction: row;
     padding: 0;
     z-index: 1;
-    min-height: calc(var(--title-width) + (var(--content-padding) * 2)); /* Base minimum height on title size */
     height: auto; /* Allow expansion with content */
 
     &.hero {
@@ -24,7 +23,6 @@
             display: none;
         }
         padding-left: var(--content-padding);
-        min-height: auto; /* Reset min-height for hero sections */
     }
 
 
@@ -84,8 +82,18 @@
     }
 
     .contentWrapper {
+        /*
+         * The wrapper is sized by the space the title container leaves behind, never by its
+         * contents: a zero flex-basis keeps content out of the width calculation, min-width
+         * overrides the automatic minimum size that otherwise lets a wide child push a flex
+         * item past its container, and border-box keeps the padding inside that width.
+         */
         flex-grow: 1;
         flex-shrink: 1;
+        flex-basis: 0;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
         height: 100%;
         padding: var(--content-padding);
     }

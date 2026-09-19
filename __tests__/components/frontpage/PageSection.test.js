@@ -1,41 +1,15 @@
 // ABOUTME: Unit tests for the PageSection component covering the sticky title
-// ABOUTME: container layout, the measured --title-width variable, and hero mode.
+// ABOUTME: container layout, content wrapper, background icon, and hero mode.
 
 import PageSection from '@/components/frontpage/PageSection';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-
-const MEASURED_TITLE_WIDTH = 137;
-
-function mockTitleWidth(width) {
-    const descriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetWidth');
-    Object.defineProperty(HTMLHeadingElement.prototype, 'offsetWidth', {
-        configurable: true,
-        get: () => width
-    });
-    return () => {
-        delete HTMLHeadingElement.prototype.offsetWidth;
-        if (descriptor) {
-            Object.defineProperty(HTMLElement.prototype, 'offsetWidth', descriptor);
-        }
-    };
-}
 
 function renderScaffold(props = {}) {
     return render(<PageSection title="Previously" {...props} />);
 }
 
 describe('PageSection', () => {
-
-    let restoreTitleWidth;
-
-    beforeEach(() => {
-        restoreTitleWidth = mockTitleWidth(MEASURED_TITLE_WIDTH);
-    });
-
-    afterEach(() => {
-        restoreTitleWidth();
-    });
 
     it('should render the title inside the sticky title container', () => {
         const result = renderScaffold({ title: 'Previously' });
@@ -48,18 +22,18 @@ describe('PageSection', () => {
         expect(title.textContent).toBe('Previously');
     });
 
-    it('should publish the measured title width to the section as --title-width', () => {
+    it('should leave section sizing to the stylesheet rather than inline styles', () => {
         const result = renderScaffold();
 
         const section = result.getByTestId('page-section');
-        expect(section.style.getPropertyValue('--title-width')).toBe(`${MEASURED_TITLE_WIDTH}px`);
+        expect(section.getAttribute('style')).toBeNull();
     });
 
-    it('should not publish --title-width for hero sections, which have no visible title', () => {
+    it('should leave hero section sizing to the stylesheet rather than inline styles', () => {
         const result = renderScaffold({ hero: true });
 
         const section = result.getByTestId('page-section');
-        expect(section.style.getPropertyValue('--title-width')).toBe('');
+        expect(section.getAttribute('style')).toBeNull();
         expect(section).toHaveClass('hero');
     });
 
