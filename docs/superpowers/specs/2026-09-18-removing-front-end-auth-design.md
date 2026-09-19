@@ -25,7 +25,7 @@ different things:
 |---|---|
 | `AuthLoggedIn` | Remove the element **and its children**. Authenticated-only UI. |
 | `AuthRecognized` | Remove the element **and its children**. Returning-visitor-only UI. |
-| `AuthGuest` | Remove the element, **keep its children**. Guest UI always showed for everyone. |
+| `AuthGuest` | Remove the element, **keep its children**. Guest UI always showed for everyone. In practice this preserves nothing: `AuthGuest`'s only use is inside `SecurePage`, wrapping `LoginModal`, and both are deleted. |
 
 `SecurePage` is removed outright; it exists only to gate a page behind login.
 
