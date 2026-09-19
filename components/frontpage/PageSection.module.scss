@@ -13,10 +13,8 @@
     /* background-color: var(--bg-dark); */
     display: flex;
     flex-direction: row;
-    gap: 0.5vw;
-    padding: var(--content-padding);
+    padding: 0;
     z-index: 1;
-    min-height: calc(var(--title-width) + (var(--content-padding) * 2)); /* Base minimum height on title size */
     height: auto; /* Allow expansion with content */
 
     &.hero {
@@ -25,21 +23,24 @@
             display: none;
         }
         padding-left: var(--content-padding);
-        min-height: auto; /* Reset min-height for hero sections */
     }
 
 
 
     .sectionTitleContainer {
-        width: 2.5em;
+        flex-grow: 0;
+        flex-shrink: 0;
+        width: calc(1em + var(--content-padding));
+        padding: var(--content-padding);
+        padding-right: 0;
+        font-size: var(--title-font-size);
+        line-height: var(--title-font-size);
+
+        font-weight: 600;
+        white-space: nowrap;
 
         .sectionTitle {
             color: var(--text-color);
-            @include poptextSectionHeader;
-
-            font-size: var(--title-font-size);
-            font-weight: 600;
-            white-space: nowrap;
             width: fit-content;
 
             position: sticky;
@@ -49,6 +50,8 @@
 
             display: block;
             aspect-ratio: 1;
+
+            @include poptextSectionHeader;
 
             transform:
                     rotate(-90deg)
@@ -79,8 +82,19 @@
     }
 
     .contentWrapper {
-        width: 100%;
+        /*
+         * The wrapper is sized by the space the title container leaves behind, never by its
+         * contents: a zero flex-basis keeps content out of the width calculation, min-width
+         * overrides the automatic minimum size that otherwise lets a wide child push a flex
+         * item past its container, and border-box keeps the padding inside that width.
+         */
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 0;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
         height: 100%;
-        padding: 0;
+        padding: var(--content-padding);
     }
 }
