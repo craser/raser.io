@@ -88,7 +88,7 @@ So Tasks 1 and 2 assert on **child count of a container that survives**, after g
 - Consumes: nothing from earlier tasks.
 - Produces: `PostMetaInfo` renders a single container `<div data-testid="post-meta-info">` whose only element child is `<div data-testid="post-meta-info-details">`. After this task `PostMetaInfo` imports neither `PostViewContext` nor anything under `components/auth/`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `__tests__/components/PostMetaInfo.test.js`:
 
@@ -142,13 +142,13 @@ describe('PostMetaInfo', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `npm test -- PostMetaInfo`
 
 Expected: the first test FAILS (`post-meta-info-details` testid does not exist yet). The second test FAILS with `expect(received).toBe(expected) // Expected: 1, Received: 2` — the second child is the `AuthLoggedIn` row holding the edit and delete links. Both failures are required. If the second test passes at this step, the auth mock is not taking effect: stop and fix the mock before continuing.
 
-- [ ] **Step 3: Remove the authenticated row and add the testids**
+- [x] **Step 3: Remove the authenticated row and add the testids**
 
 Replace the whole of `components/PostMetaInfo.jsx` with:
 
@@ -175,7 +175,7 @@ export default function PostMetaInfo(props) {
 
 Note what went: the `AuthLoggedIn` element **and its children** (per the spec's rule for `AuthLoggedIn`), plus the now-unused `AuthLoggedIn`, `EditLink`, `DeleteLink`, and `usePostViewContext` imports and the `toEditView` destructuring.
 
-- [ ] **Step 4: Remove the two now-pointless mocks from the test**
+- [x] **Step 4: Remove the two now-pointless mocks from the test**
 
 In `__tests__/components/PostMetaInfo.test.js`, delete both the `@/components/auth/AuthenticationContext` mock block (including its two explanatory comment lines) and the `@/components/PostViewContext` mock block. `PostMetaInfo` no longer imports either module.
 
@@ -185,17 +185,17 @@ Then change the second test's name, since "even for an authenticated user" no lo
     it('renders no post-mutating controls', () => {
 ```
 
-- [ ] **Step 5: Run the tests to verify they pass**
+- [x] **Step 5: Run the tests to verify they pass**
 
 Run: `npm test -- PostMetaInfo`
 Expected: PASS, 2 tests.
 
-- [ ] **Step 6: Run the full suite**
+- [x] **Step 6: Run the full suite**
 
 Run: `npm test`
 Expected: all suites pass. Test count rises from 303 to 305.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add components/PostMetaInfo.jsx __tests__/components/PostMetaInfo.test.js
@@ -225,7 +225,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Consumes: nothing from Task 1.
 - Produces: `SiteNavigationHeader` renders `<div data-testid="site-nav">` containing only the search nav item. No `userLogin` flag check remains anywhere in the component.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `__tests__/components/templates/SiteNavigationHeader.test.js`:
 
@@ -274,13 +274,13 @@ describe('SiteNavigationHeader', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `npm test -- SiteNavigationHeader`
 
 Expected: the first test **passes** — `navSearch` is mocked on, so `mock-search-button` already renders. The second test **FAILS** with `expect(received).toBe(expected) // Expected: 1, Received: 2`; the extra child is the `AuthRecognized` nav item holding `LoginButton`. That single failure is the point of this step. If it passes here, the auth or flag mock is not taking effect — stop and fix the mock before touching the component.
 
-- [ ] **Step 3: Remove the authentication blocks**
+- [x] **Step 3: Remove the authentication blocks**
 
 Replace the whole of `components/templates/SiteNavigationHeader.jsx` with:
 
@@ -305,23 +305,23 @@ export default function SiteNavigationHeader({ styles = standardStyles }) {
 
 Three things went: the `AuthRecognized` block with its `LoginButton` child, the `AuthLoggedIn` block with its new-entry `Link` and `LogoutButton` children, and the `<FeatureEnabled feature="userLogin">` wrapper that contained both and is now empty. The `next/link` import goes with the new-entry link. The `navSearch` block and its existing comment are untouched.
 
-- [ ] **Step 4: Remove the now-pointless auth mock from the test**
+- [x] **Step 4: Remove the now-pointless auth mock from the test**
 
 In `__tests__/components/templates/SiteNavigationHeader.test.js`, delete the `@/components/auth/AuthenticationContext` mock block and its two explanatory comment lines. `SiteNavigationHeader` no longer imports that module.
 
 Keep everything else, including the `useFlags` mock with `userLogin: true` and the comment above it. Both test names stay as written: "even with the userLogin flag on" is still exactly what the second test proves, since that flag may well still be live in LaunchDarkly.
 
-- [ ] **Step 5: Run the tests to verify they pass**
+- [x] **Step 5: Run the tests to verify they pass**
 
 Run: `npm test -- SiteNavigationHeader`
 Expected: PASS, 2 tests.
 
-- [ ] **Step 6: Run the full suite**
+- [x] **Step 6: Run the full suite**
 
 Run: `npm test`
 Expected: all suites pass. Test count 307.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add components/templates/SiteNavigationHeader.jsx __tests__/components/templates/SiteNavigationHeader.test.js
@@ -354,7 +354,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 
 **Why:** with the `EDIT` view gone, nothing calls `toEditView` or `toReaderView`, so the view state can never transition. The component reduces to a wrapper that always renders `ReadPostView`, and the only difference between its two reachable views is the `showNextPrev` flag.
 
-- [ ] **Step 1: Confirm nothing else consumes the context**
+- [x] **Step 1: Confirm nothing else consumes the context**
 
 Run:
 ```bash
@@ -362,7 +362,7 @@ grep -rn "PostViewContext\|usePostViewContext" --include="*.js" --include="*.jsx
 ```
 Expected: hits only in `components/PostViewContext.jsx` itself, `components/LogEntries.jsx`, and `components/pages/SinglePostPage.jsx`. If `PostMetaInfo.jsx` still appears, Task 1 is incomplete — go back.
 
-- [ ] **Step 2: Point LogEntries at ReadPostView**
+- [x] **Step 2: Point LogEntries at ReadPostView**
 
 In `components/LogEntries.jsx`, replace the import on line 4:
 
@@ -378,7 +378,7 @@ and the map on line 65:
 
 The `View.ENTRY_LIST` case passed `showNextPrev={false}` and left `showBody` undefined, so both are preserved: `showBody` stays absent.
 
-- [ ] **Step 3: Point SinglePostPage at ReadPostView**
+- [x] **Step 3: Point SinglePostPage at ReadPostView**
 
 In `components/pages/SinglePostPage.jsx`, replace the import on line 7:
 
@@ -396,13 +396,13 @@ The default `View.SINGLE_ENTRY` case passed `showNextPrev={true}`, so that is no
 
 Leave the file's pre-existing unused `Fragment`, `PostDao`, `Post`, and `NextPrevPostLinks` imports alone. They were dead before this change and tidying them is unrelated work.
 
-- [ ] **Step 4: Delete the context**
+- [x] **Step 4: Delete the context**
 
 ```bash
 git rm components/PostViewContext.jsx
 ```
 
-- [ ] **Step 5: Add prop-contract tests for both call sites**
+- [x] **Step 5: Add prop-contract tests for both call sites**
 
 **Why this step exists.** The obvious safety net is not there. `__tests__/pages/index.test.js:35`
 mocks `@/components/LogEntries` wholesale and `__tests__/pages/archive/postId.test.js:14` mocks
@@ -531,7 +531,7 @@ describe('SinglePostPage', () => {
 Note the `mock` prefix on `mockReadPostViewProps`: Jest forbids a `jest.mock` factory from closing
 over an out-of-scope variable unless its name begins with `mock`.
 
-- [ ] **Step 6: Verify the suite and the build**
+- [x] **Step 6: Verify the suite and the build**
 
 Run: `npm test`
 Expected: all suites pass. The four new tests bring the count to **311 tests across 42 suites** (303 baseline + 2 from Task 1 + 2 from Task 2 + 4 here).
@@ -539,7 +539,7 @@ Expected: all suites pass. The four new tests bring the count to **311 tests acr
 Run: `npm run build`
 Expected: compiles with no module-resolution errors.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add components/LogEntries.jsx components/pages/SinglePostPage.jsx \
@@ -575,7 +575,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 
 Two of these were already broken before this work and are being deleted, not fixed: `components/pages/EditPostPage.jsx` calls `useDataContext()` without importing it and declares `apostDao` while referencing `postDao`, so `/edit/[postId]` cannot render today; and `pages/create/index.jsx` imports `SecurePage` without using it, so `/create` is currently ungated.
 
-- [ ] **Step 1: Confirm each file is unreferenced outside the set being deleted**
+- [x] **Step 1: Confirm each file is unreferenced outside the set being deleted**
 
 ```bash
 grep -rn "EditPost\|EditLink\|DeleteLink\|EditableField\|EditTitleImage\|CreatePostPage\|EditPostPage" \
@@ -583,7 +583,7 @@ grep -rn "EditPost\|EditLink\|DeleteLink\|EditableField\|EditTitleImage\|CreateP
 ```
 Expected: every hit is inside one of the files listed above. Any hit elsewhere means an earlier task was incomplete — stop and resolve it before deleting.
 
-- [ ] **Step 2: Delete the files**
+- [x] **Step 2: Delete the files**
 
 ```bash
 git rm components/EditPost.jsx \
@@ -598,7 +598,7 @@ git rm components/EditPost.jsx \
 git rm -r pages/create pages/edit
 ```
 
-- [ ] **Step 3: Verify the suite, lint, and build**
+- [x] **Step 3: Verify the suite, lint, and build**
 
 Run: `npm test`
 Expected: all suites pass, 307 tests.
@@ -609,7 +609,7 @@ Expected: warnings only, zero errors. The warning previously reported for `EditP
 Run: `npm run build`
 Expected: compiles. The route list no longer contains `/create` or `/edit/[postId]`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git commit -m "REMOVING-AUTH: delete the post create and edit machinery
@@ -641,14 +641,14 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Consumes: no importers of `components/auth/*` outside that directory and `pages/login/`.
 - Produces: `App` renders `FeatureFlagProvider > AnalyticsProvider > ModalProvider > DataProvider > SearchProvider`. `lib/api/AuthenticationManager` has no importer, which Task 6 relies on.
 
-- [ ] **Step 1: Confirm nothing outside the deletion set imports auth**
+- [x] **Step 1: Confirm nothing outside the deletion set imports auth**
 
 ```bash
 grep -rn "components/auth" --include="*.js" --include="*.jsx" . | grep -v node_modules
 ```
 Expected: hits only inside `components/auth/`, `pages/login/index.jsx`, `pages/_app.js`, `__tests__/_app.test.js`, and the two auth test files. Anything else means an earlier task is incomplete.
 
-- [ ] **Step 2: Update the _app test first**
+- [x] **Step 2: Update the _app test first**
 
 In `__tests__/_app.test.js`, delete the mock block at lines 28-32:
 
@@ -668,12 +668,12 @@ and the assertion at line 81:
 
 The other five provider mocks and assertions stay exactly as they are.
 
-- [ ] **Step 3: Run the test to verify it fails**
+- [x] **Step 3: Run the test to verify it fails**
 
 Run: `npm test -- _app`
 Expected: FAIL. `pages/_app.js` still imports `@/components/auth/AuthenticationContext`, and with the mock gone the real module loads and drags in `AuthenticationManager`, `LoginModal`, and the analytics context. The failure confirms the provider is genuinely still wired in.
 
-- [ ] **Step 4: Remove the provider from _app**
+- [x] **Step 4: Remove the provider from _app**
 
 Replace the whole of `pages/_app.js` with:
 
@@ -708,12 +708,12 @@ export default function App({ Component, pageProps }) {
 
 The surviving providers keep their relative order. Indentation of the inner block is normalised to 4 spaces per level, which the original had drifted from.
 
-- [ ] **Step 5: Run the test to verify it passes**
+- [x] **Step 5: Run the test to verify it passes**
 
 Run: `npm test -- _app`
 Expected: PASS, 4 tests.
 
-- [ ] **Step 6: Delete the auth directory, the login page, and the auth tests**
+- [x] **Step 6: Delete the auth directory, the login page, and the auth tests**
 
 ```bash
 git rm -r components/auth pages/login __tests__/components/auth
@@ -721,7 +721,7 @@ git rm -r components/auth pages/login __tests__/components/auth
 
 That takes `AuthenticationContext.jsx`, `AuthGuest.jsx`, `AuthLoggedIn.jsx`, `AuthRecognized.jsx`, `CheckAuthButton.jsx`, `LoginButton.jsx`, `LogoutButton.jsx`, `LoginModal.jsx`, `LoginModal.module.scss`, and `SecurePage.jsx`.
 
-- [ ] **Step 7: Verify the suite, lint, and build**
+- [x] **Step 7: Verify the suite, lint, and build**
 
 Run: `npm test`
 Expected: all suites pass. The two auth suites go, taking **24 tests** with them (21 in `AuthenticationContext.test.js`, 3 in `LoginModal.test.js`). Count settles at **287 tests across 40 suites** — 303 baseline, plus the 8 added across Tasks 1, 2, and 3, minus those 24. A large drop in test count is the expected shape of this task: those 24 tests exercised behaviour that no longer exists.
@@ -732,7 +732,7 @@ Expected: warnings only, zero errors.
 Run: `npm run build`
 Expected: compiles, and the route list no longer contains `/login`.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add pages/_app.js __tests__/_app.test.js
@@ -765,7 +765,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Consumes: no importer of `AuthenticationManager`; no caller of any DAO write method.
 - Produces: `PostDao` and `CachingPostDao` expose read methods only — `getLatestPost`, `getPostById`, `getNextPost`, `getPrevPost`, `getEntries`, `getSearchStubs`.
 
-- [ ] **Step 1: Confirm every caller is gone**
+- [x] **Step 1: Confirm every caller is gone**
 
 ```bash
 grep -rn "AuthenticationManager\|createPost\|publishPost\|updatePost\|deletePost" \
@@ -773,7 +773,7 @@ grep -rn "AuthenticationManager\|createPost\|publishPost\|updatePost\|deletePost
 ```
 Expected: hits only inside `lib/api/AuthenticationManager.js`, `model/PostDao.js`, and `model/CachingPostDao.js`. Nothing under `app/`, `pages/`, `components/`, or `__tests__/`.
 
-- [ ] **Step 2: Delete the authentication shim**
+- [x] **Step 2: Delete the authentication shim**
 
 ```bash
 git rm lib/api/AuthenticationManager.js
@@ -781,23 +781,23 @@ git rm lib/api/AuthenticationManager.js
 
 `lib/api/` holds nothing else, so git drops the directory.
 
-- [ ] **Step 3: Strip the writes from PostDao**
+- [x] **Step 3: Strip the writes from PostDao**
 
 In `model/PostDao.js`, delete the four write methods at lines 116-133 (`createPost`, `publishPost`, `updatePost`, `deletePost`) and the three private helpers `#api` (lines 26-30), `#auth` (lines 32-39), and `#sendPost` (lines 55-66). All three helpers are reachable only from those four methods.
 
 Keep `#cleanFetch` and every `get*` method untouched. After the edit the class body runs: `#config`, the three static factories with their existing `TODO` comment, the constructor, `#cleanFetch`, then the six read methods with their existing comments intact.
 
-- [ ] **Step 4: Strip the passthroughs from CachingPostDao**
+- [x] **Step 4: Strip the passthroughs from CachingPostDao**
 
 In `model/CachingPostDao.js`, delete lines 89-99 — the `createPost`, `publishPost`, and `updatePost` passthroughs. There is no `deletePost` passthrough. `getSearchStubs` becomes the last method in the class.
 
-- [ ] **Step 5: Remove the dead endpoints from siteconfig.json**
+- [x] **Step 5: Remove the dead endpoints from siteconfig.json**
 
 In `siteconfig.json`, delete the whole `api.endpoints.auth` object (both `login` and `check`) and these four keys from `api.endpoints.entries`: `create`, `delete`, `publish`, `update`.
 
 `api.endpoints.entries` keeps `entry`, `latest`, `next`, `previous`, and `bulk`. `api.root` and `api.endpoints.maps` are untouched. Keep 4-space indentation and valid JSON — no trailing comma where `bulk` now ends the object.
 
-- [ ] **Step 6: Remove the orphaned dependency**
+- [x] **Step 6: Remove the orphaned dependency**
 
 `react-dropzone` was imported only by the deleted `EditTitleImage.jsx`. Remove its line from `dependencies` in `package.json`, then:
 
@@ -809,7 +809,7 @@ This rewrites `package-lock.json`. Commit both.
 
 Leave `js-cookie`, `react-query`, and `react-router-dom` in place — already unreferenced before this work, out of scope.
 
-- [ ] **Step 7: Verify everything**
+- [x] **Step 7: Verify everything**
 
 ```bash
 npm test
@@ -821,7 +821,7 @@ Expected: 40 suites and 287 tests pass; lint reports warnings only; the build co
 
 Coverage should rise rather than fall: `PostDao.js` sat at 0%, and `pages/create`, `pages/edit`, and `pages/login` were all at 0% too, so the `coverage-enforcement.yml` gate has more headroom than before, not less.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add model/PostDao.js model/CachingPostDao.js siteconfig.json package.json package-lock.json
@@ -844,11 +844,11 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 
 ## Final Verification
 
-- [ ] `npm test` — 40 suites, 287 tests, output clean of stray console noise
-- [ ] `npm run lint` — zero errors
-- [ ] `npm run build` — compiles; route list has no `/create`, `/edit/[postId]`, or `/login`
-- [ ] `grep -rn "components/auth\|AuthenticationManager\|SecurePage" --include="*.js" --include="*.jsx" . | grep -v node_modules` returns nothing
-- [ ] `git log --oneline main..HEAD` shows the design-doc commit plus six task commits
+- [x] `npm test` — 40 suites, 287 tests, output clean of stray console noise
+- [x] `npm run lint` — zero errors
+- [x] `npm run build` — compiles; route list has no `/create`, `/edit/[postId]`, or `/login`
+- [x] `grep -rn "components/auth\|AuthenticationManager\|SecurePage" --include="*.js" --include="*.jsx" . | grep -v node_modules` returns nothing
+- [x] `git log --oneline main..HEAD` shows the design-doc commit plus six task commits
 
 ## Handoff Notes For Chris
 

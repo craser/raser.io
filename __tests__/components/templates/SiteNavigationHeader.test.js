@@ -1,5 +1,5 @@
 // ABOUTME: Verifies SiteNavigationHeader renders only the search control.
-// ABOUTME: Both the userLogin flag and auth status are mocked ON so a surviving login control would be caught.
+// ABOUTME: The userLogin flag is mocked ON so the nav is held to staying clean even if the flag is still live.
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import { useFlags } from 'launchdarkly-react-client-sdk';

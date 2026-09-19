@@ -1,5 +1,5 @@
 // ABOUTME: Verifies PostMetaInfo renders post details and no post-mutating controls.
-// ABOUTME: PostMetaInfo depends on neither auth nor PostViewContext, so nothing else is mocked.
+// ABOUTME: PostMetaInfo depends on neither auth nor PostViewContext, so no auth or view-context mocks are needed.
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useFlags } from 'launchdarkly-react-client-sdk';
