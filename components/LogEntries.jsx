@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './LogEntries.module.scss';
 import LoadingSpinner from "@/components/LoadingSpinner";
-import PostViewContext, { View } from "@/components/PostViewContext";
+import ReadPostView from "@/components/ReadPostView";
 import { useDataContext } from "@/components/api/DataProvider";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 
@@ -62,7 +62,7 @@ export default function LogEntries({ initialPage = 0, pageSize, initialEntries }
 
     return (
         <Fragment>
-            {entries.map(e => <PostViewContext key={e.entryId} post={e} initialView={View.ENTRY_LIST}/>)}
+            {entries.map(e => <ReadPostView key={e.entryId} post={e} showNextPrev={false}/>)}
             <div ref={pageBottomRef} className={styles.listingBottom}>{isLoading ? <LoadingSpinner/> : '• • •'}</div>
         </Fragment>
     );

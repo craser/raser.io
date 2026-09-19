@@ -25,12 +25,6 @@ jest.mock('@/components/analytics/AnalyticsProvider', () => {
     };
 });
 
-jest.mock('@/components/auth/AuthenticationContext', () => {
-    return function MockAuthenticationContext({ children }) {
-        return (<div data-testid="mock-AuthenticationContext">{children}</div>);
-    };
-});
-
 jest.mock('@/components/api/DataProvider', () => {
     return function MockDataProvider({ children }) {
         return (<div data-testid="mock-DataProvider">{children}</div>);
@@ -78,7 +72,6 @@ describe('App Component', () => {
         const { getByTestId } = renderScaffold();
         expect(getByTestId('mock-FeatureFlagProvider')).toBeInTheDocument();
         expect(getByTestId('mock-AnalyticsProvider')).toBeInTheDocument();
-        expect(getByTestId('mock-AuthenticationContext')).toBeInTheDocument();
         expect(getByTestId('mock-DataProvider')).toBeInTheDocument();
         expect(getByTestId('mock-SearchProvider')).toBeInTheDocument();
         expect(getByTestId('mock-ModalProvider')).toBeInTheDocument();

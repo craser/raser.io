@@ -4,7 +4,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { Post } from "@/components/Post";
 import NextPrevPostLinks from "@/components/NextPrevPostLinks";
 import StandardLayout from "@/components/templates/StandardLayout";
-import PostViewContext from "@/components/PostViewContext";
+import ReadPostView from "@/components/ReadPostView";
 import { useDataContext } from "@/components/api/DataProvider";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 import SingleSectionContent from '@/components/templates/SingleSectionContent';
@@ -50,7 +50,7 @@ export default function SinglePostPage({ postId }) {
         return (
             <StandardLayout content={
                 <SingleSectionContent content={
-                    <PostViewContext post={post} showBody={true} next={next} prev={prev}/>
+                    <ReadPostView post={post} showBody={true} next={next} prev={prev} showNextPrev={true}/>
                 }/>
             }/>
         );
