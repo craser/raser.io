@@ -402,24 +402,158 @@ Leave the file's pre-existing unused `Fragment`, `PostDao`, `Post`, and `NextPre
 git rm components/PostViewContext.jsx
 ```
 
-- [ ] **Step 5: Verify the suite and the build**
+- [ ] **Step 5: Add prop-contract tests for both call sites**
+
+**Why this step exists.** The obvious safety net is not there. `__tests__/pages/index.test.js:35`
+mocks `@/components/LogEntries` wholesale and `__tests__/pages/archive/postId.test.js:14` mocks
+`@/components/pages/SinglePostPage` wholesale, so neither test renders the code this task edits.
+Without the tests below, a wrong prop — list entries growing next/prev navigation, or post pages
+losing it — ships silently past a green suite, a clean lint, and a successful build. The entire
+content of this refactor is preserving two prop differences, so those two props are what to test.
+
+Neither component needs a stylesheet mock: `LogEntries` imports its SCSS relatively, which
+resolves to `identity-obj-proxy`, and `SinglePostPage` imports none.
+
+Create `__tests__/components/LogEntries.test.js`:
+
+```jsx
+// ABOUTME: Guards the props LogEntries hands to ReadPostView for each list entry.
+// ABOUTME: List entries must render without next/prev navigation.
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import LogEntries from '@/components/LogEntries';
+
+const mockReadPostViewProps = [];
+
+jest.mock('@/components/ReadPostView', () => {
+    return function MockReadPostView(props) {
+        mockReadPostViewProps.push(props);
+        return <div data-testid={`mock-read-post-view-${props.post.entryId}`}/>;
+    };
+});
+
+jest.mock('@/components/analytics/AnalyticsProvider', () => ({
+    useAnalytics: () => ({ firePageView: jest.fn(), fireReferrer: jest.fn() })
+}));
+
+jest.mock('@/components/api/DataProvider', () => ({
+    useDataContext: () => ({
+        getPostDao: () => ({ getEntries: jest.fn().mockResolvedValue([]) })
+    })
+}));
+
+const mockEntries = [{ entryId: 'DUMMY_ENTRY_ID', title: 'DUMMY_TITLE' }];
+
+describe('LogEntries', () => {
+    beforeEach(() => {
+        mockReadPostViewProps.length = 0;
+        global.IntersectionObserver = class {
+            observe() {}
+            disconnect() {}
+        };
+    });
+
+    it('renders a ReadPostView for each entry', () => {
+        const { getByTestId } = render(<LogEntries initialEntries={mockEntries} pageSize={10}/>);
+        expect(getByTestId('mock-read-post-view-DUMMY_ENTRY_ID')).toBeInTheDocument();
+    });
+
+    it('renders list entries without next/prev navigation', () => {
+        render(<LogEntries initialEntries={mockEntries} pageSize={10}/>);
+        expect(mockReadPostViewProps[0].showNextPrev).toBe(false);
+    });
+});
+```
+
+Create `__tests__/components/pages/SinglePostPage.test.js`:
+
+```jsx
+// ABOUTME: Guards the props SinglePostPage hands to ReadPostView for a single post.
+// ABOUTME: A single post must render its full body with next/prev navigation.
+import { render, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import SinglePostPage from '@/components/pages/SinglePostPage';
+
+const mockReadPostViewProps = [];
+
+jest.mock('@/components/ReadPostView', () => {
+    return function MockReadPostView(props) {
+        mockReadPostViewProps.push(props);
+        return <div data-testid="mock-read-post-view"/>;
+    };
+});
+
+jest.mock('@/components/templates/StandardLayout', () => {
+    return function MockStandardLayout({ content }) {
+        return <div data-testid="mock-standard-layout">{content}</div>;
+    };
+});
+
+jest.mock('@/components/templates/SingleSectionContent', () => {
+    return function MockSingleSectionContent({ content }) {
+        return <div data-testid="mock-single-section-content">{content}</div>;
+    };
+});
+
+jest.mock('@/components/analytics/AnalyticsProvider', () => ({
+    useAnalytics: () => ({ firePageView: jest.fn(), fireReferrer: jest.fn() })
+}));
+
+jest.mock('@/components/api/DataProvider', () => ({
+    useDataContext: () => ({
+        getPostDao: () => ({
+            getPostById: jest.fn().mockResolvedValue({ entryId: 'DUMMY_ENTRY_ID', title: 'DUMMY_TITLE' }),
+            getNextPost: jest.fn().mockResolvedValue(null),
+            getPrevPost: jest.fn().mockResolvedValue(null)
+        })
+    })
+}));
+
+describe('SinglePostPage', () => {
+    beforeEach(() => {
+        mockReadPostViewProps.length = 0;
+    });
+
+    it('renders the post once it loads', async () => {
+        const { getByTestId } = render(<SinglePostPage postId="DUMMY_ENTRY_ID"/>);
+        await waitFor(() => expect(getByTestId('mock-read-post-view')).toBeInTheDocument());
+    });
+
+    it('renders the full body with next/prev navigation', async () => {
+        const { getByTestId } = render(<SinglePostPage postId="DUMMY_ENTRY_ID"/>);
+        await waitFor(() => expect(getByTestId('mock-read-post-view')).toBeInTheDocument());
+        expect(mockReadPostViewProps[0].showBody).toBe(true);
+        expect(mockReadPostViewProps[0].showNextPrev).toBe(true);
+    });
+});
+```
+
+Note the `mock` prefix on `mockReadPostViewProps`: Jest forbids a `jest.mock` factory from closing
+over an out-of-scope variable unless its name begins with `mock`.
+
+- [ ] **Step 6: Verify the suite and the build**
 
 Run: `npm test`
-Expected: all suites pass, 307 tests. `__tests__/pages/index.test.js` and `__tests__/pages/archive/postId.test.js` exercise these two render paths, so a mistake here shows up as a real failure rather than silence.
+Expected: all suites pass. The four new tests bring the count to **311 tests across 42 suites** (303 baseline + 2 from Task 1 + 2 from Task 2 + 4 here).
 
 Run: `npm run build`
 Expected: compiles with no module-resolution errors.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add components/LogEntries.jsx components/pages/SinglePostPage.jsx
+git add components/LogEntries.jsx components/pages/SinglePostPage.jsx \
+        __tests__/components/LogEntries.test.js __tests__/components/pages/SinglePostPage.test.js
 git commit -m "REMOVING-AUTH: collapse PostViewContext into direct ReadPostView use
 
 Without the EDIT view nothing calls toEditView or toReaderView, so the view
 state could never change and the provider always resolved to ReadPostView. The
 only difference between the two reachable views was the showNextPrev flag, now
 passed explicitly at both call sites.
+
+Adds a prop-contract test per call site. Neither path had coverage: the
+page-level tests mock LogEntries and SinglePostPage wholesale, so a wrong
+showNextPrev would have shipped past a green suite and a clean build.
 
 Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ```
@@ -590,7 +724,7 @@ That takes `AuthenticationContext.jsx`, `AuthGuest.jsx`, `AuthLoggedIn.jsx`, `Au
 - [ ] **Step 7: Verify the suite, lint, and build**
 
 Run: `npm test`
-Expected: all suites pass. The two auth suites go, taking **24 tests** with them (21 in `AuthenticationContext.test.js`, 3 in `LoginModal.test.js`). Count settles at **283 tests across 38 suites** — 303 baseline, plus the 4 added in Tasks 1 and 2, minus those 24. A large drop in test count is the expected shape of this task: those 24 tests exercised behaviour that no longer exists.
+Expected: all suites pass. The two auth suites go, taking **24 tests** with them (21 in `AuthenticationContext.test.js`, 3 in `LoginModal.test.js`). Count settles at **287 tests across 40 suites** — 303 baseline, plus the 8 added across Tasks 1, 2, and 3, minus those 24. A large drop in test count is the expected shape of this task: those 24 tests exercised behaviour that no longer exists.
 
 Run: `npm run lint`
 Expected: warnings only, zero errors.
@@ -649,7 +783,7 @@ git rm lib/api/AuthenticationManager.js
 
 - [ ] **Step 3: Strip the writes from PostDao**
 
-In `model/PostDao.js`, delete the four write methods at lines 116-133 (`createPost`, `publishPost`, `updatePost`, `deletePost`) and the two private helpers `#auth` (lines 32-39) and `#sendPost` (lines 55-66) and `#api` (lines 26-30). All three helpers are reachable only from those four methods.
+In `model/PostDao.js`, delete the four write methods at lines 116-133 (`createPost`, `publishPost`, `updatePost`, `deletePost`) and the three private helpers `#api` (lines 26-30), `#auth` (lines 32-39), and `#sendPost` (lines 55-66). All three helpers are reachable only from those four methods.
 
 Keep `#cleanFetch` and every `get*` method untouched. After the edit the class body runs: `#config`, the three static factories with their existing `TODO` comment, the constructor, `#cleanFetch`, then the six read methods with their existing comments intact.
 
@@ -683,7 +817,7 @@ npm run lint
 npm run build
 ```
 
-Expected: 38 suites and 283 tests pass; lint reports warnings only; the build compiles. `__tests__/model/CachingPostDao.test.js` and `__tests__/lib/SiteConfig.test.js` both still pass — neither covered the write paths, which is why none of this needed new tests.
+Expected: 40 suites and 287 tests pass; lint reports warnings only; the build compiles. `__tests__/model/CachingPostDao.test.js` and `__tests__/lib/SiteConfig.test.js` both still pass — neither covered the write paths, which is why none of this needed new tests.
 
 Coverage should rise rather than fall: `PostDao.js` sat at 0%, and `pages/create`, `pages/edit`, and `pages/login` were all at 0% too, so the `coverage-enforcement.yml` gate has more headroom than before, not less.
 
@@ -710,7 +844,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 
 ## Final Verification
 
-- [ ] `npm test` — 38 suites, 283 tests, output clean of stray console noise
+- [ ] `npm test` — 40 suites, 287 tests, output clean of stray console noise
 - [ ] `npm run lint` — zero errors
 - [ ] `npm run build` — compiles; route list has no `/create`, `/edit/[postId]`, or `/login`
 - [ ] `grep -rn "components/auth\|AuthenticationManager\|SecurePage" --include="*.js" --include="*.jsx" . | grep -v node_modules` returns nothing
