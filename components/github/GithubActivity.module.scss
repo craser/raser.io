@@ -5,6 +5,7 @@
     --bg-dark: rgba(0, 0, 0, 0.5);
     --text-color: white;
     overflow: hidden;
+    max-width: 100%;
 
     position: relative;
     display: flex;
@@ -91,6 +92,7 @@
             .commitInfo {
                 flex-grow: 1;
                 flex-shrink: 1;
+                min-width: 0; // override min-width:auto so this can shrink narrower than its text
 
                 display: flex;
                 flex-direction: column;
@@ -98,6 +100,17 @@
                 .commitMessage {
                     color: white;
                     font-size: 0.8em;
+
+                    // Truncate to two lines. -webkit-box is the only display mode
+                    // -webkit-line-clamp works with.
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+
+                    // Break unbroken runs (URLs, long identifiers) rather than
+                    // letting them set a min-content width wider than the container.
+                    overflow-wrap: anywhere;
                 }
 
                 .commitDate {
