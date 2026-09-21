@@ -1,3 +1,4 @@
+import styles from "./DatePosted.module.scss";
 
 export default function DatePosted(props) {
     const LOCALE = 'en-US' // TODO: Get the browser's locale.
@@ -7,5 +8,5 @@ export default function DatePosted(props) {
     let monthName = posted.toLocaleString(LOCALE, { month: 'short' });
     let year = posted.getFullYear();
 
-    return <>{weekDay}, {monthName} {date}, {year}</>;
+    return <>Posted <span className={styles.datePosted}>{weekDay}, {monthName} {date}, {year}</span></>;
 }
