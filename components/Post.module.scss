@@ -6,11 +6,15 @@
     text-align: justify;
     margin-bottom: 2em;
     background-color: var(--theme-color-content-text-bg);
-    border-radius: var(--theme-border-radius-large);
+    border-radius: 0;
     padding: 15px;
 
     @include backgroundCrossFade();
     color: var(--theme-color-text);
+
+    @include large() {
+        border-radius: var(--theme-border-radius-large);
+    }
 }
 
 .entry .title {
@@ -133,28 +137,38 @@
  * to 50% and then translating them by half the width of the main column.
  */
 .nextPrevLinksContainer {
-    // TODO: fix this so it's not an embarrassment.
-    --post-width: calc(min(630px, calc(100vw - 20px)));
-    --button-offset: calc(min((51vw + var(--post-width) / 2), (100vw - 8vw)));
     position: relative; // offset parent for previews
-
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: stretch;
     padding-bottom: 3em;
-    flex-basis: 50%;
+    gap: 2vw;
 
+    @include small() {
+    }
+
+
+    /* if there is no prev post */
     &.nextOnly {
         flex-direction: row;
     }
 
+    /* if there is no next post */
     &.prevOnly {
         flex-direction: row-reverse;
     }
 }
 
 .nextPrevPreviewContainer {
+    flex-basis: 50%;
+    flex-grow: 1;
     border-radius: var(--theme-border-radius-large);
-    max-width: 45%;
+    @include small {
+        &.prevLink {
+            border-radius: var(--theme-border-radius-large) 0 0 var(--theme-border-radius-large);
+        }
+
+        &.nextLink {
+            border-radius: 0 var(--theme-border-radius-large) var(--theme-border-radius-large) 0;
+        }
+    }
 }

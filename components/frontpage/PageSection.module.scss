@@ -8,6 +8,12 @@
     --title-padding: 20px;
     --content-padding: 20px;
 
+    @include small() {
+        --title-font-size: 1.1em;
+        --title-padding: 10px;
+        --content-padding: 10px;
+    }
+
     position: relative;
     @include backgroundCrossFade();
     /* background-color: var(--bg-dark); */
@@ -46,16 +52,17 @@
             position: sticky;
             top: calc(60px + 2vw);
             text-transform: uppercase;
-            transform-origin: top left;
 
             display: block;
             aspect-ratio: 1;
 
+            transform-origin: top left;
+            transform:
+                rotate(-90deg)
+                translateX(-100%);
+
             @include poptextSectionHeader;
 
-            transform:
-                    rotate(-90deg)
-                    translate(-100%, 0);
             z-index: 2;
         }
     }
