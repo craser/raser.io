@@ -15,3 +15,8 @@ GRANT SELECT, INSERT, UPDATE ON TABLE blog_entries TO blog_publisher;
 GRANT SELECT, INSERT, DELETE ON TABLE attachments TO blog_publisher;
 GRANT SELECT, INSERT ON TABLE tags TO blog_publisher;
 GRANT SELECT, INSERT, DELETE ON TABLE tag_links TO blog_publisher;
+
+-- CockroachDB's built-in `public` role, which every user inherits, can create tables in the
+-- public schema by default. Remove that so blog_publisher holds only the grants above. Admin
+-- users (the app's own user among them) are unaffected.
+REVOKE CREATE ON SCHEMA public FROM public;
