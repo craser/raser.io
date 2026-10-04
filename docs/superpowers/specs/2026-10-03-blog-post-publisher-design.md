@@ -32,7 +32,10 @@ to the production CockroachDB database. Re-running it on the same folder updates
 
 ## Command line
 
-Exposed as `npm run blog-post`, implemented by `scripts/blog-post.js`.
+Exposed as `npm run blog-post`. The entry point source is `scripts/blog-post.js`; `npm run build:publish`
+bundles it and `lib/publish/` with esbuild into `bin/blog-post.mjs` (gitignored), which is what runs.
+`npm run blog-post` rebuilds first, via a `preblog-post` script. Because of the build step, the sources
+use the `@/` alias like the rest of the codebase and contain nothing specific to how they are run.
 
 ```
 npm run blog-post -- --gen <name>
@@ -51,9 +54,9 @@ Before a real publish, the tool prints a summary and asks for confirmation, for 
 
 ### Credential loading
 
-`scripts/blog-post.js` checks for the `PUBLISH_*` variables. If any are missing during a publish
+The CLI checks for the `PUBLISH_*` variables. If any are missing during a publish
 or dry run, it re-launches itself as
-`op run --env-file=scripts/publish/publish.env -- node scripts/blog-post.js <same args>`.
+`op run --env-file=scripts/publish/publish.env -- node bin/blog-post.mjs <same args>`.
 `--gen` never triggers the re-launch. If `op` is not installed or sign-in fails, the tool prints a
 short explanation instead of a stack trace.
 
@@ -219,8 +222,8 @@ deletes anything from the CDN.
 
 ## Components
 
-All under `lib/publish/` unless noted. Relative imports only (no `@/`), so plain `node` can run
-them.
+All under `lib/publish/` unless noted. Imports use the `@/` alias, resolved by esbuild when
+bundling and by Jest in tests.
 
 | Unit | Responsibility |
 |------|----------------|
@@ -233,7 +236,8 @@ them.
 | `PostWriter` | The database transaction, including ID assignment and retry. Configured from `PUBLISH_DATABASE_URL`. |
 | `Publisher` | Runs validate → plan → (confirm) → upload → write → write-back. |
 
-Also: a `blog-post` script in `package.json`, `posts/` in `.gitignore`, and
+Also: `esbuild` as a devDependency; `build:publish`, `preblog-post` and `blog-post` scripts in
+`package.json`; `posts/` and `bin/` in `.gitignore`; and
 `scripts/publish/publish.env` plus `scripts/publish/create-publisher-role.sql`.
 
 ## Testing

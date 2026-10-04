@@ -4,18 +4,18 @@
 
 **Goal:** A command-line tool, `npm run blog-post`, that scaffolds post folders (`--gen`) and publishes a post folder to production: uploading its files to the Bunny CDN and writing the post to CockroachDB.
 
-**Architecture:** Small single-purpose modules in `lib/publish/` (folder reading, validation, link rewriting, record building, CDN client, upload planner, database writer, orchestrator, CLI helpers), each unit-tested with in-memory fakes. A thin entry point, `scripts/blog-post.js`, wires them together, re-launches itself under `op run` to obtain credentials, and prompts for confirmation.
+**Architecture:** Small single-purpose modules in `lib/publish/` (folder reading, validation, link rewriting, record building, CDN client, upload planner, database writer, orchestrator, CLI helpers), each unit-tested with in-memory fakes. A thin entry point, `scripts/blog-post.js`, wires them together, re-launches itself under `op run` to obtain credentials, and prompts for confirmation. `npm run build:publish` bundles the entry point and `lib/publish/` with esbuild into `bin/blog-post.mjs`, which is what actually runs; the sources are written like the rest of the codebase and never run directly by `node`.
 
-**Tech Stack:** Node (plain ESM, run as `node scripts/blog-post.js`), `pg` (already a dependency), global `fetch`, Jest + babel-jest (existing setup), 1Password CLI (`op`).
+**Tech Stack:** Node, esbuild (new devDependency, bundles the CLI), `pg` (already a dependency), global `fetch`, Jest + babel-jest (existing setup), 1Password CLI (`op`).
 
 **Spec:** `docs/superpowers/specs/2026-10-03-blog-post-publisher-design.md`
 
 ## Global Constraints
 
-- No new npm dependencies.
-- Files in `lib/publish/` and `scripts/` import each other with **relative paths ending in `.js`** (e.g. `import PublishError from './PublishError.js';`). Never `@/` — plain `node` cannot resolve it. Tests may import with `@/lib/publish/...` like the rest of the suite.
+- The only new npm dependency is `esbuild`, as a devDependency (added in Task 11).
+- Source files import project modules with the `@/` alias and no file extension, like the rest of the codebase (e.g. `import PublishError from '@/lib/publish/PublishError';`). They contain nothing that depends on how they are run: esbuild resolves the alias when bundling, and Jest resolves it in tests.
 - Nothing in `lib/publish/` or `scripts/blog-post.js` reads `.env*` files or the app's variables (`DATABASE_URL`, `BUNNY_*`, `SiteConfig`). Credentials come only from `PUBLISH_DATABASE_URL`, `PUBLISH_BUNNY_STORAGE_HOST`, `PUBLISH_BUNNY_STORAGE_ZONE`, `PUBLISH_BUNNY_ACCESS_KEY`.
-- `lib/publish/` code must run on Node 18 (CI uses Node 18): no `Array.prototype.toSorted`/`toReversed`, no `Set` methods like `union`.
+- CI runs the Jest suite on Node 18, so `lib/publish/` code avoids APIs newer than Node 18: no `Array.prototype.toSorted`/`toReversed`, no `Set` methods like `union`.
 - Every new source file starts with two `// ABOUTME:` lines describing it. Every new test file starts with a `/** ... */` docblock holding two `ABOUTME:` lines and `@jest-environment node` (see `__tests__/lib/maps/MapImageStore.test.js`).
 - CI fails a PR whose statement coverage is lower than `main`'s. Everything in `lib/publish/` is unit tested; `scripts/blog-post.js` holds only wiring.
 - CDN base URL: `https://raserio.b-cdn.net`. Fixed column values: `user_id = 1`, `user_name = 'Chris'`, `allow_comments = 'false'`, `syndicate = 'false'`.
@@ -50,7 +50,8 @@
 | `lib/publish/PostWriter.js` | Database reads and the publish transaction, with retry. |
 | `lib/publish/Publisher.js` | Orchestrates validate → plan → confirm → upload → write → write-back. |
 | `lib/publish/cli.js` | Argument parsing, relaunch decision, `op run` command, yes/no parsing. |
-| `scripts/blog-post.js` | Entry point: wiring, `op run` relaunch, prompt, exit codes. |
+| `scripts/blog-post.js` | Entry point source: wiring, `op run` relaunch, prompt, exit codes. Bundled, never run directly. |
+| `bin/blog-post.mjs` | Build output of `npm run build:publish` (gitignored). |
 | `scripts/publish/publish.env` | 1Password references for the `PUBLISH_*` variables. |
 | `scripts/publish/create-publisher-role.sql` | One-time SQL creating the `blog_publisher` role. |
 | `__tests__/lib/publish/support/postFixture.js` | Test helper: builds temporary post folders. |
@@ -212,7 +213,7 @@ Create `lib/publish/PostScaffold.js`:
 
 import fs from 'node:fs';
 import path from 'node:path';
-import PublishError from './PublishError.js';
+import PublishError from '@/lib/publish/PublishError';
 
 export const POST_TEMPLATE = {
     title: '',
@@ -506,7 +507,7 @@ Create `lib/publish/PostFolder.js`:
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import PublishError from './PublishError.js';
+import PublishError from '@/lib/publish/PublishError';
 
 /** Folders whose files are uploaded, and the attachment kind each implies. */
 const FILE_FOLDERS = { images: 'image', docs: 'document' };
@@ -878,7 +879,7 @@ Create `lib/publish/validate.js`:
 // ABOUTME: Checks a post folder for every problem that can be found without the network.
 // ABOUTME: Returns all problems at once so one run shows everything to fix.
 
-import { findFolderReferences } from './linkRewriter.js';
+import { findFolderReferences } from '@/lib/publish/linkRewriter';
 
 const DATE_POSTED = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
 const VIA_FIELDS = ['url', 'title', 'text'];
@@ -1135,8 +1136,8 @@ Create `lib/publish/postRecord.js`:
 // ABOUTME: Turns a validated post folder into the record PostWriter stores.
 // ABOUTME: Decides the title image fields, attachment metadata and the CDN form of the HTML.
 
-import { AUTHOR, CDN_BASE_URL } from './constants.js';
-import { rewriteLinks } from './linkRewriter.js';
+import { AUTHOR, CDN_BASE_URL } from '@/lib/publish/constants';
+import { rewriteLinks } from '@/lib/publish/linkRewriter';
 
 /** blog_entries.image_file_type: 0 renders a map from a .gpx file, 1 an image. */
 const MAP_IMAGE_TYPE = 0;
@@ -1296,7 +1297,7 @@ Create `lib/publish/CdnStore.js`:
 // ABOUTME: Lists and uploads files at the root of the Bunny CDN storage zone for the publisher.
 // ABOUTME: Configured explicitly from PUBLISH_BUNNY_* values, never from the app's configuration.
 
-import PublishError from './PublishError.js';
+import PublishError from '@/lib/publish/PublishError';
 
 export default class CdnStore {
     #host;
@@ -1760,7 +1761,7 @@ Create `lib/publish/PostWriter.js`:
 // ABOUTME: Reads and writes blog posts in the database on behalf of the publisher.
 // ABOUTME: Writes each post in one transaction, retrying when CockroachDB asks the client to.
 
-import PublishError from './PublishError.js';
+import PublishError from '@/lib/publish/PublishError';
 
 /** SQLSTATE CockroachDB returns when a transaction must be retried by the client. */
 const RETRY_ERROR = '40001';
@@ -2170,12 +2171,12 @@ Create `lib/publish/Publisher.js`:
 // ABOUTME: Each step finishes before the next starts, so a failure never leaves the database pointing at missing files.
 
 import fs from 'node:fs';
-import { readPostFolder, writeBack } from './PostFolder.js';
-import { buildPostRecord } from './postRecord.js';
-import { planUploads } from './PublishPlanner.js';
-import PublishError from './PublishError.js';
-import { formatLocalMinute, formatLocalSecond } from './timestamps.js';
-import { validatePostFolder } from './validate.js';
+import { readPostFolder, writeBack } from '@/lib/publish/PostFolder';
+import { buildPostRecord } from '@/lib/publish/postRecord';
+import { planUploads } from '@/lib/publish/PublishPlanner';
+import PublishError from '@/lib/publish/PublishError';
+import { formatLocalMinute, formatLocalSecond } from '@/lib/publish/timestamps';
+import { validatePostFolder } from '@/lib/publish/validate';
 
 export default class Publisher {
     #cdn;
@@ -2381,15 +2382,15 @@ describe('relaunchCommand', () => {
         expect(relaunchCommand({
             envFile: '/repo/scripts/publish/publish.env',
             nodePath: '/usr/local/bin/node',
-            execArgv: ['--disable-warning=MODULE_TYPELESS_PACKAGE_JSON'],
-            scriptPath: '/repo/scripts/blog-post.js',
+            execArgv: ['--enable-source-maps'],
+            scriptPath: '/repo/bin/blog-post.mjs',
             argv: ['posts/x', '--dry-run']
         })).toEqual({
             command: 'op',
             args: [
                 'run', '--env-file=/repo/scripts/publish/publish.env', '--',
-                '/usr/local/bin/node', '--disable-warning=MODULE_TYPELESS_PACKAGE_JSON',
-                '/repo/scripts/blog-post.js', 'posts/x', '--dry-run'
+                '/usr/local/bin/node', '--enable-source-maps',
+                '/repo/bin/blog-post.mjs', 'posts/x', '--dry-run'
             ]
         });
     });
@@ -2519,18 +2520,19 @@ git commit -m "BLOG-POST-PUBLISHER: argument parsing and op run relaunch decisio
 
 ---
 
-### Task 11: Entry script, credentials wiring, role SQL, docs
+### Task 11: Entry script, build, credentials wiring, role SQL, docs
 
 **Files:**
 - Create: `scripts/blog-post.js`
 - Create: `scripts/publish/publish.env`
 - Create: `scripts/publish/create-publisher-role.sql`
-- Modify: `package.json` (add the `blog-post` script to `"scripts"`)
+- Modify: `package.json` (esbuild devDependency; `build:publish`, `preblog-post` and `blog-post` scripts)
+- Modify: `.gitignore` (append `/bin`)
 - Modify: `README.md` (append a "Publishing a post" section)
 
 **Interfaces:**
 - Consumes: everything in `lib/publish/` — `parseArgs`, `relaunchDecision`, `relaunchCommand`, `isYes`, `USAGE`, `RELAUNCH_MARKER` (Task 10); `createPostScaffold` (Task 1); `Publisher` (Task 9); `CdnStore` (Task 6); `PostWriter` (Task 8); `PublishError` (Task 1).
-- Produces: `npm run blog-post`.
+- Produces: `npm run build:publish` (writes `bin/blog-post.mjs`) and `npm run blog-post`.
 
 - [ ] **Step 1: Write the entry script**
 
@@ -2538,20 +2540,22 @@ Create `scripts/blog-post.js`:
 
 ```js
 // ABOUTME: Command line entry point for `npm run blog-post`: scaffolds post folders and publishes them.
-// ABOUTME: Gets credentials by re-running itself under `op run`; holds wiring only, the logic is in lib/publish.
+// ABOUTME: Bundled into bin/blog-post.mjs by `npm run build:publish`; holds wiring only, the logic is in lib/publish.
 
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import readline from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
-import CdnStore from '../lib/publish/CdnStore.js';
-import { isYes, parseArgs, relaunchCommand, relaunchDecision, RELAUNCH_MARKER, USAGE } from '../lib/publish/cli.js';
-import { createPostScaffold } from '../lib/publish/PostScaffold.js';
-import PostWriter from '../lib/publish/PostWriter.js';
-import PublishError from '../lib/publish/PublishError.js';
-import Publisher from '../lib/publish/Publisher.js';
+import CdnStore from '@/lib/publish/CdnStore';
+import { isYes, parseArgs, relaunchCommand, relaunchDecision, RELAUNCH_MARKER, USAGE } from '@/lib/publish/cli';
+import { createPostScaffold } from '@/lib/publish/PostScaffold';
+import PostWriter from '@/lib/publish/PostWriter';
+import PublishError from '@/lib/publish/PublishError';
+import Publisher from '@/lib/publish/Publisher';
 
+// After bundling this is bin/blog-post.mjs, the file to re-run under op run. bin/ and scripts/
+// sit at the same depth, so the repo root is one level up either way.
 const SCRIPT_PATH = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(SCRIPT_PATH), '..');
 const ENV_FILE = path.join(REPO_ROOT, 'scripts', 'publish', 'publish.env');
@@ -2651,7 +2655,30 @@ main(process.argv.slice(2))
     });
 ```
 
-- [ ] **Step 2: Add the credential references, the role SQL and the npm script**
+- [ ] **Step 2: Add the build, the credential references and the role SQL**
+
+Install esbuild:
+
+```bash
+npm install --save-dev esbuild@^0.28.2
+```
+
+In `package.json`, add these entries to `"scripts"` (after `"test:coverage:open"`, adding a comma to the line before):
+
+```json
+"build:publish": "esbuild scripts/blog-post.js --bundle --platform=node --format=esm --packages=external --tsconfig=jsconfig.json --outfile=bin/blog-post.mjs",
+"preblog-post": "npm run build:publish",
+"blog-post": "node bin/blog-post.mjs"
+```
+
+`--tsconfig=jsconfig.json` gives esbuild the `@/*` alias. `--packages=external` leaves `pg` and other npm packages as imports resolved from `node_modules` at run time. The `.mjs` extension tells Node the bundle is ESM. npm runs `preblog-post` before every `npm run blog-post`, so the bundle is always current.
+
+Append to `.gitignore`:
+
+```
+# build output of `npm run build:publish`
+/bin
+```
 
 Create `scripts/publish/publish.env`:
 
@@ -2686,13 +2713,10 @@ GRANT SELECT, INSERT ON TABLE tags TO blog_publisher;
 GRANT SELECT, INSERT, DELETE ON TABLE tag_links TO blog_publisher;
 ```
 
-In `package.json`, add this entry to `"scripts"` (after `"test:coverage:open"`, adding a comma to the line before):
+- [ ] **Step 3: Build, then smoke test the paths that need no credentials**
 
-```json
-"blog-post": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/blog-post.js"
-```
-
-- [ ] **Step 3: Smoke test the paths that need no credentials**
+Run: `npm run build:publish`
+Expected: esbuild reports writing `bin/blog-post.mjs` with no errors. `grep -c "from \"pg\"" bin/blog-post.mjs` prints `1` (pg stays external), and `grep -c "@/lib" bin/blog-post.mjs` prints `0` (every alias was resolved).
 
 Run: `npm run blog-post -- --gen smoke-test`
 Expected: prints `Created posts/smoke-test/`; `ls posts/smoke-test` shows `body.html docs images intro.html post.json`.
@@ -2703,12 +2727,12 @@ Expected: exits non-zero, printing `.../posts/smoke-test already exists; not tou
 Run: `npm run blog-post -- --bogus`
 Expected: prints `Unknown option --bogus.` and the usage text; exit code 2.
 
-Run: `git status --short posts/`
-Expected: no output (the folder is gitignored).
+Run: `git status --short posts/ bin/`
+Expected: no output (both are gitignored).
 
 Run: `rm -rf posts/smoke-test`
 
-If `node` reports `Cannot use import statement outside a module` or cannot resolve a `lib/publish` import, a file in `lib/publish/` is missing a `.js` extension on a relative import, or uses `@/` — fix the import; do not add `"type": "module"` to `package.json` (it would break the Next.js and Jest configs, which are CommonJS).
+If the build fails to resolve an `@/...` import, check the path against the file name (case matters). Do not add `"type": "module"` to `package.json`; it would break the Next.js and Jest configs, which are CommonJS.
 
 - [ ] **Step 4: Document the workflow**
 
@@ -2718,7 +2742,7 @@ Append to `README.md`:
 ## Publishing a post
 
 Posts are written as folders under `posts/` (gitignored) and published to production with
-`npm run blog-post`.
+`npm run blog-post`, which first bundles the tool into `bin/blog-post.mjs` (`npm run build:publish`).
 
 ```bash
 # Create posts/my-trip/ with post.json, intro.html, body.html, images/ and docs/
@@ -2755,7 +2779,7 @@ Expected: all suites pass, including the existing ones. Every file under `lib/pu
 - [ ] **Step 6: Commit**
 
 ```bash
-git add scripts/blog-post.js scripts/publish/publish.env scripts/publish/create-publisher-role.sql package.json README.md
+git add scripts/blog-post.js scripts/publish/publish.env scripts/publish/create-publisher-role.sql package.json package-lock.json .gitignore README.md
 git commit -m "BLOG-POST-PUBLISHER: npm run blog-post entry point, 1Password wiring and role setup" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```
 
