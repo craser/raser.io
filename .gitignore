@@ -48,3 +48,6 @@ database
 
 # blog post folders, published with `npm run blog-post`
 /posts
+
+# build output of `npm run build:publish`
+/bin

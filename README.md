@@ -108,3 +108,34 @@ For critical hotfixes that need to bypass coverage requirements, repository admi
 - Front end (this codebase) on Vercel
 - Back end is Spring Boot hosted on Heroku
 
+
+## Publishing a post
+
+Posts are written as folders under `posts/` (gitignored) and published to production with
+`npm run blog-post`, which first bundles the tool into `bin/blog-post.mjs` (`npm run build:publish`).
+
+```bash
+# Create posts/my-trip/ with post.json, intro.html, body.html, images/ and docs/
+npm run blog-post -- --gen my-trip
+
+# Show what publishing would do, without changing anything
+npm run blog-post -- posts/my-trip --dry-run
+
+# Publish (asks for confirmation; --yes skips the question)
+npm run blog-post -- posts/my-trip
+```
+
+- Reference files from the HTML by their folder path (`<img src="images/hero.jpg">`); the
+  published post uses the CDN URL. Every file in `images/` and `docs/` is uploaded to the root of
+  the CDN storage zone under its file name.
+- A file whose name is already taken on the CDN by another post stops the run. Rename it, or
+  pass `--force` to overwrite.
+- The first publish writes `entryId` into `post.json`. Publishing the folder again updates that
+  entry; unchanged files are not re-uploaded.
+- New posts can take up to an hour to appear, since pages regenerate hourly.
+
+Credentials come from 1Password, never from `.env` files: the script re-runs itself under
+`op run --env-file=scripts/publish/publish.env`, which resolves the references in that file.
+It needs the 1Password CLI (`op`) and an item holding `database_url`, `bunny_storage_host`,
+`bunny_storage_zone` and `bunny_access_key`. The database user is `blog_publisher`, created once
+with `scripts/publish/create-publisher-role.sql`.
