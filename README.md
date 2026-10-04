@@ -128,7 +128,7 @@ npm run blog-post -- posts/my-trip
 - Reference files from the HTML by their folder path (`<img src="images/hero.jpg">`); the
   published post uses the CDN URL. Every file in `images/` and `docs/` is uploaded to the root of
   the CDN storage zone under its file name.
-- A file whose name is already taken on the CDN by another post stops the run. Rename it, or
+- A file whose name is already taken on the CDN stops the run. Rename it, or
   pass `--force` to overwrite.
 - The first publish writes `entryId` into `post.json`. Publishing the folder again updates that
   entry; unchanged files are not re-uploaded.

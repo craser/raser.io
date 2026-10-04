@@ -17,6 +17,10 @@ test('a minimal folder is valid', () => {
     expect(validatePostFolder(folder())).toEqual([]);
 });
 
+test('a leap day is a valid datePosted', () => {
+    expect(validatePostFolder(folder({ post: { datePosted: '2028-02-29 23:59' } }))).toEqual([]);
+});
+
 test('a fully filled-in folder is valid', () => {
     const valid = folder({
         post: {
@@ -38,6 +42,11 @@ test.each([
     ['blank title', { post: { title: '  ' } }, '"title"'],
     ['missing title', { post: { title: undefined } }, '"title"'],
     ['date without time', { post: { datePosted: '2026-10-03' } }, '"datePosted"'],
+    ['month 13', { post: { datePosted: '2026-13-01 10:00' } }, '"datePosted"'],
+    ['February 30', { post: { datePosted: '2026-02-30 10:00' } }, '"datePosted"'],
+    ['hour 24', { post: { datePosted: '2026-10-03 24:00' } }, '"datePosted"'],
+    ['minute 60', { post: { datePosted: '2026-10-03 10:60' } }, '"datePosted"'],
+    ['titleImage in docs/', { post: { titleImage: 'docs/route.pdf' } }, '"titleImage"'],
     ['entryId as a string', { post: { entryId: '3421' } }, '"entryId"'],
     ['titleImage not in folder', { post: { titleImage: 'images/nope.jpg' } }, '"titleImage"'],
     ['via not an object', { post: { via: 'x' } }, '"via"'],

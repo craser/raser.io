@@ -49,6 +49,15 @@ describe('findEntry', () => {
     });
 });
 
+describe('nextEntryId', () => {
+    test('is MAX(entry_id) + 1, read outside a transaction', async () => {
+        const db = fakeDatabase({ maxEntryId: 3420 });
+
+        expect(await new PostWriter({ pool: db.pool }).nextEntryId()).toBe(3421);
+        expect(db.sql()).not.toContain('BEGIN');
+    });
+});
+
 describe('write', () => {
     test('a new post gets MAX(entry_id) + 1 and is inserted inside a transaction', async () => {
         const db = fakeDatabase({ maxEntryId: 3420 });

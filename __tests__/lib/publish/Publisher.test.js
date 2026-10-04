@@ -30,6 +30,7 @@ function fakeCdn(listing = {}) {
 function fakeWriter(entries = {}) {
     return {
         records: [],
+        nextEntryId: jest.fn(async () => 3421),
         async findEntry(entryId) {
             return entryId in entries ? { entryId, attachmentNames: new Set(entries[entryId]) } : null;
         },
@@ -131,6 +132,7 @@ test('collisions stop the run before any file is uploaded', async () => {
     const { publisher, cdn, writer } = setup({ cdn: fakeCdn({ 'hero.jpg': 'DIFFERENT' }) });
 
     await expect(publisher.publish(dir)).rejects.toMatchObject({
+        message: expect.stringContaining('--force'),
         details: [expect.stringContaining('hero.jpg')]
     });
     expect(cdn.uploads).toEqual([]);
@@ -160,7 +162,17 @@ test('a dry run changes nothing and does not ask', async () => {
     expect(writer.records).toEqual([]);
     expect(confirm).not.toHaveBeenCalled();
     expect(fs.readFileSync(path.join(dir, 'post.json'), 'utf-8')).toBe(before);
-    expect(log.join('\n')).toContain('New entry: "My Trip"');
+    expect(log.join('\n')).toContain('New entry (will be 3421): "My Trip"');
+    expect(writer.nextEntryId).toHaveBeenCalledTimes(1);
+});
+
+test('an update dry run does not ask for the next entry ID', async () => {
+    dir = makePostFolder({ post: { title: 'My Trip', entryId: 3421 } });
+    const { publisher, writer } = setup({ writer: fakeWriter({ 3421: [] }) });
+
+    await publisher.publish(dir, { dryRun: true });
+
+    expect(writer.nextEntryId).not.toHaveBeenCalled();
 });
 
 test('declined confirmation cancels with nothing uploaded, written or changed', async () => {

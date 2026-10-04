@@ -7,7 +7,7 @@ import readline from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 import CdnStore from '@/lib/publish/CdnStore';
-import { isYes, parseArgs, relaunchCommand, relaunchDecision, RELAUNCH_MARKER, USAGE } from '@/lib/publish/cli';
+import { isYes, parseArgs, relaunchCommand, resolvePostDir, relaunchDecision, RELAUNCH_MARKER, USAGE } from '@/lib/publish/cli';
 import { createPostScaffold } from '@/lib/publish/PostScaffold';
 import PostWriter from '@/lib/publish/PostWriter';
 import PublishError from '@/lib/publish/PublishError';
@@ -58,7 +58,7 @@ async function publish({ dir, dryRun, force, yes }) {
             confirm,
             log: line => console.log(line)
         });
-        const result = await publisher.publish(path.resolve(dir), { dryRun, force, yes });
+        const result = await publisher.publish(resolvePostDir(dir, process.env, process.cwd()), { dryRun, force, yes });
         if (result.status === 'published') {
             console.log(`Published entry ${result.entryId}. It can take up to an hour to appear on raser.io.`);
         } else if (result.status === 'cancelled') {

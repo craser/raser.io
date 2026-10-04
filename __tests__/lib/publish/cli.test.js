@@ -5,7 +5,8 @@
  * @jest-environment node
  */
 
-import { parseArgs, relaunchDecision, relaunchCommand, isYes, REQUIRED_ENV, RELAUNCH_MARKER } from '@/lib/publish/cli';
+import path from 'node:path';
+import { parseArgs, resolvePostDir, relaunchDecision, relaunchCommand, isYes, REQUIRED_ENV, RELAUNCH_MARKER } from '@/lib/publish/cli';
 
 describe('parseArgs', () => {
     test('--gen takes a folder name', () => {
@@ -18,6 +19,10 @@ describe('parseArgs', () => {
 
     test('flags may come before or after the folder', () => {
         expect(parseArgs(['--dry-run', 'posts/x', '--force', '--yes'])).toEqual({ command: 'publish', dir: 'posts/x', dryRun: true, force: true, yes: true });
+    });
+
+    test('a folder named like an Object.prototype member is a folder, not a flag', () => {
+        expect(parseArgs(['constructor'])).toEqual({ command: 'publish', dir: 'constructor', dryRun: false, force: false, yes: false });
     });
 
     test('--help asks for usage without an error', () => {
@@ -41,6 +46,20 @@ describe('parseArgs', () => {
 
     test('an unknown option is named in the error', () => {
         expect(parseArgs(['--bogus', 'posts/x']).error).toContain('--bogus');
+    });
+});
+
+describe('resolvePostDir', () => {
+    test('resolves against INIT_CWD, the directory npm was run from', () => {
+        expect(resolvePostDir('.', { INIT_CWD: '/work/posts/my-trip' }, '/repo')).toBe(path.resolve('/work/posts/my-trip'));
+    });
+
+    test('resolves against the current directory without INIT_CWD', () => {
+        expect(resolvePostDir('posts/x', {}, '/repo')).toBe(path.resolve('/repo/posts/x'));
+    });
+
+    test('leaves an absolute folder unchanged', () => {
+        expect(resolvePostDir('/abs/post', { INIT_CWD: '/work' }, '/repo')).toBe(path.resolve('/abs/post'));
     });
 });
 
