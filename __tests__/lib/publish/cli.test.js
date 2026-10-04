@@ -49,6 +49,40 @@ describe('parseArgs', () => {
     });
 });
 
+describe('parseArgs --delete', () => {
+    test('an all-digit target is an entry ID', () => {
+        expect(parseArgs(['--delete', '3421'])).toEqual({
+            command: 'delete', target: { entryId: 3421 }, dryRun: false, yes: false, purgeFiles: false
+        });
+    });
+
+    test('any other target is a post folder', () => {
+        expect(parseArgs(['--delete', 'posts/my-trip'])).toEqual({
+            command: 'delete', target: { dir: 'posts/my-trip' }, dryRun: false, yes: false, purgeFiles: false
+        });
+    });
+
+    test('takes --dry-run, --yes and --purge-files in any order', () => {
+        expect(parseArgs(['--purge-files', '--delete', '3421', '--yes', '--dry-run'])).toEqual({
+            command: 'delete', target: { entryId: 3421 }, dryRun: true, yes: true, purgeFiles: true
+        });
+    });
+
+    test.each([
+        [['--delete']],
+        [['--delete', '--yes']],
+        [['--delete', '3421', 'posts/x']],
+        [['--delete', '3421', '--force']],
+        [['--delete', '3421', '--gen', 'x']],
+        [['--purge-files', 'posts/x']]
+    ])('%p is a usage error', (argv) => {
+        const result = parseArgs(argv);
+
+        expect(result.command).toBe('usage');
+        expect(result.error).toEqual(expect.any(String));
+    });
+});
+
 describe('resolvePostDir', () => {
     test('resolves against INIT_CWD, the directory npm was run from', () => {
         expect(resolvePostDir('.', { INIT_CWD: '/work/posts/my-trip' }, '/repo')).toBe(path.resolve('/work/posts/my-trip'));

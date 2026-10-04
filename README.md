@@ -134,6 +134,22 @@ npm run blog-post -- posts/my-trip
   entry; unchanged files are not re-uploaded.
 - New posts can take up to an hour to appear, since pages regenerate hourly.
 
+### Deleting a post
+
+```bash
+# By entry ID, or by the post folder that published it
+npm run blog-post -- --delete 3421 --dry-run
+npm run blog-post -- --delete posts/my-trip
+```
+
+- Removes the entry, its attachment rows and its tag links in one transaction, after asking for
+  confirmation (`--yes` skips the question). Tags themselves stay.
+- An entry that has reader comments is never deleted; the tool says how many it has and stops.
+- CDN files stay in place unless you pass `--purge-files`, which deletes the entry's files after
+  the database delete, skipping any file another entry still uses.
+- Deleting by folder resets `entryId` and `datePosted` in its `post.json`, so publishing the
+  folder again creates a new entry.
+
 Credentials come from 1Password, never from `.env` files: the script re-runs itself under
 `op run --env-file=scripts/publish/publish.env`, which resolves the references in that file.
 It needs the 1Password CLI (`op`) and an item holding `database_url`, `bunny_storage_host`,

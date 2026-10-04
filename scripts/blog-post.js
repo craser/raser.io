@@ -1,4 +1,4 @@
-// ABOUTME: Command line entry point for `npm run blog-post`: scaffolds post folders and publishes them.
+// ABOUTME: Command line entry point for `npm run blog-post`: scaffolds, publishes and deletes posts.
 // ABOUTME: Bundled into bin/blog-post.mjs by `npm run build:publish`; holds wiring only, the logic is in lib/publish.
 
 import { spawnSync } from 'node:child_process';
@@ -7,6 +7,7 @@ import readline from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 import CdnStore from '@/lib/publish/CdnStore';
+import Deleter from '@/lib/publish/Deleter';
 import { isYes, parseArgs, relaunchCommand, resolvePostDir, relaunchDecision, RELAUNCH_MARKER, USAGE } from '@/lib/publish/cli';
 import { createPostScaffold } from '@/lib/publish/PostScaffold';
 import PostWriter from '@/lib/publish/PostWriter';
@@ -45,10 +46,14 @@ function relaunch(argv) {
     return result.status ?? 1;
 }
 
-async function publish({ dir, dryRun, force, yes }) {
+/**
+ * Builds the CDN client and database writer from the PUBLISH_* variables, runs work with them,
+ * and closes the database pool afterwards.
+ */
+async function withServices(work) {
     const pool = new pg.Pool({ connectionString: process.env.PUBLISH_DATABASE_URL });
     try {
-        const publisher = new Publisher({
+        return await work({
             cdn: new CdnStore({
                 host: process.env.PUBLISH_BUNNY_STORAGE_HOST,
                 zone: process.env.PUBLISH_BUNNY_STORAGE_ZONE,
@@ -58,7 +63,14 @@ async function publish({ dir, dryRun, force, yes }) {
             confirm,
             log: line => console.log(line)
         });
-        const result = await publisher.publish(resolvePostDir(dir, process.env, process.cwd()), { dryRun, force, yes });
+    } finally {
+        await pool.end();
+    }
+}
+
+async function publish({ dir, dryRun, force, yes }) {
+    return withServices(async (services) => {
+        const result = await new Publisher(services).publish(resolvePostDir(dir, process.env, process.cwd()), { dryRun, force, yes });
         if (result.status === 'published') {
             console.log(`Published entry ${result.entryId}. It can take up to an hour to appear on raser.io.`);
         } else if (result.status === 'cancelled') {
@@ -67,9 +79,22 @@ async function publish({ dir, dryRun, force, yes }) {
             console.log('Dry run; nothing changed.');
         }
         return 0;
-    } finally {
-        await pool.end();
-    }
+    });
+}
+
+async function deletePost({ target, dryRun, yes, purgeFiles }) {
+    const resolved = target.dir ? { dir: resolvePostDir(target.dir, process.env, process.cwd()) } : target;
+    return withServices(async (services) => {
+        const result = await new Deleter(services).delete(resolved, { dryRun, yes, purgeFiles });
+        if (result.status === 'deleted') {
+            console.log(`Deleted entry ${result.entryId}. It can take up to an hour to disappear from raser.io.`);
+        } else if (result.status === 'cancelled') {
+            console.log('Cancelled; nothing changed.');
+        } else {
+            console.log('Dry run; nothing changed.');
+        }
+        return 0;
+    });
 }
 
 async function main(argv) {
@@ -94,7 +119,7 @@ async function main(argv) {
         console.error(`1Password did not supply ${decision.missing.join(', ')}. Check ${path.relative(process.cwd(), ENV_FILE)} against the 1Password item.`);
         return 1;
     }
-    return publish(args);
+    return args.command === 'delete' ? deletePost(args) : publish(args);
 }
 
 main(process.argv.slice(2))

@@ -63,3 +63,24 @@ describe('upload', () => {
             .rejects.toThrow(/my photo\.jpg.*HTTP 500/);
     });
 });
+
+describe('delete', () => {
+    test('DELETEs the encoded name with the access key', async () => {
+        const fetch = fetchReturns(200);
+
+        await store(fetch).delete('my photo.jpg');
+
+        expect(fetch).toHaveBeenCalledWith('https://la.storage.bunnycdn.com/raserio/my%20photo.jpg', {
+            method: 'DELETE',
+            headers: { AccessKey: 'test-key' }
+        });
+    });
+
+    test('a file that is already gone counts as deleted', async () => {
+        await expect(store(fetchReturns(404)).delete('gone.jpg')).resolves.toBeUndefined();
+    });
+
+    test('a failed delete is a PublishError naming the file and status', async () => {
+        await expect(store(fetchReturns(500)).delete('hero.jpg')).rejects.toThrow(/hero\.jpg.*HTTP 500/);
+    });
+});
