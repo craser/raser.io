@@ -11,10 +11,14 @@
 
 CREATE USER IF NOT EXISTS blog_publisher WITH PASSWORD 'paste-the-generated-password-here';
 
-GRANT SELECT, INSERT, UPDATE ON TABLE blog_entries TO blog_publisher;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE blog_entries TO blog_publisher;
 GRANT SELECT, INSERT, DELETE ON TABLE attachments TO blog_publisher;
 GRANT SELECT, INSERT ON TABLE tags TO blog_publisher;
 GRANT SELECT, INSERT, DELETE ON TABLE tag_links TO blog_publisher;
+
+-- `--delete` refuses to delete an entry that has reader comments, so it needs to count them.
+-- CockroachDB has no column-level grants, so this also lets the role read commenters' details.
+GRANT SELECT ON TABLE comments TO blog_publisher;
 
 -- CockroachDB's built-in `public` role, which every user inherits, can create tables in the
 -- public schema by default. Remove that so blog_publisher holds only the grants above. Admin

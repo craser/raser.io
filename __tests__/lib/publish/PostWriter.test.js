@@ -166,3 +166,103 @@ describe('write', () => {
         expect(db.releases()).toBe(1);
     });
 });
+
+describe('findEntryForDeletion', () => {
+    const entryRow = (overrides = {}) => ({
+        match: /^SELECT entry_id, title/,
+        rows: [{ entry_id: 3421, title: 'My Trip', date_posted: '2026-10-03 14:30', image_file_name: 'hero.jpg', ...overrides }]
+    });
+    const comments = (n) => ({ match: /FROM comments/, rows: [{ n: String(n) }] });
+
+    test('returns null when the entry does not exist', async () => {
+        const db = fakeDatabase({ responses: [{ match: /^SELECT entry_id, title/, rows: [] }] });
+
+        expect(await new PostWriter({ pool: db.pool }).findEntryForDeletion(3421)).toBeNull();
+    });
+
+    test('describes the entry: title, date, comment count, and its files including the title image', async () => {
+        const db = fakeDatabase({ entries: { 3421: ['hero.jpg', 'route.pdf'] }, responses: [entryRow(), comments(0)] });
+
+        expect(await new PostWriter({ pool: db.pool }).findEntryForDeletion(3421)).toEqual({
+            entryId: 3421,
+            title: 'My Trip',
+            datePosted: '2026-10-03 14:30',
+            commentCount: 0,
+            fileNames: ['hero.jpg', 'route.pdf']
+        });
+        expect(paramsOf(db, 'SELECT count(*) AS n FROM comments')).toEqual([[3421]]);
+    });
+
+    test('adds a title image that is not also an attachment', async () => {
+        const db = fakeDatabase({ entries: { 3421: ['route.pdf'] }, responses: [entryRow({ image_file_name: 'old-hero.jpg' }), comments(2)] });
+
+        expect(await new PostWriter({ pool: db.pool }).findEntryForDeletion(3421)).toMatchObject({
+            commentCount: 2,
+            fileNames: ['route.pdf', 'old-hero.jpg']
+        });
+    });
+
+    test('an entry with no title image and no attachments has no files', async () => {
+        const db = fakeDatabase({ responses: [entryRow({ image_file_name: null }), comments(0)] });
+
+        expect((await new PostWriter({ pool: db.pool }).findEntryForDeletion(3421)).fileNames).toEqual([]);
+    });
+});
+
+describe('sharedFileNames', () => {
+    test('returns the names another entry still uses, as an attachment or a title image', async () => {
+        const db = fakeDatabase({ responses: [{ match: /entry_id <> \$1/, rows: [{ name: 'hero.jpg' }, { name: 'hero.jpg' }] }] });
+
+        const shared = await new PostWriter({ pool: db.pool }).sharedFileNames(3421, ['hero.jpg', 'route.pdf']);
+
+        expect(shared).toEqual(new Set(['hero.jpg']));
+        expect(db.statements.at(-1).params).toEqual([3421, ['hero.jpg', 'route.pdf']]);
+    });
+
+    test('asks nothing when there are no names', async () => {
+        const db = fakeDatabase();
+
+        expect(await new PostWriter({ pool: db.pool }).sharedFileNames(3421, [])).toEqual(new Set());
+        expect(db.statements).toEqual([]);
+    });
+});
+
+describe('deleteEntry', () => {
+    const deleted = (rowCount) => ({ match: /^DELETE FROM blog_entries/, rowCount });
+
+    test('removes tag links, attachments, then the entry, in one transaction', async () => {
+        const db = fakeDatabase({ responses: [deleted(1)] });
+
+        await new PostWriter({ pool: db.pool }).deleteEntry(3421);
+
+        expect(db.sql()).toEqual([
+            'BEGIN',
+            'DELETE FROM tag_links WHERE object_id = $1',
+            'DELETE FROM attachments WHERE entry_id = $1',
+            'DELETE FROM blog_entries WHERE entry_id = $1',
+            'COMMIT'
+        ]);
+        expect(db.statements.filter(s => s.sql.startsWith('DELETE')).map(s => s.params)).toEqual([[3421], [3421], [3421]]);
+    });
+
+    test('an entry that is already gone rolls back with a PublishError', async () => {
+        const db = fakeDatabase({ responses: [deleted(0)] });
+
+        await expect(new PostWriter({ pool: db.pool }).deleteEntry(3421)).rejects.toThrow(PublishError);
+        expect(count(db, 'ROLLBACK')).toBe(1);
+        expect(count(db, 'COMMIT')).toBe(0);
+    });
+
+    test('retries on a CockroachDB retry error', async () => {
+        const db = fakeDatabase({
+            responses: [deleted(1)],
+            failures: [{ match: /^DELETE FROM attachments/, error: retryable() }]
+        });
+
+        await new PostWriter({ pool: db.pool }).deleteEntry(3421);
+
+        expect(count(db, 'BEGIN')).toBe(2);
+        expect(count(db, 'COMMIT')).toBe(1);
+        expect(db.releases()).toBe(2);
+    });
+});

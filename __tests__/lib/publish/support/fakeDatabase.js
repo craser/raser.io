@@ -1,5 +1,5 @@
 // ABOUTME: In-memory stand-in for a pg Pool, answering the statements PostWriter issues.
-// ABOUTME: Records every statement so tests can check what was sent, and can inject failures.
+// ABOUTME: Records every statement so tests can check what was sent; can inject failures and canned responses.
 
 export function fakeDatabase({
     maxEntryId = 3420,
@@ -7,7 +7,8 @@ export function fakeDatabase({
     maxTagId = 40,
     tags = {},
     entries = {},
-    failures = []
+    failures = [],
+    responses = []
 } = {}) {
     const statements = [];
     const pending = [...failures];
@@ -20,6 +21,10 @@ export function fakeDatabase({
         const failure = pending.findIndex(f => f.match.test(text));
         if (failure >= 0) {
             throw pending.splice(failure, 1)[0].error;
+        }
+        const response = responses.find(r => r.match.test(text));
+        if (response) {
+            return { rows: response.rows ?? [], rowCount: response.rowCount ?? (response.rows ?? []).length };
         }
         if (text.startsWith('SELECT COALESCE(MAX(entry_id), 0) + 1')) {
             return { rows: [{ next_id: String(maxEntryId + 1) }], rowCount: 1 };
