@@ -63,13 +63,12 @@ short explanation instead of a stack trace.
 `scripts/publish/publish.env` is committed and holds only 1Password references:
 
 ```
-PUBLISH_DATABASE_URL=op://5zneo7hc5c6n7j6y6vgzivadvq/raser.io publisher/database_url
-PUBLISH_BUNNY_STORAGE_HOST=op://5zneo7hc5c6n7j6y6vgzivadvq/raser.io publisher/bunny_storage_host
-PUBLISH_BUNNY_STORAGE_ZONE=op://5zneo7hc5c6n7j6y6vgzivadvq/raser.io publisher/bunny_storage_zone
-PUBLISH_BUNNY_ACCESS_KEY=op://5zneo7hc5c6n7j6y6vgzivadvq/raser.io publisher/bunny_access_key
+PUBLISH_DATABASE_URL=op://raser.io/raser.io publisher/database_url
+PUBLISH_BUNNY_STORAGE_HOST=op://raser.io/raser.io publisher/bunny_storage_host
+PUBLISH_BUNNY_STORAGE_ZONE=op://raser.io/raser.io publisher/bunny_storage_zone
+PUBLISH_BUNNY_ACCESS_KEY=op://raser.io/raser.io publisher/bunny_access_key
 ```
 
-The vault is referenced by ID because two 1Password vaults are named "raser.io".
 
 ### Database role
 
