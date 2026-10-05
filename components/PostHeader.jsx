@@ -1,6 +1,6 @@
 import styles from '@/components/frontpage/PreviousPosts.module.scss';
 import { PostLink } from '@/components/PostLink';
-import PostTitleImage from '@/components/PostTitleImage';
+import PreviewTitleImage from '@/components/frontpage/PreviewTitleImage';
 import { PostBriefIntro } from '@/components/frontpage/PostBriefIntro';
 import { PostedDate } from '@/components/frontpage/PostedDate';
 import { EstimatedMinutesToRead } from '@/components/frontpage/EstimatedMinutesToRead';
@@ -10,7 +10,7 @@ export function PostHeader({ post, ...props }) {
     return (
         <div className={styles.post}>
             <PostLink post={post}>
-                <PostTitleImage className={styles.image} post={post} />
+                <PreviewTitleImage className={styles.image} post={post} />
                 <h1 className={styles.title} {...props}>{post.title}</h1>
                 <PostBriefIntro className={styles.brief} post={post} maxLength={20} />
                 <div className={styles.footer}>
