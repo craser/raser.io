@@ -138,29 +138,21 @@
  */
 .nextPrevLinksContainer {
     position: relative; // offset parent for previews
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr; // fixed halves, so a lone link keeps its own side
+    column-gap: 2vw;
     padding-bottom: 3em;
-    gap: 2vw;
-
-    @include small() {
-    }
-
-
-    /* if there is no prev post */
-    &.nextOnly {
-        flex-direction: row;
-    }
-
-    /* if there is no next post */
-    &.prevOnly {
-        flex-direction: row-reverse;
-    }
 }
 
 .nextPrevPreviewContainer {
-    flex-basis: 50%;
-    flex-grow: 1;
+    &.nextLink {
+        grid-column: 1;
+    }
+
+    &.prevLink {
+        grid-column: 2;
+    }
+
     border-radius: var(--theme-border-radius-large);
     @include small {
         &.prevLink {
