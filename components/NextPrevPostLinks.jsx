@@ -3,14 +3,8 @@ import { PostPreview } from '@/components/PostPreview';
 import PageSection from '@/components/frontpage/PageSection';
 
 export default function NextPrevPostLinks({ nextPost, prevPost }) {
-    
-    const containerClasses = [styles.nextPrevLinksContainer];
-    if (!nextPost) {
-        containerClasses.push(styles.prevOnly);
-    }
-
     return (
-        <div className={containerClasses.join(' ')}>
+        <div className={styles.nextPrevLinksContainer}>
             {nextPost &&
                 <PageSection title="next" className={[styles.nextPrevPreviewContainer, styles.nextLink].join(' ')}>
                     <PostPreview post={nextPost} />
