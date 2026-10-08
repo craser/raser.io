@@ -63,6 +63,14 @@
       "readme": "/api/github/readme?repo={repo}"
     }
   },
+  "spotify": {
+    "clientId": "{SPOTIFY_CLIENT_ID}",
+    "clientSecret": "{SPOTIFY_CLIENT_SECRET}",
+    "refreshToken": "{SPOTIFY_REFRESH_TOKEN}",
+    "endpoints": {
+      "recent": "/api/spotify/recent"
+    }
+  },
   "launchdarkly": {
     "clientSideId": "{NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID}"
   }
