@@ -12,6 +12,7 @@ function TrackRow({ track }) {
         <li className={styles.track}>
             <a className={styles.trackLink} href={track.url}>
                 {track.albumImageUrl &&
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img className={styles.albumImage} src={track.albumImageUrl} alt="" width={48} height={48}/>
                 }
                 <span className={styles.trackText}>

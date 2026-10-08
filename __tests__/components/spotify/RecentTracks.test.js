@@ -4,7 +4,7 @@
  */
 
 import '@testing-library/jest-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import RecentTracks from '@/components/spotify/RecentTracks';
 
 jest.mock('lucide-react', () => ({
@@ -76,9 +76,11 @@ describe('RecentTracks', () => {
     });
 
     test('renders nothing when there are no tracks', async () => {
-        apiReturns({ ok: true, json: () => Promise.resolve({ tracks: [] }) });
+        const json = jest.fn().mockResolvedValue({ tracks: [] });
+        apiReturns({ ok: true, json });
         const { container } = render(<RecentTracks/>);
-        await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+        await waitFor(() => expect(json).toHaveBeenCalled());
+        await act(async () => {});
         expect(container).toBeEmptyDOMElement();
     });
 
