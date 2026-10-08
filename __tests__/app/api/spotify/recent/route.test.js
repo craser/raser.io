@@ -29,16 +29,19 @@ const play = (id) => ({
 describe('/api/spotify/recent', () => {
     let NextResponse;
     let consoleError;
+    let consoleWarn;
 
     beforeEach(() => {
         jest.clearAllMocks();
         NextResponse = require('next/server').NextResponse;
         NextResponse.mockImplementation((body, init) => ({ body, status: init.status, headers: init.headers }));
         consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
     });
 
     afterEach(() => {
         consoleError.mockRestore();
+        consoleWarn.mockRestore();
     });
 
     function spotifyReturns(ids) {
@@ -63,6 +66,19 @@ describe('/api/spotify/recent', () => {
         expect(tracks.map((t) => t.id)).toEqual(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']);
         expect(response.status).toBe(200);
         expect(consoleError).not.toHaveBeenCalled();
+        expect(consoleWarn).not.toHaveBeenCalled();
+    });
+
+    test('an empty listening history is a cached 200 with no tracks, and the reason is logged', async () => {
+        spotifyReturns([]);
+        const { GET } = require('@/app/api/spotify/recent/route');
+
+        const response = await GET();
+
+        expect(response.status).toBe(200);
+        expect(JSON.parse(response.body)).toEqual({ tracks: [] });
+        expect(response.headers['Cache-Control']).toBe('public, s-maxage=3600, stale-while-revalidate=86400');
+        expect(consoleWarn).toHaveBeenCalledWith('Spotify returned no recently played tracks.');
     });
 
     test('caches a success for an hour', async () => {

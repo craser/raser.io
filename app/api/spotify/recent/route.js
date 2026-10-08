@@ -1,5 +1,5 @@
 // ABOUTME: GET /api/spotify/recent: the tracks Chris most recently played on Spotify, for the front page.
-// ABOUTME: Returns up to 12 distinct tracks cached for an hour, or an uncached 502 when Spotify can't be reached.
+// ABOUTME: Returns up to 12 distinct tracks cached for an hour (logging when there are none), or an uncached 502 when Spotify can't be reached.
 
 import { NextResponse } from "next/server";
 import SiteConfig from "@/lib/SiteConfig";
@@ -20,6 +20,9 @@ export async function GET() {
     });
     try {
         const tracks = selectDistinctTracks(await spotify.getRecentlyPlayedTracks(), TRACK_LIMIT);
+        if (tracks.length === 0) {
+            console.warn('Spotify returned no recently played tracks.');
+        }
         return new NextResponse(JSON.stringify({ tracks }), {
             status: 200,
             headers: {
