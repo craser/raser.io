@@ -15,7 +15,10 @@
     "test:coverage:open": "open coverage/lcov-report/index.html",
     "build:publish": "esbuild scripts/blog-post.js --bundle --platform=node --format=esm --packages=external --tsconfig=jsconfig.json --outfile=bin/blog-post.mjs",
     "preblog-post": "npm run build:publish",
-    "blog-post": "node bin/blog-post.mjs"
+    "blog-post": "node bin/blog-post.mjs",
+    "build:spotify-auth": "esbuild scripts/spotify-auth.js --bundle --platform=node --format=esm --packages=external --tsconfig=jsconfig.json --outfile=bin/spotify-auth.mjs",
+    "prespotify-auth": "npm run build:spotify-auth",
+    "spotify-auth": "op run --env-file scripts/spotify/spotify.env -- node bin/spotify-auth.mjs"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.11",
