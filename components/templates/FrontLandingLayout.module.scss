@@ -153,14 +153,31 @@
                 border-top: 1px solid #333;
             }
 
+            /*
+             * Mobile stacks the columns with column-reverse, so the highest order lands on top.
+             * Empty when the flag is off or there's nothing to list; hide it so it takes no space.
+             */
+            .listening {
+                order: 1;
+
+                &:empty {
+                    display: none;
+                }
+            }
+
             @media only screen and (min-width: 800px) {
                 flex-direction: row;
 
-                section {
-                    width: 100%;
-                    max-width: 50%;
-                    min-width: 40%;
+                /* Two or three columns share the row evenly, depending on whether listening is shown. */
+                > section,
+                > .listening {
+                    flex: 1 1 0;
+                    min-width: 0;
                     z-index: 1;
+                }
+
+                .listening {
+                    order: 0;
                 }
 
             }

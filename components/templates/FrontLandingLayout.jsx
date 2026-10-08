@@ -4,7 +4,7 @@ import StandardLayout from './StandardLayout'
 import { useEffect, useRef } from "react";
 import { debounce, inIdle } from "@/lib/util/wrappers";
 
-export default function FrontLandingLayout({ latest, github, social, previous }) {
+export default function FrontLandingLayout({ latest, github, listening, previous }) {
     const headerRef = useRef(null);
 
     /**
@@ -37,6 +37,7 @@ export default function FrontLandingLayout({ latest, github, social, previous })
                 </div>
                 <div className={styles.tier2}>
                     {github}
+                    <div className={styles.listening}>{listening}</div>
                     {previous}
                 </div>
             </>

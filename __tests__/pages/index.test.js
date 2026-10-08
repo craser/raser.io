@@ -2,13 +2,14 @@
 // ABOUTME: Guards against getStaticProps being reintroduced while the data layer is being reworked.
 
 import { render } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import Home from '@/pages/index';
 
 const captured = {};
 
 jest.mock('@/components/templates/FrontLandingLayout', () => ({
     __esModule: true,
-    default: ({ latest, previous }) => <div data-testid="front-landing">{latest}{previous}</div>
+    default: ({ latest, github, listening, previous }) => <div data-testid="front-landing">{latest}{github}{listening}{previous}</div>
 }));
 
 jest.mock('@/components/templates/StandardLayout', () => ({
@@ -45,16 +46,17 @@ jest.mock('@/components/github/GithubActivity', () => ({
     default: () => <div data-testid="github-activity"/>
 }));
 
-jest.mock('@/components/frontpage/SocialFeed', () => ({
+jest.mock('@/components/spotify/RecentTracks', () => ({
     __esModule: true,
-    default: () => <div data-testid="social-feed"/>
+    default: () => <div data-testid="recent-tracks"/>
 }));
 
 jest.mock('@/components/flags/FeatureEnabled', () => ({
     __esModule: true,
-    default: ({ children, override }) => {
-        captured.featureEnabledOverride = override;
-        return <div data-testid="feature-enabled">{children}</div>;
+    default: ({ feature, children, override }) => {
+        captured.featureEnabledOverride = captured.featureEnabledOverride ?? override;
+        captured.enabledFeatures = [...(captured.enabledFeatures ?? []), feature];
+        return <div data-testid={`feature-enabled-${feature}`}>{children}</div>;
     }
 }));
 
@@ -105,5 +107,15 @@ describe('Home page', () => {
         render(<Home/>);
         expect(captured.featureEnabledOverride).toBeUndefined();
         expect(captured.featureDisabledOverride).toBeUndefined();
+    });
+
+    it('shows recent tracks only behind the showRecentTracks flag', () => {
+        const { getByTestId } = render(<Home/>);
+        expect(captured.enabledFeatures).toContain('showRecentTracks');
+        expect(getByTestId('feature-enabled-showRecentTracks')).toContainElement(getByTestId('recent-tracks'));
+    });
+
+    it('no longer renders the social feed placeholder', () => {
+        expect(() => require('@/components/frontpage/SocialFeed')).toThrow();
     });
 });

@@ -3,7 +3,7 @@ import LatestPost from "@/components/frontpage/LatestPost";
 import StandardLayout from "@/components/templates/StandardLayout";
 import LogEntries from "@/components/LogEntries";
 import GithubActivity from "@/components/github/GithubActivity";
-import SocialFeed from "@/components/frontpage/SocialFeed";
+import RecentTracks from "@/components/spotify/RecentTracks";
 import PreviousPosts from "@/components/frontpage/PreviousPosts";
 import FeatureEnabled from "@/components/flags/FeatureEnabled";
 import FeatureDisabled from "@/components/flags/FeatureDisabled";
@@ -15,7 +15,11 @@ export default function Home({ latestPost, recentPosts, entries, isLandingPageEn
                 <FrontLandingLayout
                     latest={<LatestPost initialPost={latestPost} />}
                     github={<GithubActivity/>}
-                    social={<SocialFeed/>}
+                    listening={
+                        <FeatureEnabled feature='showRecentTracks'>
+                            <RecentTracks/>
+                        </FeatureEnabled>
+                    }
                     previous={<PreviousPosts initialPosts={recentPosts} />}
                 />
             </FeatureEnabled>
