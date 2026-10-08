@@ -22,6 +22,9 @@ Spotify lately. It is not a listening log — no history, play counts, or timest
 - On **any failure** (revoked token, Spotify outage, empty history), the section is **hidden entirely** and the
   server logs the reason. It never renders empty or flashes and disappears.
 - The section is gated by a **LaunchDarkly feature flag**, `showRecentTracks`. An absent flag means disabled.
+  Claude creates the flag as part of this work (see Implementation Order) and turns it **on in every environment,
+  including production**; it has no effect until the code is merged. The flag must have **"Available to SDKs using
+  Client-side ID"** enabled, or the React client SDK cannot see it.
 - The one-time Spotify authorization is done with a **local script**, not a deployed callback route.
 
 ## External Constraints (Spotify, as of 2026)
@@ -160,11 +163,14 @@ Following TDD for every unit.
 1. **Auth script and probe:** build `npm run spotify-auth`; Chris creates the Spotify app and runs it; then a single
    request confirms `GET /v1/me/player/recently-played` returns tracks in Development Mode. Stop and regroup if it
    does not.
-2. Distinct-track selection, Spotify shim, config.
-3. API route.
-4. `RecentTracks` component.
-5. Layout, page, flag, and `SocialFeed` cleanup.
-6. Playwright setup and e2e spec.
+2. **Feature flag:** Claude creates the boolean flag `showRecentTracks` in the LaunchDarkly web UI, using Chris's
+   signed-in browser session, with client-side SDK availability enabled, and turns it on in all environments.
+   Claude shows Chris the flag settings before saving.
+3. Distinct-track selection, Spotify shim, config.
+4. API route.
+5. `RecentTracks` component.
+6. Layout, page, flag, and `SocialFeed` cleanup.
+7. Playwright setup and e2e spec.
 
 ## Chris's Manual Steps
 
@@ -172,4 +178,3 @@ Following TDD for every unit.
   `http://127.0.0.1:<port>/callback` redirect URI.
 - Run `npm run spotify-auth`; store `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REFRESH_TOKEN` in Vercel
   and 1Password.
-- Create the `showRecentTracks` flag in LaunchDarkly and enable it when ready.
