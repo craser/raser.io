@@ -84,6 +84,16 @@ describe('RecentTracks', () => {
         expect(container).toBeEmptyDOMElement();
     });
 
+    test('renders nothing when the response has no tracks property', async () => {
+        const json = jest.fn().mockResolvedValue({});
+        apiReturns({ ok: true, json });
+        const { container } = render(<RecentTracks/>);
+        await waitFor(() => expect(json).toHaveBeenCalled());
+        await act(async () => {});
+        expect(container).toBeEmptyDOMElement();
+        expect(consoleError).not.toHaveBeenCalled();
+    });
+
     test('renders nothing, and logs, when the API fails', async () => {
         apiReturns({ ok: false, status: 502, json: () => Promise.resolve({ error: 'Spotify is unavailable' }) });
         const { container } = render(<RecentTracks/>);

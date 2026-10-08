@@ -35,7 +35,7 @@ export default function RecentTracks() {
                 }
                 return response.json();
             })
-            .then(({ tracks }) => setTracks(tracks))
+            .then(({ tracks }) => setTracks(tracks ?? []))
             .catch((error) => console.error(error));
     }, []);
 
