@@ -29,6 +29,9 @@ test('the Listening section is placed for the viewport', async ({ page }, testIn
     if (testInfo.project.name === 'desktop') {
         expect(g.x).toBeLessThan(l.x);
         expect(l.x).toBeLessThan(p.x);
+        // The columns share a row, so the Listening panel is as tall as its neighbours.
+        expect(Math.abs(l.height - g.height)).toBeLessThanOrEqual(1);
+        expect(Math.abs(l.height - p.height)).toBeLessThanOrEqual(1);
     } else {
         expect(l.y).toBeLessThan(p.y);
         expect(l.y).toBeLessThan(g.y);

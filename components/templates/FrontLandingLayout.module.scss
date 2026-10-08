@@ -178,6 +178,18 @@
 
                 .listening {
                     order: 0;
+
+                    /* Let the section inside fill the stretched wrapper, so its background matches its neighbours' height. */
+                    display: flex;
+                    flex-direction: column;
+
+                    > section {
+                        flex: 1;
+                    }
+
+                    &:empty {
+                        display: none;
+                    }
                 }
 
             }
