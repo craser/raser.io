@@ -1,0 +1,58 @@
+// ABOUTME: Styles for the front page "Listening" section's track list.
+// ABOUTME: Compact rows: album thumbnail, then title over artists.
+
+.trackList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.trackLink {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75em;
+    padding: 6px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+        border-color: white;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.albumImage {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.trackText {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.title,
+.artists {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.title {
+    font-weight: bold;
+}
+
+.artists {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
