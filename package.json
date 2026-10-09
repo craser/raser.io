@@ -13,9 +13,13 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:coverage:open": "open coverage/lcov-report/index.html",
+    "test:e2e": "playwright test",
     "build:publish": "esbuild scripts/blog-post.js --bundle --platform=node --format=esm --packages=external --tsconfig=jsconfig.json --outfile=bin/blog-post.mjs",
     "preblog-post": "npm run build:publish",
-    "blog-post": "node bin/blog-post.mjs"
+    "blog-post": "node bin/blog-post.mjs",
+    "build:spotify-auth": "esbuild scripts/spotify-auth.js --bundle --platform=node --format=esm --packages=external --tsconfig=jsconfig.json --outfile=bin/spotify-auth.mjs",
+    "prespotify-auth": "npm run build:spotify-auth",
+    "spotify-auth": "op run --env-file scripts/spotify/spotify.env -- node bin/spotify-auth.mjs"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.11",
@@ -57,6 +61,7 @@
     "@babel/plugin-proposal-decorators": "^7.25.9",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
+    "@playwright/test": "1.64.0",
     "@testing-library/user-event": "^14.5.2",
     "babel-jest": "^29.6.2",
     "cross-env": "^7.0.3",

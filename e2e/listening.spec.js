@@ -1,0 +1,51 @@
+// ABOUTME: End-to-end test of the front page Listening section against real Spotify data and real LaunchDarkly flags.
+// ABOUTME: Checks that tracks render and that the section sits between GitHub and Previously (desktop) or above them (mobile).
+
+const { test, expect } = require('@playwright/test');
+
+const section = (page, title) => page.locator('section', { has: page.getByRole('heading', { name: title, exact: true }) });
+
+test('the Listening section lists recently played tracks linked to Spotify', async ({ page }) => {
+    await page.goto('/');
+
+    const listening = section(page, 'Listening');
+    await expect(listening).toBeVisible({ timeout: 30000 });
+    const links = listening.locator('a[href^="https://open.spotify.com/track/"]');
+    expect(await links.count()).toBeGreaterThan(0);
+    expect(await links.count()).toBeLessThanOrEqual(12);
+});
+
+test('track titles are white and artists a lighter grey, readable on the dark panel', async ({ page }) => {
+    await page.goto('/');
+
+    const listening = section(page, 'Listening');
+    await expect(listening).toBeVisible({ timeout: 30000 });
+    // Each track link holds the thumbnail, then a span with the title span over the artists span.
+    const [title, artists] = await listening.locator('a').first().locator('span > span').all();
+    const color = (locator) => locator.evaluate((element) => getComputedStyle(element).color);
+    expect(await color(title)).toBe('rgb(255, 255, 255)');
+    expect(await color(artists)).toBe('rgb(221, 221, 221)');
+});
+
+test('the Listening section is placed for the viewport', async ({ page }, testInfo) => {
+    await page.goto('/');
+
+    const github = section(page, 'Recent Github Activity');
+    const listening = section(page, 'Listening');
+    const previous = section(page, 'Previously');
+    await expect(listening).toBeVisible({ timeout: 30000 });
+    await expect(github).toBeVisible({ timeout: 30000 });
+    await expect(previous).toBeVisible({ timeout: 30000 });
+
+    const [g, l, p] = await Promise.all([github, listening, previous].map((s) => s.boundingBox()));
+    if (testInfo.project.name === 'desktop') {
+        expect(g.x).toBeLessThan(l.x);
+        expect(l.x).toBeLessThan(p.x);
+        // The columns share a row, so the Listening panel is as tall as its neighbours.
+        expect(Math.abs(l.height - g.height)).toBeLessThanOrEqual(1);
+        expect(Math.abs(l.height - p.height)).toBeLessThanOrEqual(1);
+    } else {
+        expect(l.y).toBeLessThan(p.y);
+        expect(l.y).toBeLessThan(g.y);
+    }
+});

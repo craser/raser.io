@@ -4,6 +4,14 @@ jest.mock('/siteconfig.json', () => ({
     images: {
         postcard: 'https://example.com/images/postcards/{imageFileName}'
     },
+    spotify: {
+        clientId: '{SPOTIFY_CLIENT_ID}',
+        clientSecret: '{SPOTIFY_CLIENT_SECRET}',
+        refreshToken: '{SPOTIFY_REFRESH_TOKEN}',
+        endpoints: {
+            recent: '/api/spotify/recent'
+        }
+    },
     api: {
         root: '{NEXT_PUBLIC_API_ROOT}',
         endpoints: {
@@ -45,6 +53,23 @@ describe('SiteConfig', () => {
         };
         let actual = new SiteConfig().getValue('api.endpoints');
         expect(actual).toEqual(EXPECTED);
+    });
+
+    test('reads the Spotify credentials from the environment', () => {
+        global.process.env = {
+            SPOTIFY_CLIENT_ID: 'spotify-id',
+            SPOTIFY_CLIENT_SECRET: 'spotify-secret',
+            SPOTIFY_REFRESH_TOKEN: 'spotify-refresh'
+        };
+        const config = new SiteConfig();
+
+        expect(config.getValue('spotify.clientId')).toBe('spotify-id');
+        expect(config.getValue('spotify.clientSecret')).toBe('spotify-secret');
+        expect(config.getValue('spotify.refreshToken')).toBe('spotify-refresh');
+    });
+
+    test('knows the Spotify recent tracks endpoint', () => {
+        expect(new SiteConfig().getValue('spotify.endpoints.recent')).toBe('/api/spotify/recent');
     });
 
 });
