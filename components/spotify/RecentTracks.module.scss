@@ -50,9 +50,11 @@
 
 .title {
     font-weight: bold;
+    color: white;
 }
 
+/* Matches the commit dates in the neighbouring GitHub section. */
 .artists {
     font-size: 0.9em;
-    opacity: 0.8;
+    color: #ddd;
 }

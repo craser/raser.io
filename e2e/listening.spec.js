@@ -15,6 +15,18 @@ test('the Listening section lists recently played tracks linked to Spotify', asy
     expect(await links.count()).toBeLessThanOrEqual(12);
 });
 
+test('track titles are white and artists a lighter grey, readable on the dark panel', async ({ page }) => {
+    await page.goto('/');
+
+    const listening = section(page, 'Listening');
+    await expect(listening).toBeVisible({ timeout: 30000 });
+    // Each track link holds the thumbnail, then a span with the title span over the artists span.
+    const [title, artists] = await listening.locator('a').first().locator('span > span').all();
+    const color = (locator) => locator.evaluate((element) => getComputedStyle(element).color);
+    expect(await color(title)).toBe('rgb(255, 255, 255)');
+    expect(await color(artists)).toBe('rgb(221, 221, 221)');
+});
+
 test('the Listening section is placed for the viewport', async ({ page }, testInfo) => {
     await page.goto('/');
 
