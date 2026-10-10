@@ -22,6 +22,7 @@ import { GET as getLatest } from '@/app/api/entries/latest/[page]/route';
 import { GET as getNext } from '@/app/api/entries/[id]/next/route';
 import { GET as getPrev } from '@/app/api/entries/[id]/prev/route';
 import { GET as getSearch } from '@/app/api/entries/search/[numEntries]/route';
+import { GET as getTagged } from '@/app/api/entries/tagged/[tag]/[page]/route';
 
 function request(url = 'http://localhost/api/entries') {
     return new Request(url);
@@ -174,5 +175,49 @@ describe('GET /api/entries/search/[numEntries]', () => {
         const response = await getSearch(request(), { params: { numEntries: 'bogus' } });
         expect(response.status).toBe(200);
         expect((await response.json()).length).toBeGreaterThan(0);
+    });
+});
+
+describe('GET /api/entries/tagged/[tag]/[page]', () => {
+    it('returns the posts with that tag, newest first', async () => {
+        const response = await getTagged(request(), { params: { tag: 'joshuatree', page: '0' } });
+        expect(response.status).toBe(200);
+        const posts = await response.json();
+        expect(posts.map(p => p.entryId)).toEqual([1439, 1438, 4]);
+    });
+
+    it('honours the pageSize query parameter', async () => {
+        const response = await getTagged(
+            request('http://localhost/api/entries/tagged/joshuatree/1?pageSize=2'),
+            { params: { tag: 'joshuatree', page: '1' } }
+        );
+        const posts = await response.json();
+        expect(posts.map(p => p.entryId)).toEqual([4]);
+    });
+
+    it('decodes a URL-encoded tag', async () => {
+        const response = await getTagged(request(), { params: { tag: encodeURIComponent('at&t'), page: '0' } });
+        const posts = await response.json();
+        expect(posts).toHaveLength(1);
+        expect(posts[0].tags).toContain('at&t');
+    });
+
+    it('decodes an encoded slash in a tag', async () => {
+        const response = await getTagged(request(), { params: { tag: encodeURIComponent('9/11'), page: '0' } });
+        const posts = await response.json();
+        expect(posts).toHaveLength(1);
+        expect(posts[0].tags).toContain('9/11');
+    });
+
+    it('falls back to page zero when the page is not a number', async () => {
+        const response = await getTagged(request(), { params: { tag: 'joshuatree', page: 'bogus' } });
+        const posts = await response.json();
+        expect(posts[0].entryId).toBe(1439);
+    });
+
+    it('returns an empty array for a tag nobody uses', async () => {
+        const response = await getTagged(request(), { params: { tag: 'no-such-tag-anywhere', page: '0' } });
+        expect(response.status).toBe(200);
+        expect(await response.json()).toEqual([]);
     });
 });

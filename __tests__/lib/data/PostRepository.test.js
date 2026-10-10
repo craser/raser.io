@@ -254,6 +254,31 @@ describe('PostRepository', () => {
         });
     });
 
+    describe('getEntriesByTag', () => {
+        it('returns the posts with that tag, newest first', async () => {
+            const posts = await repository.getEntriesByTag('joshuatree');
+            expect(posts.map(p => p.entryId)).toEqual([1439, 1438, 4]);
+        });
+
+        it('honours page and pageSize', async () => {
+            const posts = await repository.getEntriesByTag('joshuatree', 1, 2);
+            expect(posts.map(p => p.entryId)).toEqual([4]);
+        });
+
+        it('returns whole posts, with attachments and tags', async () => {
+            const posts = await repository.getEntriesByTag('joshuatree', 0, 3);
+            expect(posts[2]).toEqual(expectedPost(4));
+        });
+
+        it('returns an empty array for a tag nobody uses', async () => {
+            expect(await repository.getEntriesByTag('no-such-tag-anywhere')).toEqual([]);
+        });
+
+        it('returns an empty array past the end of the tag\'s posts', async () => {
+            expect(await repository.getEntriesByTag('joshuatree', 5, 10)).toEqual([]);
+        });
+    });
+
     describe('getSearchStubs', () => {
         it('returns the requested number of posts newest first', async () => {
             const stubs = await repository.getSearchStubs(25);

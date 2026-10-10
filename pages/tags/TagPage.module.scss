@@ -1,0 +1,18 @@
+@import '@/styles/mixins.scss';
+
+.heading {
+    font-family: var(--font-title);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--theme-color-text);
+    margin: 0 0 1em 0;
+    padding: 0 15px;
+
+    @include large() {
+        padding: 0;
+    }
+}
+
+.tag {
+    color: var(--theme-color-pop);
+}

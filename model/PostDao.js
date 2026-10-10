@@ -78,6 +78,15 @@ export default class PostDao {
         return this.#cleanFetch(url).then(response => response.json())
     }
 
+    /**
+     * Returns one zero-indexed page of the posts carrying the given tag, newest first.
+     */
+    async getEntriesByTag(tag, page = 0, pageSize = 10) {
+        tag = encodeURIComponent(tag);
+        let url = this.#config.getEndpoint('entries.tagged', { tag, page, pageSize });
+        return this.#cleanFetch(url).then(response => response.json());
+    }
+
     async getSearchStubs(numEntries = 1000) {
         let url = this.#config.getEndpoint('entries.bulk', { numEntries });
         return this.#cleanFetch(url)
