@@ -82,6 +82,16 @@ export default class CachingPostDao {
         return posts;
     }
 
+    /**
+     * Caches the posts, but records no next/prev relations between them: posts sharing a tag
+     * are not neighbours in the full timeline.
+     */
+    async getEntriesByTag(tag, page, pageSize) {
+        let posts = await this.#dao.getEntriesByTag(tag, page, pageSize);
+        posts.forEach(p => this.#cache.put(p.entryId, p));
+        return posts;
+    }
+
     async getSearchStubs(numEntries = 1000) {
         return this.#dao.getSearchStubs(numEntries);
     }

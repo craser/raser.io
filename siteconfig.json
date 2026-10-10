@@ -32,7 +32,8 @@
         "latest": "/entries/latest/{page}?pageSize={pageSize}",
         "next": "/entries/{id}/next",
         "previous": "/entries/{id}/prev",
-        "bulk": "/entries/search/{numEntries}"
+        "bulk": "/entries/search/{numEntries}",
+        "tagged": "/entries/tagged/{tag}/{page}?pageSize={pageSize}"
       },
       "maps": {
         "mapimageuri": "/maps/mapimageuri/{fileName}"

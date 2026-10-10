@@ -58,3 +58,34 @@ test('Should cache next/prev relations when loading pages', async () => {
     });
     expect(mockDao.getNext).not.toHaveBeenCalled();
 })
+
+test('Should cache posts loaded by tag', async () => {
+    const mockDao = {
+        getEntriesByTag: jest.fn(async () => [{ entryId: 1439 }, { entryId: 4 }]),
+        getPostById: jest.fn(async () => ({}))
+    };
+    const dao = new CachingPostDao(mockDao);
+    const posts = await dao.getEntriesByTag('joshuatree', 0, 30);
+
+    expect(mockDao.getEntriesByTag).toHaveBeenCalledWith('joshuatree', 0, 30);
+    expect(posts.map(p => p.entryId)).toEqual([1439, 4]);
+    expect((await dao.getPostById(4)).entryId).toBe(4);
+    expect(mockDao.getPostById).not.toHaveBeenCalled();
+})
+
+test('Should not record next/prev relations between posts loaded by tag', async () => {
+    // Posts sharing a tag are not neighbours in the full timeline, so next/prev
+    // must still go back to the underlying DAO.
+    const mockDao = {
+        getEntriesByTag: jest.fn(async () => [{ entryId: 1439 }, { entryId: 4 }]),
+        getNextPost: jest.fn(async () => ({ entryId: 5 })),
+        getPrevPost: jest.fn(async () => ({ entryId: 1438 }))
+    };
+    const dao = new CachingPostDao(mockDao);
+    await dao.getEntriesByTag('joshuatree', 0, 30);
+
+    expect((await dao.getNextPost({ entryId: 4 })).entryId).toBe(5);
+    expect((await dao.getPrevPost({ entryId: 1439 })).entryId).toBe(1438);
+    expect(mockDao.getNextPost).toHaveBeenCalledTimes(1);
+    expect(mockDao.getPrevPost).toHaveBeenCalledTimes(1);
+})

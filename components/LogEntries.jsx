@@ -6,7 +6,11 @@ import { useDataContext } from "@/components/api/DataProvider";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 
 
-export default function LogEntries({ initialPage = 0, pageSize, initialEntries }) {
+/**
+ * Lists posts newest first, loading another page each time the reader nears the bottom.
+ * Given a tag, lists only the posts carrying that tag.
+ */
+export default function LogEntries({ initialPage = 0, pageSize, initialEntries, tag = null }) {
     const analytics = useAnalytics();
     const dataContext = useDataContext();
     const [entries, setEntries] = useState(initialEntries || []);
@@ -24,14 +28,18 @@ export default function LogEntries({ initialPage = 0, pageSize, initialEntries }
         console.log(`loading page ${pageNumber}`);
         const start = Date.now();
         setIsLoading(true);
-        return dataContext.getPostDao().getEntries(pageNumber, pageSize)
+        const postDao = dataContext.getPostDao();
+        const request = tag
+            ? postDao.getEntriesByTag(tag, pageNumber, pageSize)
+            : postDao.getEntries(pageNumber, pageSize);
+        return request
             .then(page => {
                 setEntries((entries) => [...entries, ...page]);
                 setIsLoading(false);
             })
             .then(() => console.log(`fetched page ${pageNumber} in ${Date.now() - start}ms`))
             .catch(e => console.error(e));
-    }, [setEntries, setIsLoading, dataContext, pageSize]);
+    }, [setEntries, setIsLoading, dataContext, pageSize, tag]);
 
     useEffect(() => {
         if (!isCsr || intersectionObserver) return;
