@@ -154,11 +154,12 @@
             }
 
             /*
-             * Mobile stacks the columns with column-reverse, so the highest order lands on top.
+             * Mobile stacks the columns with column-reverse, so the lowest order lands at the bottom:
+             * previous, github, then listening.
              * Empty when the flag is off or there's nothing to list; hide it so it takes no space.
              */
             .listening {
-                order: 1;
+                order: -1;
 
                 &:empty {
                     display: none;
