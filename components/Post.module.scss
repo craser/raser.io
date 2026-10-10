@@ -89,6 +89,17 @@
     margin-bottom: var(--margin);
 }
 
+/**
+ * Older posts embed media with fixed pixel widths (e.g. 425px Flash-era YouTube embeds).
+ * Wider than a phone screen, they make the browser zoom out the whole page.
+ */
+.entry embed,
+.entry object,
+.entry video,
+.entry iframe:not([title="YouTube video player"]) {
+    max-width: 100%;
+}
+
 .entry h2 {
     overflow: hidden;
 
