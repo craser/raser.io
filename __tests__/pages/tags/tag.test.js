@@ -30,6 +30,12 @@ jest.mock('@/components/LogEntries', () => ({
     }
 }));
 
+// next/head writes to the document head as a side effect; render its children inline instead.
+jest.mock('next/head', () => ({
+    __esModule: true,
+    default: ({ children }) => <div data-testid="head">{children}</div>
+}));
+
 jest.mock('@/components/LoadingSpinner', () => ({
     __esModule: true,
     default: () => <div data-testid="loading-spinner"/>
@@ -60,5 +66,15 @@ describe('Tag listing page', () => {
         const { getByTestId, queryByTestId } = render(<TagPage/>);
         expect(getByTestId('loading-spinner')).not.toBeNull();
         expect(queryByTestId('log-entries')).toBeNull();
+    });
+
+    it('names the tag in a heading above the list', () => {
+        const { getByRole } = render(<TagPage/>);
+        expect(getByRole('heading', { name: 'Posts tagged joshuatree' })).toBeInTheDocument();
+    });
+
+    it('names the tag in the page title', () => {
+        const { getByTestId } = render(<TagPage/>);
+        expect(getByTestId('head').querySelector('title').textContent).toBe('Posts tagged joshuatree - DeathB4Decaf');
     });
 });
