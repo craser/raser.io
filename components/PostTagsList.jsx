@@ -1,16 +1,15 @@
-import TagLink from "@/components/TagLink";
-
 export default function PostTagsList(props) {
     let { post, className } = props;
     let tags = (post && post.tags && post.tags.length)
         ? post.tags
         : [];
 
+    // Plain text for now: the site has no /tags page for these to link to.
     if (tags && tags.length) {
         return (
             <ul className={className}>
                 {tags.map(tag =>
-                    <li key={`${post.Entry_ID}.${tag}`}><TagLink tag={tag}/></li>
+                    <li key={`${post.entryId}.${tag}`}>{tag}</li>
                 )}
             </ul>
         );

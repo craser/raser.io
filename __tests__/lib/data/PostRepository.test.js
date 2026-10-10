@@ -70,6 +70,14 @@ const referenceOrder = [...reference].sort((a, b) => {
 const IMAGE_FILE_TYPES = { 0: 'map', 1: 'image', 2: 'document' };
 
 /**
+ * The reference file predates tags in the API, so the tags the database holds for the
+ * entries compared in full are listed here. Any other entry is expected to have none.
+ */
+const REFERENCE_TAGS = {
+    4: ['climbing', 'joshuatree'],
+};
+
+/**
  * The reference file stores imageFileType as the raw numeric column value. The API
  * reports the name, so translate before comparing.
  */
@@ -78,6 +86,7 @@ function expectedPost(entryId) {
     return {
         ...post,
         imageFileType: IMAGE_FILE_TYPES[post.imageFileType] ?? post.imageFileType,
+        tags: REFERENCE_TAGS[entryId] ?? [],
     };
 }
 
@@ -124,6 +133,16 @@ describe('PostRepository', () => {
             const bare = reference.find(p => !p.attachments || p.attachments.length === 0);
             const post = await repository.getPostById(bare.entryId);
             expect(post.attachments).toEqual([]);
+        });
+
+        it('lists the post\'s tag names alphabetically', async () => {
+            const post = await repository.getPostById(4);
+            expect(post.tags).toEqual(['climbing', 'joshuatree']);
+        });
+
+        it('returns an empty tags array for a post with none', async () => {
+            const post = await repository.getPostById(3420);
+            expect(post.tags).toEqual([]);
         });
 
         it('preserves CRLF line endings in body text', async () => {
@@ -177,6 +196,11 @@ describe('PostRepository', () => {
             const posts = await repository.getEntries(0, 10);
             posts.forEach(p => expect(Array.isArray(p.attachments)).toBe(true));
         });
+
+        it('carries tags on every post in the page', async () => {
+            const posts = await repository.getEntries(0, 10);
+            posts.forEach(p => expect(Array.isArray(p.tags)).toBe(true));
+        });
     });
 
     describe('getNextPost', () => {
@@ -185,6 +209,11 @@ describe('PostRepository', () => {
             const expected = referenceOrder[index - 1];
             const next = await repository.getNextPost(4);
             expect(next.entryId).toBe(expected.entryId);
+        });
+
+        it('carries the neighbour\'s tags', async () => {
+            const next = await repository.getNextPost(4);
+            expect(Array.isArray(next.tags)).toBe(true);
         });
 
         it('breaks ties on date by ascending entryId', async () => {
