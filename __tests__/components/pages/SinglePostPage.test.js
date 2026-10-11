@@ -33,6 +33,15 @@ jest.mock('@/components/templates/SingleSectionContent', () => {
     };
 });
 
+const mockPostBackgroundProps = [];
+
+jest.mock('@/components/PostBackground', () => {
+    return function MockPostBackground(props) {
+        mockPostBackgroundProps.push(props);
+        return <div data-testid="mock-post-background"/>;
+    };
+});
+
 jest.mock('@/components/analytics/AnalyticsProvider', () => ({
     useAnalytics: () => ({ firePageView: jest.fn(), fireReferrer: jest.fn() })
 }));
@@ -50,6 +59,7 @@ jest.mock('@/components/api/DataProvider', () => ({
 describe('SinglePostPage', () => {
     beforeEach(() => {
         mockReadPostViewProps.length = 0;
+        mockPostBackgroundProps.length = 0;
     });
 
     it('renders the post once it loads', async () => {
@@ -62,5 +72,11 @@ describe('SinglePostPage', () => {
         await waitFor(() => expect(getByTestId('mock-read-post-view')).toBeInTheDocument());
         expect(mockReadPostViewProps[0].showBody).toBe(true);
         expect(mockReadPostViewProps[0].showNextPrev).toBe(true);
+    });
+
+    it('puts the post\'s hero image behind the page', async () => {
+        const { getByTestId } = render(<SinglePostPage postId="DUMMY_ENTRY_ID"/>);
+        await waitFor(() => expect(getByTestId('mock-post-background')).toBeInTheDocument());
+        expect(mockPostBackgroundProps[0].post.entryId).toBe('DUMMY_ENTRY_ID');
     });
 });

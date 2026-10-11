@@ -1,0 +1,12 @@
+/*
+ * A fixed layer rather than background-attachment: fixed on <body>, because iOS Safari
+ * ignores background-attachment: fixed and would scroll the image with the page.
+ */
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
