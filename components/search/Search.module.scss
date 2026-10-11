@@ -232,3 +232,44 @@ $search-border: #333333;
     position: relative;
     left: -11px;
 }
+
+/*
+ * High Contrast Mode makes every background opaque, but the typeahead works by showing a
+ * suggestion through a transparent input, over an invisible copy of the query. Restore those,
+ * and swap the colour-coded highlights for ones that survive black and white.
+ */
+:global(:root[data-theme="high-contrast-dark"]) .searchInterface {
+    border-color: #fff;
+
+    .searchInput {
+        border-bottom-color: #fff;
+
+        input {
+            background-color: transparent !important;
+        }
+
+        .typeAhead .existingQuery {
+            color: transparent !important;
+        }
+
+        .typeAhead .suggestedCompletion {
+            color: #aaa !important;
+        }
+    }
+
+    .searchResults {
+        .searchResult {
+            border-color: #fff;
+
+            &.selectedResult, &:hover {
+                outline: 2px solid #fff;
+                outline-offset: -2px;
+            }
+        }
+
+        .searchResultText .resultTokenMatch {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+    }
+}

@@ -25,8 +25,9 @@ export default function LatestPostSection({ initialPost = null }) {
     } else {
         // TODO: get rid of this tailwind styling garbage - worked great for initial rough-in, but annoying.
         return (
-            <PostLink post={post}>
-                <div className={styles.latestPost} style={{ backgroundImage: `url(${getFrontPageTitleImageUrl(post)})`}}>
+            <PostLink post={post} className={styles.latestPostLink}>
+                {/* Set as a variable so High Contrast Mode can restore it over its no-background-images rule. */}
+                <div className={styles.latestPost} style={{ '--hero-image': `url(${getFrontPageTitleImageUrl(post)})` }}>
                     <div className={styles.postInfo}>
                         <h3 className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-4 hover:underline ${styles.postTitle}`}>
                             {post.title}

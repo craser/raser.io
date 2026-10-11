@@ -29,3 +29,8 @@
         }
     }
 }
+
+/* High Contrast Mode turns both backdrop and modal solid black; outline the modal so it stands apart. */
+:global(:root[data-theme="high-contrast-dark"]) .backdrop .modal {
+    border: 2px solid #fff;
+}

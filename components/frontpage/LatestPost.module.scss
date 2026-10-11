@@ -15,7 +15,7 @@
     flex-direction: row-reverse;
     min-height: 60vh; // fill the "splash" area. need a better way to do this... but time is short today.
 
-    /* background image set in jsx */
+    background-image: var(--hero-image); /* --hero-image set in jsx */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -72,5 +72,37 @@
         height: 100%;
         background: linear-gradient(90deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
         z-index: 2;
+    }
+}
+
+/*
+ * High Contrast Mode keeps the hero photo, drops the dimming gradient, and puts the post's
+ * details on a solid white card with black text.
+ */
+:global(:root[data-theme="high-contrast-dark"]) {
+    .latestPostLink {
+        text-decoration: none !important; // links underline by default; the card shouldn't
+    }
+
+    .latestPost {
+        background-image: var(--hero-image) !important;
+
+        &:after {
+            display: none;
+        }
+
+        .postInfo {
+            align-self: center;
+            height: fit-content;
+            padding: 1em;
+            border: 2px solid #000;
+            border-radius: 5px;
+            margin: var(--header-height) 1em 1em 1em;
+        }
+
+        .postInfo, .postInfo *, .postInfo *::before, .postInfo *::after {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
     }
 }

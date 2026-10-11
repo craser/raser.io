@@ -30,6 +30,9 @@
     --theme-gradient-neon: -webkit-linear-gradient(top, #ff00c6 0%, #BA008B 50%, #9B00C5 100%);
 }
 
+/* Themes override the tokens above, and more, under :root[data-theme="..."]. See lib/theme/themes.js. */
+@import 'themes/high-contrast-dark';
+
 /*@media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;

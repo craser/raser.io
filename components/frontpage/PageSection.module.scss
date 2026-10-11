@@ -105,3 +105,8 @@
         padding: var(--content-padding);
     }
 }
+
+/* The faint decorative icon would turn solid white in High Contrast Mode; it carries no content. */
+:global(:root[data-theme="high-contrast-dark"]) .pageSection .sectionBackground {
+    display: none;
+}
