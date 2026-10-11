@@ -1,120 +1,96 @@
 // ABOUTME: The high-contrast-dark theme, shown to visitors as "High Contrast Mode".
-// ABOUTME: White on opaque black, a black-on-white page header, and links left to the browser's defaults.
+// ABOUTME: White on opaque black, a black-on-white page header, and links in the browser's own colours.
 
 /*
- * This theme deliberately overrides component styles wholesale, with !important, rather than
- * asking each component to opt in. That way a component added later can't leave a translucent
- * or low-contrast patch behind. The few components whose mechanics depend on transparency
- * (search's typeahead overlay, the theme toggle's knob) carry their own small overrides, keyed
- * on the same :root[data-theme] selector.
- *
- * Specificity matters here: the rules below are ordered so that, at equal specificity, the
- * header beats the page, and links beat both (except the site title, which stays black).
+ * Only variables from default.scss are overridden here. Text variables are mostly
+ * `currentColor`, i.e. "inherit": text is white on the page, black in the header and on the
+ * hero card, and takes the link colour inside links.
  */
 :root[data-theme="high-contrast-dark"] {
-    /* Dark UA defaults: scrollbars, form controls, and the lighter dark-mode link colours. */
-    color-scheme: dark;
-    background-color: #000;
+    color-scheme: dark; // dark scrollbars, form controls, and the browser's dark-mode link colours
 
-    --theme-color-text: #fff;
-    --theme-color-pop: #fff;
-    --theme-color-border-light: #fff;
-    --theme-color-subtext: #fff;
+    /* Page: opaque black, no photos or decorations behind content */
+    --theme-page-bg: #000;
+    --theme-page-text: #fff;
+    --theme-content-text: currentColor;
+    --theme-backdrop-image: none;
+    --theme-backdrop-display: none;
+    --theme-decoration-display: none;
+    --theme-divider: #fff;
+
+    --theme-panel-bg: #000;
+    --theme-hairline: #888;
+    --theme-chip-bg: #000;
+
+    /* Text: inherit, so it's white on the page and link-coloured inside links */
+    --theme-color-text: currentColor;
+    --theme-text-muted: currentColor;
+    --theme-text-subtle: currentColor;
+    --theme-color-subtext: currentColor;
     --theme-color-border: #fff;
+    --theme-color-border-light: #fff;
     --theme-color-content-text-bg: #000;
-    --theme-color-title: #fff;
-    --theme-color-link: #fff; // unused here: links are reverted to browser defaults below
-    --theme-color-link-underline: currentColor;
-    --theme-color-typeahead-suggestion: #aaa;
-    --theme-gradient-neon: none;
+    --theme-color-pop: currentColor;
+    --theme-accent-hover: currentColor;
+    --theme-highlight-text: currentColor;
 
-    body {
-        background-color: #000 !important;
-        color: #fff !important;
-    }
+    --theme-pop-gradient: none;
+    --theme-section-title-gradient: none;
+    --theme-pop-fill: currentColor;
 
-    /* The page: everything opaque black, every word white, nothing see-through. */
-    body *,
-    body *::before,
-    body *::after {
-        background-color: #000 !important;
-        background-image: none !important; // also removes gradients and hero/backdrop photos
-        color: #fff !important;
-        -webkit-text-fill-color: currentColor !important; // undoes the gradient "poptext" effect
-        text-shadow: none !important;
-        box-shadow: none !important;
-        opacity: 1 !important; // also reveals things that only appear on hover
-        filter: none !important;
-        backdrop-filter: none !important;
-    }
+    /* Links: the browser's own colours and underline */
+    --theme-link-color: LinkText;
+    --theme-link-visited-color: VisitedText;
+    --theme-link-decoration: underline;
+    --theme-post-link-border: none;
+    --theme-quiet-link-color: LinkText;
+    --theme-quiet-link-visited-color: VisitedText;
 
-    body ::placeholder {
-        color: #ccc !important;
-        -webkit-text-fill-color: currentColor !important;
-        opacity: 1 !important;
-    }
+    --theme-hover-bg: #000;
+    --theme-hover-border: #fff;
+    --theme-reveal-opacity: 1;
 
-    body button {
-        border: 2px solid currentColor !important;
-    }
+    --theme-button-bg: #000;
+    --theme-button-text: #fff;
+    --theme-nav-button-bg: #fff;
+    --theme-nav-button-text: currentColor;
+    --theme-nav-button-border: 2px solid #000;
+    --theme-nav-button-hover-bg: #000;
+    --theme-nav-button-hover-text: #fff;
 
-    body button:hover,
-    body button:hover * {
-        background-color: #fff !important;
-        color: #000 !important;
-    }
+    /* The page header is the one inverted region: black on white */
+    --theme-header-bg: #fff;
+    --theme-header-stuck-bg: #fff;
+    --theme-header-text: #000;
+    --theme-header-border: 2px solid #000;
+    --theme-header-title-color: #000;
+    --theme-header-title-hover-decoration: underline;
 
-    body :focus-visible {
-        outline: 3px solid #fff !important;
-        outline-offset: 2px;
-    }
+    /* The hero photo stays; its details sit on a solid white card */
+    --theme-hero-overlay: none;
+    --theme-hero-card-bg: #fff;
+    --theme-hero-card-text: #000;
+    --theme-hero-card-meta-text: currentColor;
+    --theme-hero-card-shadow: none;
+    --theme-hero-card-border: 2px solid #000;
+    --theme-hero-card-radius: 5px;
+    --theme-hero-card-padding: 1em;
+    --theme-hero-card-margin: calc(60px + 2vw) 1em 1em 1em;
+    --theme-hero-card-align: center;
 
-    /* The page header is the one inverted region: black on white. */
-    header {
-        color-scheme: light;
-        border-bottom: 2px solid #000 !important;
-    }
+    --theme-modal-backdrop: #000;
+    --theme-modal-bg: #000;
+    --theme-modal-border: 2px solid #fff;
+    --theme-modal-shadow: none;
+    --theme-readme-bg: #000;
+    --theme-readme-text: #fff;
 
-    header,
-    header *,
-    header *::before,
-    header *::after {
-        background-color: #fff !important;
-        color: #000 !important;
-    }
-
-    header button:hover,
-    header button:hover * {
-        background-color: #000 !important;
-        color: #fff !important;
-    }
-
-    header :focus-visible {
-        outline-color: #000 !important;
-    }
-
-    /*
-     * Links get no colour of their own: `revert` hands colour, underline and visited state back
-     * to the browser's stylesheet. color-scheme above picks its light or dark link colours.
-     * Borders go too, since some components draw their own underline with border-bottom.
-     */
-    a {
-        color: revert !important;
-        text-decoration: revert !important;
-        border: revert !important;
-    }
-
-    a * {
-        color: inherit !important;
-    }
-
-    /* The exception: the site title in the header stays plain black, underlined only on hover. */
-    header h1 a {
-        color: #000 !important;
-        text-decoration: none !important;
-
-        &:hover {
-            text-decoration: underline !important;
-        }
-    }
+    --theme-search-bg: #000;
+    --theme-search-text-primary: #fff;
+    --theme-search-text-secondary: #aaa;
+    --theme-search-text-input: #fff;
+    --theme-search-highlight: #fff;
+    --theme-search-selected-bg: #000;
+    --theme-search-selected-outline: 2px solid #fff;
+    --theme-search-border: #fff;
 }

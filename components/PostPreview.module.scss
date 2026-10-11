@@ -8,8 +8,8 @@
     width: 100%;
 
     &:hover {
-        border-color: white;
-        background-color: rgba(255, 255, 255, 0.2);
+        border-color: var(--theme-hover-border);
+        background-color: var(--theme-hover-bg);
 
         .link {
             opacity: 1 !important;
@@ -41,16 +41,16 @@
 
         .date {
             font-size: 0.8em;
-            color: #aaa;
+            color: var(--theme-text-subtle);
         }
 
         .link {
-            opacity: 0; /* flips to 1 on hover */
+            opacity: var(--theme-reveal-opacity); /* flips to 1 on hover */
             display: flex;
             flex-direction: row;
             align-items: center;
             font-size: 0.8em;
-            color: white;
+            color: var(--theme-color-text);
 
             .continueIcon {
                 width: 2em;

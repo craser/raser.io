@@ -1,9 +1,6 @@
 @import '@/styles/mixins.scss';
 
 .pageSection {
-    --bg-white: rgba(255, 255, 255, 0.2);
-    --bg-dark: rgba(0, 0, 0, 0.9);
-    --text-color: white;
     --title-font-size: 1.5em;
     --title-padding: 20px;
     --content-padding: 20px;
@@ -16,7 +13,6 @@
 
     position: relative;
     @include backgroundCrossFade();
-    /* background-color: var(--bg-dark); */
     display: flex;
     flex-direction: row;
     padding: 0;
@@ -46,7 +42,7 @@
         white-space: nowrap;
 
         .sectionTitle {
-            color: var(--text-color);
+            color: var(--theme-color-text);
             width: fit-content;
 
             position: sticky;
@@ -70,7 +66,8 @@
     .sectionBackground {
         --dim: 300px;
         --border-width: calc(var(--dim) * .07);
-        --color: rgba(0, 0, 0, 0.3);
+        --color: var(--theme-section-icon-color);
+        display: var(--theme-decoration-display);
         width: var(--dim);
         height: var(--dim);
         border: var(--border-width) solid var(--color);
@@ -104,9 +101,4 @@
         height: 100%;
         padding: var(--content-padding);
     }
-}
-
-/* The faint decorative icon would turn solid white in High Contrast Mode; it carries no content. */
-:global(:root[data-theme="high-contrast-dark"]) .pageSection .sectionBackground {
-    display: none;
 }

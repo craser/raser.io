@@ -1,14 +1,14 @@
 /*
- * Plain black and white: black on white when off, white on black when on.
- * Sized to match the search NavButton beside it.
+ * Plain black and white in every theme: black on white when off, white on black when on.
+ * Sized to match the search NavButton beside it, including any border a theme gives it.
  */
 button.toggle {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 5px;
-    border: none;
-    box-shadow: inset 0 0 0 2px #000; // an outline that, unlike a border, adds no height beside the borderless search button
+    border: var(--theme-nav-button-border);
+    box-shadow: inset 0 0 0 2px #000; // an outline that, unlike a border, adds no height beside the search button
     border-radius: 5px;
     color: #000;
     background-color: #fff;
@@ -33,25 +33,5 @@ button.toggle {
     &:focus-visible {
         outline: 2px solid currentColor;
         outline-offset: 2px;
-    }
-}
-
-/*
- * High Contrast Mode paints everything in the header black on white and inverts buttons on
- * hover. The toggle's colours are its state, so they win over both. (.toggle is doubled to
- * outrank the theme's `header button:hover *`.)
- */
-:global(:root[data-theme="high-contrast-dark"]) button.toggle.toggle {
-    /* The theme borders buttons in their text colour, which would vanish around the white-on-black "on" state. */
-    border-color: #000 !important;
-
-    &, & * {
-        background-color: #fff !important;
-        color: #000 !important;
-    }
-
-    &[aria-checked="true"], &[aria-checked="true"] * {
-        background-color: #000 !important;
-        color: #fff !important;
     }
 }

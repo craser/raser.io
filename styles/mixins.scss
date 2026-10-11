@@ -11,7 +11,7 @@
 }
 
 @mixin poptextYellow() {
-    @include poptext(yellow, orange);
+    @include poptext(var(--theme-pop-gradient));
 }
 
 @mixin popSvgYellow() {
@@ -22,13 +22,14 @@
 }
 
 @mixin poptextSectionHeader() {
-    @include poptext(white, #999);
+    @include poptext(var(--theme-section-title-gradient));
 }
 
-@mixin poptext($fromColor, $toColor) {
-    background: -webkit-linear-gradient($fromColor, $toColor);
+// Fills text with a gradient. A theme can switch this off with --theme-pop-fill: currentColor.
+@mixin poptext($gradient) {
+    background: $gradient;
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-text-fill-color: var(--theme-pop-fill);
 }
 
 @mixin unPop($color) {
@@ -39,9 +40,9 @@
 }
 
 @mixin gradientBackground() {
-    background: -webkit-linear-gradient(yellow, orange);
+    background: var(--theme-pop-gradient);
 }
 
 @mixin backgroundCrossFade() {
-    background: linear-gradient(105deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
+    background: var(--theme-panel-bg);
 }

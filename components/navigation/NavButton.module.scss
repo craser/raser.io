@@ -10,13 +10,14 @@ button.navButton {
     border-radius: 5px;
     padding: 5px;
     transition: all 200ms;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.7);
+    color: var(--theme-nav-button-text);
+    background-color: var(--theme-nav-button-bg);
+    border: var(--theme-nav-button-border);
     @include poptextYellow();
 
     &:hover {
-        @include unPop(white);
-        @include gradientBackground();
+        @include unPop(var(--theme-nav-button-hover-text));
+        background: var(--theme-nav-button-hover-bg);
     }
 
     .icon {

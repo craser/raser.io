@@ -1,0 +1,104 @@
+// ABOUTME: The default theme: every themeable colour, background and effect, as CSS variables on :root.
+// ABOUTME: Components read only these variables; another theme overrides them under :root[data-theme="..."].
+
+/*
+ * Adding a theme means overriding these under :root[data-theme="your-theme"] in its own file
+ * (see high-contrast-dark.scss), and nothing else. Components should never need to know which
+ * theme is active. When styling a component, reach for one of these, or add one here.
+ *
+ * A theme may set a text variable to `currentColor`. On `color`, that means "inherit", so the
+ * text takes its colour from whatever it sits inside, including a link it sits inside.
+ */
+:root {
+    /* Page */
+    --theme-page-bg: #363c47;
+    --theme-page-text: CanvasText;
+    --theme-content-text: #222;
+    --theme-backdrop-image: url(/img/gold-rush-desktop.jpg); // behind the homepage's lower tier
+    --theme-backdrop-display: block; // a post's hero, fixed behind the page
+    --theme-decoration-display: block; // purely decorative flourishes, e.g. section icons
+    --theme-divider: #333;
+
+    /* Panels: the dark, see-through slabs content sits on */
+    --theme-panel-bg: linear-gradient(105deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
+    --theme-section-icon-color: rgba(0, 0, 0, 0.3);
+    --theme-hairline: rgba(255, 255, 255, 0.2);
+    --theme-chip-bg: rgba(255, 255, 255, 0.2);
+
+    /* Text */
+    --theme-color-text: #fff;
+    --theme-text-muted: #ddd;
+    --theme-text-subtle: #aaa;
+    --theme-color-subtext: #555;
+    --theme-color-border: #555;
+    --theme-color-border-light: #aaa;
+    --theme-color-content-text-bg: #fff;
+    --theme-color-pop: lightskyblue;
+    --theme-accent-hover: deepskyblue;
+    --theme-highlight-text: yellow;
+
+    /* Gradient-filled "pop" text */
+    --theme-pop-gradient: linear-gradient(yellow, orange);
+    --theme-section-title-gradient: linear-gradient(white, #999);
+    --theme-pop-fill: transparent; // transparent lets the gradient show through the letters
+
+    /* Links */
+    --theme-link-color: var(--theme-color-pop);
+    --theme-link-visited-color: var(--theme-link-color);
+    --theme-link-decoration: none;
+    --theme-post-link-border: 1px solid var(--theme-color-pop); // post body links' underline
+    --theme-quiet-link-color: #fff; // links that read as plain text, e.g. commit messages
+    --theme-quiet-link-visited-color: var(--theme-quiet-link-color);
+
+    /* Hover-highlighted cards */
+    --theme-hover-bg: rgba(255, 255, 255, 0.2);
+    --theme-hover-border: white;
+    --theme-reveal-opacity: 0; // things shown only on hover, e.g. "continue" links
+
+    /* Buttons */
+    --theme-button-bg: black;
+    --theme-button-text: white;
+    --theme-nav-button-bg: rgba(0, 0, 0, 0.7);
+    --theme-nav-button-text: white;
+    --theme-nav-button-border: none;
+    --theme-nav-button-hover-bg: linear-gradient(yellow, orange);
+    --theme-nav-button-hover-text: white;
+
+    /* Page header */
+    --theme-header-bg: transparent;
+    --theme-header-stuck-bg: var(--theme-panel-bg); // once the page scrolls under it
+    --theme-header-text: #fff;
+    --theme-header-border: none;
+    --theme-header-title-color: currentColor;
+    --theme-header-title-hover-decoration: none;
+
+    /* The latest post's hero on the homepage */
+    --theme-hero-overlay: linear-gradient(90deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
+    --theme-hero-card-bg: transparent;
+    --theme-hero-card-text: white;
+    --theme-hero-card-meta-text: rgba(255, 255, 255, 0.7);
+    --theme-hero-card-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+    --theme-hero-card-border: none;
+    --theme-hero-card-radius: 0;
+    --theme-hero-card-padding: 0 1em;
+    --theme-hero-card-margin: calc(60px + 2vw) 0; // clears the fixed header
+    --theme-hero-card-align: stretch;
+
+    /* Modals */
+    --theme-modal-backdrop: rgba(0, 0, 0, 0.8);
+    --theme-modal-bg: white;
+    --theme-modal-border: none;
+    --theme-modal-shadow: #111 9px 15px 20px;
+    --theme-readme-bg: darkslategray;
+    --theme-readme-text: #fffacd;
+
+    /* Search's terminal look */
+    --theme-search-bg: #1a1a1a;
+    --theme-search-text-primary: #c0c0c0;
+    --theme-search-text-secondary: #707070;
+    --theme-search-text-input: #ffffff;
+    --theme-search-highlight: #33ff33;
+    --theme-search-selected-bg: #2a2a2a;
+    --theme-search-selected-outline: none;
+    --theme-search-border: #333333;
+}

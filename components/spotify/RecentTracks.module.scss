@@ -18,12 +18,16 @@
     padding: 6px;
     border: 1px solid transparent;
     border-radius: 5px;
-    color: inherit;
-    text-decoration: none;
+    color: var(--theme-quiet-link-color);
+    text-decoration: var(--theme-link-decoration);
+
+    &:visited {
+        color: var(--theme-quiet-link-visited-color);
+    }
 
     &:hover {
-        border-color: white;
-        background-color: rgba(255, 255, 255, 0.2);
+        border-color: var(--theme-hover-border);
+        background-color: var(--theme-hover-bg);
     }
 }
 
@@ -50,11 +54,11 @@
 
 .title {
     font-weight: bold;
-    color: white;
+    color: var(--theme-color-text);
 }
 
 /* Matches the commit dates in the neighbouring GitHub section. */
 .artists {
     font-size: 0.9em;
-    color: #ddd;
+    color: var(--theme-text-muted);
 }
