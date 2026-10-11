@@ -1,12 +1,18 @@
 import SiteConfig from "@/lib/SiteConfig";
 import { useEffect, useState } from "react";
 
-export function MapImage({ fileName, className, onError }) {
-    const siteConfig = new SiteConfig();
+/**
+ * Looks up the URL of the map image for a GPX file. Returns undefined until the
+ * lookup finishes, or if it fails. Pass no fileName to skip the lookup.
+ */
+export function useMapImageSrc(fileName) {
     const [imgSrc, setImgSrc] = useState();
 
     useEffect(() => {
-        const url = siteConfig.getEndpoint('maps.mapimageuri', { fileName });
+        if (!fileName) {
+            return;
+        }
+        const url = new SiteConfig().getEndpoint('maps.mapimageuri', { fileName });
         fetch(url)
             .then(response => {
                 if (!response.ok) {
@@ -18,5 +24,10 @@ export function MapImage({ fileName, className, onError }) {
             .catch(error => console.error('Error fetching image source:', error));
     }, [fileName]);
 
+    return imgSrc;
+}
+
+export function MapImage({ fileName, className, onError }) {
+    const imgSrc = useMapImageSrc(fileName);
     return <img src={imgSrc} alt={`Map ${fileName}`} className={className} onError={onError} data-testid="map-image" />;
 }

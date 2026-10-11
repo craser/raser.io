@@ -8,6 +8,7 @@ import ReadPostView from "@/components/ReadPostView";
 import { useDataContext } from "@/components/api/DataProvider";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 import SingleSectionContent from '@/components/templates/SingleSectionContent';
+import PostBackground from "@/components/PostBackground";
 
 export default function SinglePostPage({ postId }) {
     const analytics = useAnalytics();
@@ -48,11 +49,14 @@ export default function SinglePostPage({ postId }) {
         );
     } else {
         return (
-            <StandardLayout content={
-                <SingleSectionContent content={
-                    <ReadPostView post={post} showBody={true} next={next} prev={prev} showNextPrev={true}/>
+            <>
+                <PostBackground post={post}/>
+                <StandardLayout content={
+                    <SingleSectionContent content={
+                        <ReadPostView post={post} showBody={true} next={next} prev={prev} showNextPrev={true}/>
+                    }/>
                 }/>
-            }/>
+            </>
         );
     }
 }
