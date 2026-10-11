@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 /**
  * Looks up the URL of the map image for a GPX file. Returns undefined until the
- * lookup finishes, or if it fails. Pass no fileName to skip the lookup.
+ * lookup finishes, and null if it fails. Pass no fileName to skip the lookup.
  */
 export function useMapImageSrc(fileName) {
     const [imgSrc, setImgSrc] = useState();
@@ -21,7 +21,10 @@ export function useMapImageSrc(fileName) {
                 return response.text();
             })
             .then(src => setImgSrc(src))
-            .catch(error => console.error('Error fetching image source:', error));
+            .catch(error => {
+                console.error('Error fetching image source:', error);
+                setImgSrc(null);
+            });
     }, [fileName]);
 
     return imgSrc;
@@ -29,5 +32,5 @@ export function useMapImageSrc(fileName) {
 
 export function MapImage({ fileName, className, onError }) {
     const imgSrc = useMapImageSrc(fileName);
-    return <img src={imgSrc} alt={`Map ${fileName}`} className={className} onError={onError} data-testid="map-image" />;
+    return <img src={imgSrc ?? undefined} alt={`Map ${fileName}`} className={className} onError={onError} data-testid="map-image" />;
 }

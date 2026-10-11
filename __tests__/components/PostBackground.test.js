@@ -1,5 +1,5 @@
 // ABOUTME: Tests for the fixed, full-page background behind a single post.
-// ABOUTME: The background is the post's hero image, or its map when the hero is a GPX track.
+// ABOUTME: The background is the post's hero image or map, falling back to the homepage's image.
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PostBackground from '@/components/PostBackground';
@@ -42,11 +42,21 @@ test('uses the map as the background when the hero is a GPX track', async () => 
     expect(global.fetch).toHaveBeenCalledWith('/endpoint/maps.mapimageuri/ride.gpx');
 });
 
-test('renders nothing when the post has no hero image', () => {
-    const { container } = render(<PostBackground post={{ imageFileName: null, imageFileType: null }}/>);
+test('uses the homepage background when the post has no hero image', () => {
+    render(<PostBackground post={{ imageFileName: null, imageFileType: null }}/>);
 
-    expect(container).toBeEmptyDOMElement();
+    expect(screen.getByTestId('post-background')).toHaveStyle('background-image: url(/img/gold-rush-desktop.jpg)');
     expect(global.fetch).not.toHaveBeenCalled();
+});
+
+test('uses the homepage background when the map cannot be found', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 404, text: () => Promise.resolve('Not Found') });
+
+    render(<PostBackground post={{ imageFileName: 'missing.gpx', imageFileType: 'image' }}/>);
+
+    await waitFor(() => expect(screen.getByTestId('post-background'))
+        .toHaveStyle('background-image: url(/img/gold-rush-desktop.jpg)'));
 });
 
 test('renders nothing until the map location arrives', () => {
