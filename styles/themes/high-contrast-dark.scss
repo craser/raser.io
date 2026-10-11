@@ -1,0 +1,96 @@
+// ABOUTME: The high-contrast-dark theme, shown to visitors as "High Contrast Mode".
+// ABOUTME: White on opaque black, a black-on-white page header, and links in the browser's own colours.
+
+/*
+ * Only variables from default.scss are overridden here. Text variables are mostly
+ * `currentColor`, i.e. "inherit": text is white on the page, black in the header and on the
+ * hero card, and takes the link colour inside links.
+ */
+:root[data-theme="high-contrast-dark"] {
+    color-scheme: dark; // dark scrollbars, form controls, and the browser's dark-mode link colours
+
+    /* Page: opaque black, no photos or decorations behind content */
+    --theme-page-bg: #000;
+    --theme-page-text: #fff;
+    --theme-content-text: currentColor;
+    --theme-backdrop-image: none;
+    --theme-backdrop-display: none;
+    --theme-decoration-display: none;
+    --theme-divider: #fff;
+
+    --theme-panel-bg: #000;
+    --theme-hairline: #888;
+    --theme-chip-bg: #000;
+
+    /* Text: inherit, so it's white on the page and link-coloured inside links */
+    --theme-color-text: currentColor;
+    --theme-text-muted: currentColor;
+    --theme-text-subtle: currentColor;
+    --theme-color-subtext: currentColor;
+    --theme-color-border: #fff;
+    --theme-color-border-light: #fff;
+    --theme-color-content-text-bg: #000;
+    --theme-color-pop: currentColor;
+    --theme-accent-hover: currentColor;
+    --theme-highlight-text: currentColor;
+
+    --theme-pop-gradient: none;
+    --theme-section-title-gradient: none;
+    --theme-pop-fill: currentColor;
+
+    /* Links: the browser's own colours and underline */
+    --theme-link-color: LinkText;
+    --theme-link-visited-color: VisitedText;
+    --theme-link-decoration: underline;
+    --theme-post-link-border: none;
+    --theme-quiet-link-color: LinkText;
+    --theme-quiet-link-visited-color: VisitedText;
+
+    --theme-hover-bg: #000;
+    --theme-hover-border: #fff;
+    --theme-reveal-opacity: 1;
+
+    --theme-button-bg: #000;
+    --theme-button-text: #fff;
+    --theme-nav-button-bg: #fff;
+    --theme-nav-button-text: currentColor;
+    --theme-nav-button-border: 2px solid #000;
+    --theme-nav-button-hover-bg: #000;
+    --theme-nav-button-hover-text: #fff;
+
+    /* The page header is the one inverted region: black on white */
+    --theme-header-bg: #fff;
+    --theme-header-stuck-bg: #fff;
+    --theme-header-text: #000;
+    --theme-header-border: 2px solid #000;
+    --theme-header-title-color: #000;
+    --theme-header-title-hover-decoration: underline;
+
+    /* The hero photo stays; its details sit on a solid white card */
+    --theme-hero-overlay: none;
+    --theme-hero-card-bg: #fff;
+    --theme-hero-card-text: #000;
+    --theme-hero-card-meta-text: currentColor;
+    --theme-hero-card-shadow: none;
+    --theme-hero-card-border: 2px solid #000;
+    --theme-hero-card-radius: 5px;
+    --theme-hero-card-padding: 1em;
+    --theme-hero-card-margin: calc(60px + 2vw) 1em 1em 1em;
+    --theme-hero-card-align: center;
+
+    --theme-modal-backdrop: #000;
+    --theme-modal-bg: #000;
+    --theme-modal-border: 2px solid #fff;
+    --theme-modal-shadow: none;
+    --theme-readme-bg: #000;
+    --theme-readme-text: #fff;
+
+    --theme-search-bg: #000;
+    --theme-search-text-primary: #fff;
+    --theme-search-text-secondary: #aaa;
+    --theme-search-text-input: #fff;
+    --theme-search-highlight: #fff;
+    --theme-search-selected-bg: #000;
+    --theme-search-selected-outline: 2px solid #fff;
+    --theme-search-border: #fff;
+}

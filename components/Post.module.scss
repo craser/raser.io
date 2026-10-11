@@ -28,13 +28,12 @@
 }
 
 .entry .title a {
-    color: var(--theme-color-title);
     border: none;
 }
 
+/* Link colours come from the global link rule in globals.scss. */
 .entry a {
-    color: var(--theme-color-link);
-    border-bottom: 1px solid var(--theme-color-link-underline);
+    border-bottom: var(--theme-post-link-border);
 }
 
 .entrymetainfo, .entryfooter {
@@ -48,7 +47,6 @@
 
 .entrymetainfo a {
     border: 0;
-    color: var(--theme-color-pop);
 }
 
 .tagslist {
@@ -122,18 +120,14 @@
 
 .entryfooter {
     text-align: center;
-    color: yellow;
-}
-
-.entryfooter a {
-    color: var(--theme-color-pop);
+    color: var(--theme-highlight-text);
 }
 
 .entryfooter button {
     /* I'm in a hurry. Let's just make this usable & get on with our lives... */
     margin: 20px;
-    background-color: black;
-    color: white;
+    background-color: var(--theme-button-bg);
+    color: var(--theme-button-text);
     padding: 10px;
     font-weight: bold;
     border-radius: 10px;

@@ -4,13 +4,14 @@
     left: 0;
     height: 100vh;
     width: 100vw;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--theme-modal-backdrop);
     z-index: 10;
 
     .modal {
         transition: all 200ms ease-in-out;
         padding: 0;
-        background-color: white;
+        background-color: var(--theme-modal-bg);
+        border: var(--theme-modal-border);
         position: absolute;
         top: 50%;
         left: 50%;
@@ -22,7 +23,7 @@
         overflow-x: hidden;
 
         //drop shadow
-        box-shadow: #111 9px 15px 20px;
+        box-shadow: var(--theme-modal-shadow);
 
         &::backdrop {
             background-color: #222;

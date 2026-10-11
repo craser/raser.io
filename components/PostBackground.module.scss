@@ -3,6 +3,7 @@
  * ignores background-attachment: fixed and would scroll the image with the page.
  */
 .background {
+    display: var(--theme-backdrop-display);
     position: fixed;
     inset: 0;
     z-index: -1;

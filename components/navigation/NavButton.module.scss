@@ -10,18 +10,31 @@ button.navButton {
     border-radius: 5px;
     padding: 5px;
     transition: all 200ms;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.7);
+    color: var(--theme-nav-button-text);
+    background-color: var(--theme-nav-button-bg);
+    border: var(--theme-nav-button-border);
     @include poptextYellow();
 
     &:hover {
-        @include unPop(white);
-        @include gradientBackground();
+        @include unPop(var(--theme-nav-button-hover-text));
+        background: var(--theme-nav-button-hover-bg);
     }
 
     .icon {
         width: 24px;
         height: 24px;
+    }
+
+    /* Icon-only on phones, to leave the header room; the label stays for screen readers. */
+    .label {
+        @include small() {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
     }
 
 

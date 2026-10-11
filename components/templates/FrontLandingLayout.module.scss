@@ -10,14 +10,17 @@
     flex-direction: row;
     align-items: end;
     justify-content: space-between;
-        transition: background 400ms ease-in;
+    transition: background 400ms ease-in;
+    background: var(--theme-header-bg);
+    color: var(--theme-header-text);
+    border-bottom: var(--theme-header-border);
 
     @include large() {
         align-items: center;
     }
 
     &.stuck {
-        @include backgroundCrossFade();
+        background: var(--theme-header-stuck-bg);
     }
 
     .titleBanner {
@@ -35,6 +38,15 @@
             letter-spacing: -10px;
         }
 
+        a {
+            color: var(--theme-header-title-color);
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: var(--theme-header-title-hover-decoration);
+            }
+        }
+
     }
 
     /* The UL that holds the navigation links */
@@ -50,6 +62,10 @@
             list-style-type: none;
             margin-left: 20px;
             text-transform: lowercase;
+
+            @include small() {
+                margin-left: 6px;
+            }
         }
 
         a {
@@ -102,7 +118,7 @@
 
     .content {
         font-family: HelveticaNeue-condensed, sans-serif;
-        color: #222;
+        color: var(--theme-content-text);
         background-size: cover;
         background-attachment: fixed;
         background-repeat: no-repeat;
@@ -122,8 +138,8 @@
             overflow: hidden;
 
             position: relative;
-            background: linear-gradient(105deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
-            border-bottom: 1px solid #002; /* FIXME: use theme color here */
+            background: var(--theme-panel-bg);
+            border-bottom: 1px solid var(--theme-divider);
             z-index: 1;
             height: auto; /* Allow expansion with content */
         }
@@ -135,7 +151,7 @@
             justify-content: space-between;
             align-items: stretch;
 
-            background: url(/img/gold-rush-desktop.jpg);
+            background-image: var(--theme-backdrop-image);
             background-repeat: no-repeat;
             background-attachment: fixed;
             padding: 1vw;
@@ -150,7 +166,7 @@
                 width: 100%;
                 content: '';
                 height: 2vw;
-                border-top: 1px solid #333;
+                border-top: 1px solid var(--theme-divider);
             }
 
             /*

@@ -1,9 +1,7 @@
 @import '@/styles/mixins.scss';
 
 .githubActivitySection {
-    --bg-white: rgba(255, 255, 255, 0.2);
-    --bg-dark: rgba(0, 0, 0, 0.5);
-    --text-color: white;
+    --text-color: var(--theme-color-text);
     overflow: hidden;
     max-width: 100%;
 
@@ -75,18 +73,18 @@
             gap: 0.5em;
             align-items: center;
             border: 1px solid transparent;
-            border-top: 1px solid var(--bg-white);
+            border-top: 1px solid var(--theme-hairline);
             padding: 5px;
             border-radius: 5px;
             max-width: 100%;
 
             &:last-child {
-                border-bottom: 1px solid var(--bg-white);
+                border-bottom: 1px solid var(--theme-hairline);
             }
 
             &:hover {
-                background-color: var(--bg-white);
-                border: 1px solid var(--bg-white);
+                background-color: var(--theme-hover-bg);
+                border: 1px solid var(--theme-hairline);
             }
 
             .commitInfo {
@@ -98,7 +96,7 @@
                 flex-direction: column;
 
                 .commitMessage {
-                    color: white;
+                    color: var(--theme-quiet-link-color);
                     font-size: 0.8em;
 
                     // Truncate to two lines. -webkit-box is the only display mode
@@ -111,10 +109,14 @@
                     // Break unbroken runs (URLs, long identifiers) rather than
                     // letting them set a min-content width wider than the container.
                     overflow-wrap: anywhere;
+
+                    &:visited {
+                        color: var(--theme-quiet-link-visited-color);
+                    }
                 }
 
                 .commitDate {
-                    color: #ddd;
+                    color: var(--theme-text-muted);
                     font-size: 0.6em;
                 }
             }
@@ -122,11 +124,15 @@
             .commitHash {
                 flex-grow: 0;
                 flex-shrink: 0;
-                background-color: var(--bg-white);
+                background-color: var(--theme-chip-bg);
                 border-radius: 5px;
                 padding: 5px 10px;
                 font-family: var(--font-monospace);
-                color: var(--text-color);
+                color: var(--theme-quiet-link-color);
+
+                &:visited {
+                    color: var(--theme-quiet-link-visited-color);
+                }
             }
 
         }

@@ -1,14 +1,5 @@
 // ABOUTME: Styles for the Search modal UI with a retro terminal aesthetic.
-// ABOUTME: Uses CSS variables for easy color customization.
-
-/* Terminal color scheme - easily tweakable */
-$search-bg: #1a1a1a;
-$search-text-primary: #c0c0c0;
-$search-text-secondary: #707070;
-$search-text-input: #ffffff;
-$search-highlight: #33ff33;
-$search-selected-bg: #2a2a2a;
-$search-border: #333333;
+// ABOUTME: Colours come from the --theme-search-* variables in styles/themes/.
 
 /* Used to create a fade-in effect for the search interface */
 @keyframes fadeIn {
@@ -34,13 +25,13 @@ $search-border: #333333;
  * this contains the actual UI
  */
 .searchInterface {
-    --search-bg: #{$search-bg};
-    --search-text-primary: #{$search-text-primary};
-    --search-text-secondary: #{$search-text-secondary};
-    --search-text-input: #{$search-text-input};
-    --search-highlight: #{$search-highlight};
-    --search-selected-bg: #{$search-selected-bg};
-    --search-border: #{$search-border};
+    --search-bg: var(--theme-search-bg);
+    --search-text-primary: var(--theme-search-text-primary);
+    --search-text-secondary: var(--theme-search-text-secondary);
+    --search-text-input: var(--theme-search-text-input);
+    --search-highlight: var(--theme-search-highlight);
+    --search-selected-bg: var(--theme-search-selected-bg);
+    --search-border: var(--theme-search-border);
 
     animation: fadeIn 150ms ease-in-out;
     background-color: var(--search-bg);
@@ -155,6 +146,8 @@ $search-border: #333333;
             &.selectedResult, &:hover {
                 border-color: var(--search-border);
                 background-color: var(--search-selected-bg);
+                outline: var(--theme-search-selected-outline);
+                outline-offset: -2px;
             }
 
             &:last-child {

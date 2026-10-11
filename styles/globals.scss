@@ -13,22 +13,15 @@
     --font-title: 'Merriweather';
     --font-monospace: 'JetBrains Mono', 'IBM Plex Mono', monospace;
     --font-main: 'Lato';
-    --theme-color-text: #fff;
-    --theme-color-pop: lightskyblue;
-    --theme-color-border-light: #aaa;
-    --theme-color-subtext: #555;
-    --theme-color-border: #555;
-    --theme-color-content-text-bg: #fff;
-    --theme-color-title: var(--theme-color-text);
-    --theme-color-link: lightskyblue;
-    --theme-color-link-underline: var(--theme-color-pop);
-    --theme-color-typeahead-suggestion: var(--theme-color-border-light);
     --theme-border-radius-large: 7px;
     --theme-container-padding-lg: 15px;
     --theme-container-padding-s: 7px;
     --theme-container-padding-xs: 3px;
-    --theme-gradient-neon: -webkit-linear-gradient(top, #ff00c6 0%, #BA008B 50%, #9B00C5 100%);
 }
+
+/* Colours, backgrounds and effects are theme variables. See styles/themes/default.scss. */
+@import 'themes/default';
+@import 'themes/high-contrast-dark';
 
 /*@media (prefers-color-scheme: dark) {
   :root {
@@ -58,7 +51,8 @@ $screen-small-max: ($screen-breakpoint - 1);
 
 body {
     font-family: var(--font-main), HelveticaNeue-condensed, sans-serif;
-    background-color: #363c47;
+    background-color: var(--theme-page-bg);
+    color: var(--theme-page-text);
     margin: 0;
     max-width: 100vw;
     overflow-x: hidden;
@@ -66,8 +60,13 @@ body {
     &> div#__next {
     }
 
-    a {
-        color: var(--theme-color-pop);
-        text-decoration: none;
+    /* :where() keeps these at the bottom of the pile, so any component's own link styling wins. */
+    :where(a) {
+        color: var(--theme-link-color);
+        text-decoration: var(--theme-link-decoration);
+    }
+
+    :where(a:visited) {
+        color: var(--theme-link-visited-color);
     }
 }
