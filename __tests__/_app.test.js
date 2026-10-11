@@ -43,6 +43,12 @@ jest.mock('@/components/modal/ModalProvider', () => {
     };
 });
 
+jest.mock('@/components/theme/ThemeProvider', () => {
+    return function MockThemeProvider({ children }) {
+        return (<div data-testid="mock-ThemeProvider">{children}</div>);
+    };
+});
+
 // Mock the CSS import
 jest.mock('@/styles/globals.scss', () => {
     return {};
@@ -75,6 +81,7 @@ describe('App Component', () => {
         expect(getByTestId('mock-DataProvider')).toBeInTheDocument();
         expect(getByTestId('mock-SearchProvider')).toBeInTheDocument();
         expect(getByTestId('mock-ModalProvider')).toBeInTheDocument();
+        expect(getByTestId('mock-ThemeProvider')).toBeInTheDocument();
     });
 
     it('should render an rss link in the head', () => {
