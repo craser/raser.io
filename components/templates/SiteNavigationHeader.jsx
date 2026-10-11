@@ -1,6 +1,7 @@
 import standardStyles from "@/components/templates/StandardLayout.module.scss";
 import SearchButton from "@/components/search/SearchButton";
 import FeatureEnabled from "@/components/flags/FeatureEnabled";
+import HighContrastToggle from "@/components/theme/HighContrastToggle";
 
 export default function SiteNavigationHeader({ styles = standardStyles }) {
     return (
@@ -11,6 +12,9 @@ export default function SiteNavigationHeader({ styles = standardStyles }) {
                     <SearchButton className={styles.searchButton}/>
                 </div>
             </FeatureEnabled>
+            <div className={styles.navitem}>
+                <HighContrastToggle/>
+            </div>
         </div>
     );
 }

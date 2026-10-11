@@ -50,6 +50,10 @@
             list-style-type: none;
             margin-left: 20px;
             text-transform: lowercase;
+
+            @include small() {
+                margin-left: 6px;
+            }
         }
 
         a {
