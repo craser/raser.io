@@ -1,9 +1,13 @@
 @import '@/styles/mixins.scss';
 
 .header {
+    --title-size: 40px;
+    /* Space below the title's baseline, inside its line box. Merriweather at line-height 1 leaves 0.15em. */
+    --title-below-baseline: calc(var(--title-size) * 0.15);
+
     position: fixed;
     width: 100%;
-    padding: 1vw 2vw 0 2vw;
+    padding: 1vw 2vw;
     z-index: 5; /* strangely, needed to stay above the YouTube iframes... wtf... */
 
     display: flex;
@@ -16,7 +20,7 @@
     border-bottom: var(--theme-header-border);
 
     @include large() {
-        align-items: center;
+        --title-size: 60px;
     }
 
     &.stuck {
@@ -25,16 +29,14 @@
 
     .titleBanner {
         font-family: var(--font-title), serif;
-        font-size: 40px;
-        line-height: 40px;
+        font-size: var(--title-size);
+        line-height: var(--title-size);
         letter-spacing: -6px;
         margin: 0;
         padding: 0 1em 0 0; /* leave room for odd kerning on final f */
         @include poptextYellow();
 
         @include large() {
-            font-size: 60px;
-            line-height: 60px;
             letter-spacing: -10px;
         }
 
@@ -56,6 +58,7 @@
         justify-content: flex-end;
         gap: 0;
         padding: 0;
+        margin-bottom: var(--title-below-baseline); // bottoms of the buttons line up with the bottom of the title's letters
 
         .navitem {
             display: inline;
