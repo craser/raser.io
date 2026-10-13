@@ -36,7 +36,7 @@ theme variables (the existing rule stated at the top of that file).
 | Variable | default.scss | high-contrast-dark.scss | Role |
 |---|---|---|---|
 | `--theme-title-color` | `#ffd84d` | `currentColor` | top-level titles (site banners, the homepage hero's post title, tag-page heading) |
-| `--theme-heading-color` | `#5cc8ff` | `currentColor` | 2nd-level headings (post titles on the post page and preview cards, section titles, repo names, in-post h2) |
+| `--theme-heading-color` | `#5cc8ff` | `currentColor` | 2nd-level headings (post titles on the post page and preview cards, repo names, in-post h2) |
 | `--theme-info-color` | `#33ff33` | `currentColor` | 3rd-tier info (dates, read time, tags, commit hashes, "continue"/"more", in-post h3) |
 | `--theme-post-link-color` | `#c0c0c0` | `LinkText` | links inside post bodies |
 | `--theme-radius` | `0` | (inherits) | all rectangular corners |
@@ -104,7 +104,8 @@ flat. Search variables keep their values (they already are the search look).
 - Post titles on the post page and on preview cards ("Previously", archive
   list, next/previous) → `var(--theme-heading-color)`, mono (Chris's call:
   post title blue, its metadata green).
-- Section titles (PageSection) and repo names → `var(--theme-heading-color)`.
+- Repo names → `var(--theme-heading-color)`. Section titles (PageSection's
+  vertical labels) → `var(--theme-text-subtle)`, an understated grey (Chris's call).
 - Dates, read time, tags, commit hashes, "continue"/"more", hero byline meta →
   `var(--theme-info-color)` (hero meta keeps `--theme-hero-card-meta-text`),
   mono.
