@@ -4,7 +4,9 @@
 /*
  * Only variables from default.scss are overridden here. Text variables are mostly
  * `currentColor`, i.e. "inherit": text is white on the page, black in the header and on the
- * hero card, and takes the link colour inside links.
+ * hero card, and takes the link colour inside links. That only works for text inside a link:
+ * on the <a> itself `currentColor` means the parent's colour, so a link's own colour must come
+ * from a link variable (--theme-*-link-color), which is LinkText here.
  */
 :root[data-theme="high-contrast-dark"] {
     color-scheme: dark; // dark scrollbars, form controls, and the browser's dark-mode link colours
@@ -34,15 +36,26 @@
     --theme-accent-hover: currentColor;
     --theme-highlight-text: currentColor;
 
-    --theme-pop-gradient: none;
-    --theme-section-title-gradient: none;
-    --theme-pop-fill: currentColor;
+    /* The heading hierarchy: all inherit, like the rest of this theme's text */
+    --theme-title-color: currentColor;
+    --theme-heading-color: currentColor;
+    --theme-info-color: currentColor;
+    --theme-heading-link-color: LinkText;
+    --theme-heading-link-visited-color: VisitedText;
+    --theme-info-link-color: LinkText;
+    --theme-info-link-visited-color: VisitedText;
+    --theme-post-link-color: LinkText;
+    --theme-post-link-visited-color: VisitedText;
+    --theme-post-link-hover-color: LinkText;
+    --theme-track-title-color: currentColor;
+    --theme-track-artist-color: currentColor;
 
     /* Links: the browser's own colours and underline */
     --theme-link-color: LinkText;
     --theme-link-visited-color: VisitedText;
     --theme-link-decoration: underline;
     --theme-post-link-border: none;
+    --theme-post-link-hover-border: none;
     --theme-quiet-link-color: LinkText;
     --theme-quiet-link-visited-color: VisitedText;
 
@@ -55,6 +68,8 @@
     --theme-nav-button-bg: #fff;
     --theme-nav-button-text: currentColor;
     --theme-nav-button-border: 2px solid #000;
+    --theme-nav-button-border-width: 2px;
+    --theme-toggle-border-color: #000;
     --theme-nav-button-hover-bg: #000;
     --theme-nav-button-hover-text: #fff;
 
@@ -68,6 +83,7 @@
 
     /* The hero photo stays; its details sit on a solid white card */
     --theme-hero-overlay: none;
+    --theme-hero-overlay-narrow: none;
     --theme-hero-card-bg: #fff;
     --theme-hero-card-text: #000;
     --theme-hero-card-meta-text: currentColor;

@@ -10,39 +10,17 @@
     }
 }
 
-@mixin poptextYellow() {
-    @include poptext(var(--theme-pop-gradient));
-}
-
-@mixin popSvgYellow() {
-    color: yellow;
-
-
-
-}
-
-@mixin poptextSectionHeader() {
-    @include poptext(var(--theme-section-title-gradient));
-}
-
-// Fills text with a gradient. A theme can switch this off with --theme-pop-fill: currentColor.
-@mixin poptext($gradient) {
-    background: $gradient;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: var(--theme-pop-fill);
-}
-
-@mixin unPop($color) {
-    background: unset;
-    -webkit-background-clip: unset;
-    -webkit-text-fill-color: unset;
-    color: $color;
-}
-
-@mixin gradientBackground() {
-    background: var(--theme-pop-gradient);
-}
-
-@mixin backgroundCrossFade() {
+// A flat panel: solid background, single-pixel border, themed corners.
+@mixin panel() {
     background: var(--theme-panel-bg);
+    border: 1px solid var(--theme-color-border);
+    border-radius: var(--theme-radius);
+}
+
+// Terminal-style chrome text for titles, labels and metadata.
+@mixin monoChrome() {
+    font-family: var(--font-monospace);
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }

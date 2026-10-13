@@ -16,12 +16,13 @@
     }
 
     .header {
-        color: var(--text-color);
+        color: var(--theme-heading-color);
         display: flex;
         gap: 0.2rem;
         align-items: center;
         font-size: 1.2em;
-        font-weight: 600;
+        font-weight: normal;
+        font-family: var(--font-monospace);
 
         .readmeButton {
             position: absolute;
@@ -59,7 +60,12 @@
             padding: 5px 0;
 
             .repoLink {
-                @include poptextYellow;
+                @include monoChrome();
+                color: var(--theme-heading-link-color);
+
+                &:visited {
+                    color: var(--theme-heading-link-visited-color);
+                }
 
                 &:hover {
                     text-decoration: underline;
@@ -75,7 +81,7 @@
             border: 1px solid transparent;
             border-top: 1px solid var(--theme-hairline);
             padding: 5px;
-            border-radius: 5px;
+            border-radius: var(--theme-radius);
             max-width: 100%;
 
             &:last-child {
@@ -116,7 +122,8 @@
                 }
 
                 .commitDate {
-                    color: var(--theme-text-muted);
+                    @include monoChrome();
+                    color: var(--theme-info-color);
                     font-size: 0.6em;
                 }
             }
@@ -125,13 +132,14 @@
                 flex-grow: 0;
                 flex-shrink: 0;
                 background-color: var(--theme-chip-bg);
-                border-radius: 5px;
+                border-radius: var(--theme-radius);
                 padding: 5px 10px;
                 font-family: var(--font-monospace);
-                color: var(--theme-quiet-link-color);
+                color: var(--theme-info-link-color);
+                border: 1px solid var(--theme-color-border);
 
                 &:visited {
-                    color: var(--theme-quiet-link-visited-color);
+                    color: var(--theme-info-link-visited-color);
                 }
             }
 
