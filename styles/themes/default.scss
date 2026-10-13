@@ -46,11 +46,6 @@
     --theme-track-title-color: #fff; // the Listening section's track titles
     --theme-track-artist-color: #ddd; // ...and their artists
 
-    /* Gradient-filled "pop" text */
-    --theme-pop-gradient: linear-gradient(yellow, orange);
-    --theme-section-title-gradient: linear-gradient(white, #999);
-    --theme-pop-fill: transparent; // transparent lets the gradient show through the letters
-
     /* Links */
     --theme-link-color: var(--theme-color-pop);
     --theme-link-visited-color: var(--theme-link-color);
