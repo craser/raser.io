@@ -6,6 +6,7 @@ import { EstimatedMinutesToRead } from "@/components/frontpage/EstimatedMinutesT
 import { PostBriefIntro } from "@/components/frontpage/PostBriefIntro";
 import styles from './LatestPost.module.scss';
 import { PostLink } from "@/components/PostLink";
+import PostTitle from "@/components/PostTitle";
 import { getFrontPageTitleImageUrl } from "@/components/frontpage/PreviewTitleImage";
 
 export default function LatestPostSection({ initialPost = null }) {
@@ -28,9 +29,7 @@ export default function LatestPostSection({ initialPost = null }) {
             <PostLink post={post} className={styles.latestPostLink}>
                 <div className={styles.latestPost} style={{ '--hero-image': `url(${getFrontPageTitleImageUrl(post)})` }}>
                     <div className={styles.postInfo}>
-                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 hover:underline">
-                            {post.title}
-                        </h3>
+                        <PostTitle post={post} as="h3" className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 hover:underline"/>
                         <PostBriefIntro maxLength={60} post={post} className="text-sm md:text-base mb-6"/>
                         <div className={styles.byLine}>
                             <img className={styles.bylineIcon} src="/img/chris-social-avatar.png" alt="Chris Raser"/>
