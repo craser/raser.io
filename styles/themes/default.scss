@@ -41,7 +41,12 @@
     --theme-title-color: #ffd84d;
     --theme-heading-color: #5cc8ff;
     --theme-info-color: #33ff33;
+    --theme-heading-link-color: var(--theme-heading-color); // links that read as headings, e.g. repo names
+    --theme-heading-link-visited-color: var(--theme-heading-link-color);
+    --theme-info-link-color: var(--theme-info-color); // links that read as small info, e.g. tags, commit hashes
+    --theme-info-link-visited-color: var(--theme-info-link-color);
     --theme-post-link-color: #c0c0c0; // links inside post bodies; their underline is --theme-post-link-border
+    --theme-post-link-visited-color: var(--theme-post-link-color);
     --theme-radius: 0; // every rectangular corner
     --theme-track-title-color: #fff; // the Listening section's track titles
     --theme-track-artist-color: #ddd; // ...and their artists
@@ -65,6 +70,8 @@
     --theme-nav-button-bg: #1a1a1a;
     --theme-nav-button-text: #5cc8ff;
     --theme-nav-button-border: 1px solid #5cc8ff;
+    --theme-nav-button-border-width: 1px; // the width alone, so the high-contrast toggle can match the search button's size
+    --theme-toggle-border-color: transparent; // the high-contrast toggle's border, there only to match the search button's size
     --theme-nav-button-hover-bg: #2a2a2a;
     --theme-nav-button-hover-text: #5cc8ff;
 

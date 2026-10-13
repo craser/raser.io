@@ -61,7 +61,11 @@
 
             .repoLink {
                 @include monoChrome();
-                color: var(--theme-heading-color);
+                color: var(--theme-heading-link-color);
+
+                &:visited {
+                    color: var(--theme-heading-link-visited-color);
+                }
 
                 &:hover {
                     text-decoration: underline;
@@ -131,11 +135,11 @@
                 border-radius: var(--theme-radius);
                 padding: 5px 10px;
                 font-family: var(--font-monospace);
-                color: var(--theme-info-color);
+                color: var(--theme-info-link-color);
                 border: 1px solid var(--theme-color-border);
 
                 &:visited {
-                    color: var(--theme-quiet-link-visited-color);
+                    color: var(--theme-info-link-visited-color);
                 }
             }
 

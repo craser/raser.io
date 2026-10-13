@@ -38,3 +38,24 @@ test('the header buttons fit inside the viewport and the page does not scroll si
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
     expect(scrollWidth).toBeLessThanOrEqual(viewportWidth);
 });
+
+test("in High Contrast Mode, GitHub repo and commit links use the browser's link colour", async ({ page }) => {
+    await page.goto('/');
+    const toggle = page.getByTestId('high-contrast-toggle');
+    await expect(toggle).toBeVisible({ timeout: 30000 });
+    await toggle.click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'high-contrast-dark');
+
+    const github = page.locator('section', { has: page.getByRole('heading', { name: 'Recent Github Activity', exact: true }) });
+    await expect(github).toBeVisible({ timeout: 30000 });
+    // Commit messages use the quiet link colour (LinkText in High Contrast Mode): the reference.
+    const commitMessage = github.locator('a[href*="/commit/"]').first();
+    await expect(commitMessage).toBeVisible({ timeout: 30000 });
+    // A repo name sits in an h2 beside the icon; a commit hash is a short hex string.
+    const repoLink = github.locator('h2 a').first();
+    const commitHash = github.locator('a[href*="/commit/"]').filter({ hasText: /^[0-9a-f]{8}$/ }).first();
+    const color = (locator) => locator.evaluate((element) => getComputedStyle(element).color);
+    const reference = await color(commitMessage);
+    expect(await color(repoLink)).toBe(reference);
+    expect(await color(commitHash)).toBe(reference);
+});

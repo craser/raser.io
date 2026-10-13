@@ -32,6 +32,10 @@
     border-bottom: var(--theme-post-link-border);
 }
 
+.entry a:visited {
+    color: var(--theme-post-link-visited-color);
+}
+
 .entrymetainfo, .entryfooter {
     font-size: 0.8em;
     color: var(--theme-info-color);
@@ -44,8 +48,12 @@
 }
 
 .entrymetainfo a {
-    color: var(--theme-info-color);
+    color: var(--theme-info-link-color);
     border: 0;
+}
+
+.entrymetainfo a:visited {
+    color: var(--theme-info-link-visited-color);
 }
 
 .tagslist {

@@ -6,7 +6,7 @@
 
 .titleBanner {
     font: normal 40px var(--font-monospace);
-    color: var(--theme-header-title-color);
+    color: var(--theme-title-color);
     letter-spacing: 0;
     line-height: 60px;
     margin: 0;
@@ -26,7 +26,7 @@
 }
 
 .titleBanner a {
-    color: var(--theme-header-title-color);
+    color: var(--theme-title-color);
     text-decoration: none;
 }
 

@@ -83,9 +83,13 @@
 
 .archiveLink {
     @include monoChrome();
-    color: var(--theme-info-color);
+    color: var(--theme-info-link-color);
     display: flex;
     justify-content: flex-end;
+
+    &:visited {
+        color: var(--theme-info-link-visited-color);
+    }
     align-items: center;
     padding: 2em 0;
 
