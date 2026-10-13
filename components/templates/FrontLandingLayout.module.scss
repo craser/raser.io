@@ -2,7 +2,7 @@
 
 .header {
     --title-size: 40px;
-    /* Space below the title's baseline, inside its line box. Merriweather at line-height 1 leaves 0.15em. */
+    /* Space below the title's baseline, inside its line box. Roughly 0.15em for the title font at line-height 1. */
     --title-below-baseline: calc(var(--title-size) * 0.15);
 
     position: fixed;
@@ -23,6 +23,11 @@
         --title-size: 60px;
     }
 
+    @include small() {
+        --title-size: 24px; // leaves room for the search button and high contrast toggle at 375px
+        align-items: center; // buttons centered vertically in the bar
+    }
+
     &.stuck {
         background: var(--theme-header-stuck-bg);
     }
@@ -34,10 +39,6 @@
         letter-spacing: 0;
         margin: 0;
         padding: 0 1em 0 0; /* keep space between the title and the nav */
-
-        @include small() {
-            font-size: 24px; // leaves room for the search button and high contrast toggle at 375px
-        }
 
         @include large() {
             letter-spacing: 0;
@@ -62,6 +63,10 @@
         gap: 0;
         padding: 0;
         margin-bottom: var(--title-below-baseline); // bottoms of the buttons line up with the bottom of the title's letters
+
+        @include small() {
+            margin-bottom: 0; // centered in the bar instead
+        }
 
         .navitem {
             display: inline;
