@@ -1,10 +1,9 @@
 @import '@/styles/mixins.scss';
 
 .heading {
-    font-family: var(--font-title);
     font-size: 24px;
-    font-weight: 400;
-    color: var(--theme-color-text);
+    @include monoChrome();
+    color: var(--theme-title-color);
     margin: 0 0 1em 0;
     padding: 0 15px;
 
@@ -14,5 +13,5 @@
 }
 
 .tag {
-    color: var(--theme-color-pop);
+    color: var(--theme-info-color);
 }
