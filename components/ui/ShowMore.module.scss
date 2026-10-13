@@ -2,7 +2,8 @@
 
 
 .showMore, .showLess {
-    color: var(--theme-color-pop);
+    color: var(--theme-info-color);
+    font-family: var(--font-monospace);
 
     width: 100%;
     text-align: right;
@@ -14,11 +15,12 @@
     gap: 0.4em;
     align-items: center;
 
-    border-radius: 5px;
+    border-radius: var(--theme-radius);
     padding: 5px 10px;
 
     &:hover {
-        color: var(--theme-accent-hover);
+        color: var(--theme-info-color);
+        background-color: var(--theme-hover-bg);
     }
 }
 

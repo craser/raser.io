@@ -1,25 +1,32 @@
+@import '@/styles/mixins.scss';
+
 .header {
 
 }
 
 .titleBanner {
-    font: bold 80px var(--font-title), sans-serif;
-    color: black;
-    letter-spacing: -10px;
-    line-height: 120px;
+    font: normal 40px var(--font-monospace);
+    color: var(--theme-header-title-color);
+    letter-spacing: 0;
+    line-height: 60px;
     margin: 0;
     padding: 0;
     padding: 5px;
 
 
-    line-height: 120px;
-    letter-spacing: -10px;
+    line-height: 60px;
+    letter-spacing: 0;
     margin: 0;
     padding: 0;
+
+    @include large() {
+        font-size: 80px;
+        line-height: 120px;
+    }
 }
 
 .titleBanner a {
-    color: black;
+    color: var(--theme-header-title-color);
     text-decoration: none;
 }
 
@@ -38,21 +45,20 @@
 }
 
 .sitenav a {
-    color: #000;
+    color: var(--theme-nav-button-text);
     padding: 3px 0.5em 3px 0.5em;
     margin: 3px;
     border: 0;
 }
 
 .sitenav a:hover {
-    color: #e88c49;
+    color: var(--theme-info-color);
 }
 
 .content {
-    font-family: HelveticaNeue-condensed, sans-serif;
-    color: #222;
+    font-family: var(--font-main), sans-serif;
+    color: var(--theme-content-text);
     width: 100%;
     height: calc(100vh - 125px - 2.5em);
     z-index: 0;
 }
-

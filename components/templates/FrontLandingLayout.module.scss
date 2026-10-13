@@ -28,16 +28,19 @@
     }
 
     .titleBanner {
-        font-family: var(--font-title), serif;
+        font-family: var(--font-monospace);
         font-size: var(--title-size);
         line-height: var(--title-size);
-        letter-spacing: -6px;
+        letter-spacing: 0;
         margin: 0;
-        padding: 0 1em 0 0; /* leave room for odd kerning on final f */
-        @include poptextYellow();
+        padding: 0 1em 0 0; /* keep space between the title and the nav */
+
+        @include small() {
+            font-size: 24px; // leaves room for the search button and high contrast toggle at 375px
+        }
 
         @include large() {
-            letter-spacing: -10px;
+            letter-spacing: 0;
         }
 
         a {
@@ -74,7 +77,7 @@
         a {
             --icon-square-size: 40px;
             align-items: center;
-            border-radius: 5px;
+            border-radius: var(--theme-radius);
             border: 0;
             color: white;
             display: inline-flex;
@@ -120,7 +123,7 @@
     z-index: 1;
 
     .content {
-        font-family: HelveticaNeue-condensed, sans-serif;
+        font-family: var(--font-main), sans-serif;
         color: var(--theme-content-text);
         background-size: cover;
         background-attachment: fixed;

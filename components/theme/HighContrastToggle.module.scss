@@ -9,7 +9,7 @@ button.toggle {
     padding: 5px;
     border: var(--theme-nav-button-border);
     box-shadow: inset 0 0 0 2px #000; // an outline that, unlike a border, adds no height beside the search button
-    border-radius: 5px;
+    border-radius: var(--theme-radius);
     color: #000;
     background-color: #fff;
     cursor: pointer;
