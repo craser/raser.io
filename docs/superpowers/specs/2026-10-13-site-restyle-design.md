@@ -38,7 +38,9 @@ theme variables (the existing rule stated at the top of that file).
 | `--theme-title-color` | `#ffd84d` | `currentColor` | top-level titles (site banners, the homepage hero's post title, tag-page heading) |
 | `--theme-heading-color` | `#5cc8ff` | `currentColor` | 2nd-level headings (post titles on the post page and preview cards, repo names, in-post h2) |
 | `--theme-info-color` | `#33ff33` | `currentColor` | 3rd-tier info (dates, read time, tags, commit hashes, "continue"/"more", in-post h3) |
-| `--theme-post-link-color` | `#c0c0c0` | `LinkText` | links inside post bodies |
+| `--theme-post-link-color` | `#999` | `LinkText` | links inside post bodies |
+| `--theme-post-link-hover-color` | `#fff` | `LinkText` | post-body links on hover |
+| `--theme-post-link-hover-border` | `1px solid #33ff33` | `none` | post-body link underline on hover |
 | `--theme-radius` | `0` | (inherits) | all rectangular corners |
 | `--theme-track-title-color` | `#fff` | `currentColor` | Listening track titles (keeps Chris's "titles white") |
 | `--theme-track-artist-color` | `#ddd` | `currentColor` | Listening artists (keeps "artists light grey") |
@@ -60,7 +62,7 @@ theme variables (the existing rule stated at the top of that file).
 | `--theme-color-pop` | `lightskyblue` | `#5cc8ff` |
 | `--theme-accent-hover` | `deepskyblue` | `#5cc8ff` |
 | `--theme-highlight-text` | `yellow` | `#ffd84d` |
-| `--theme-post-link-border` | `1px solid var(--theme-color-pop)` | `1px solid #33ff33` |
+| `--theme-post-link-border` | `1px solid var(--theme-color-pop)` | `1px solid #999` |
 | `--theme-quiet-link-color` | `#fff` | `#c0c0c0` |
 | `--theme-hover-bg` | `rgba(255,255,255,0.2)` | `#2a2a2a` |
 | `--theme-hover-border` | `white` | `#333` |
