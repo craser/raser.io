@@ -82,7 +82,8 @@
     --theme-header-title-hover-decoration: none;
 
     /* The latest post's hero on the homepage */
-    --theme-hero-overlay: linear-gradient(90deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
+    --theme-hero-overlay: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.85) 55%, rgba(0, 0, 0, 0.85) 100%);
+    --theme-hero-overlay-narrow: linear-gradient(180deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.85)); // on phones the text spans the whole hero
     --theme-hero-card-bg: transparent;
     --theme-hero-card-text: white;
     --theme-hero-card-meta-text: #33ff33;

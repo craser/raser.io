@@ -102,6 +102,10 @@
         width: 100%;
         height: 100%;
         background: var(--theme-hero-overlay);
+
+        @include small() {
+            background: var(--theme-hero-overlay-narrow);
+        }
         z-index: 2;
     }
 }

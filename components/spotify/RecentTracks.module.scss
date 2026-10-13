@@ -57,7 +57,7 @@
     color: var(--theme-track-title-color);
 }
 
-/* Matches the commit dates in the neighbouring GitHub section. */
+/* Dimmer than the track title, so the title leads. */
 .artists {
     font-size: 0.9em;
     color: var(--theme-track-artist-color);
