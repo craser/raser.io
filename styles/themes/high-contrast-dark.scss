@@ -34,6 +34,14 @@
     --theme-accent-hover: currentColor;
     --theme-highlight-text: currentColor;
 
+    /* The heading hierarchy: all inherit, like the rest of this theme's text */
+    --theme-title-color: currentColor;
+    --theme-heading-color: currentColor;
+    --theme-info-color: currentColor;
+    --theme-post-link-color: LinkText;
+    --theme-track-title-color: currentColor;
+    --theme-track-artist-color: currentColor;
+
     --theme-pop-gradient: none;
     --theme-section-title-gradient: none;
     --theme-pop-fill: currentColor;

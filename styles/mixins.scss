@@ -46,3 +46,18 @@
 @mixin backgroundCrossFade() {
     background: var(--theme-panel-bg);
 }
+
+// A flat panel: solid background, single-pixel border, themed corners.
+@mixin panel() {
+    background: var(--theme-panel-bg);
+    border: 1px solid var(--theme-color-border);
+    border-radius: var(--theme-radius);
+}
+
+// Terminal-style chrome text for titles, labels and metadata.
+@mixin monoChrome() {
+    font-family: var(--font-monospace);
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
