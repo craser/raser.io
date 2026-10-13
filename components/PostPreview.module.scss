@@ -29,7 +29,7 @@
         line-height: 1.2em;
         margin: 0.2em 0 0 0;
         @include monoChrome();
-        color: var(--theme-title-color);
+        color: var(--theme-heading-color);
     }
 
     .footer {

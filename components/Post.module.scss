@@ -19,7 +19,7 @@
     margin: 0;
     text-align: left;
     @include monoChrome();
-    color: var(--theme-title-color);
+    color: var(--theme-heading-color);
 }
 
 /* PostTitle sits inside the post link; the title's own border-bottom is the underline. */
