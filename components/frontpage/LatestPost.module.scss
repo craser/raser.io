@@ -51,8 +51,32 @@
         margin: var(--theme-hero-card-margin);
         padding: var(--theme-hero-card-padding);
 
-        .meta {
+        .postTitle {
+            @include monoChrome();
+            color: var(--theme-title-color);
+            font-size: 1.6em;
+            line-height: 1.3em;
+            margin: 0 0 0.5em 0;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .brief {
+            font-size: 0.95em;
+            margin-bottom: 1.5em;
+        }
+
+        .byLineName {
+            @include monoChrome();
+            font-size: 0.85em;
+        }
+
+        .byLineMeta {
+            @include monoChrome();
             color: var(--theme-hero-card-meta-text);
+            font-size: 0.75em;
         }
 
         .byLine {

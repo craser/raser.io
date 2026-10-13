@@ -24,18 +24,17 @@ export default function LatestPostSection({ initialPost = null }) {
             <LoadingSpinner/>
         );
     } else {
-        // TODO: get rid of this tailwind styling garbage - worked great for initial rough-in, but annoying.
         return (
             <PostLink post={post} className={styles.latestPostLink}>
                 <div className={styles.latestPost} style={{ '--hero-image': `url(${getFrontPageTitleImageUrl(post)})` }}>
                     <div className={styles.postInfo}>
-                        <PostTitle post={post} as="h3" className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 hover:underline"/>
-                        <PostBriefIntro maxLength={60} post={post} className="text-sm md:text-base mb-6"/>
+                        <PostTitle post={post} as="h3" className={styles.postTitle}/>
+                        <PostBriefIntro maxLength={60} post={post} className={styles.brief}/>
                         <div className={styles.byLine}>
                             <img className={styles.bylineIcon} src="/img/chris-social-avatar.png" alt="Chris Raser"/>
                             <div>
-                                <p className="text-sm font-medium">Chris Raser</p>
-                                <p className={`text-xs ${styles.meta}`}>
+                                <p className={styles.byLineName}>Chris Raser</p>
+                                <p className={styles.byLineMeta}>
                                     <PostedDate post={post}/> • <EstimatedMinutesToRead post={post}/></p>
                             </div>
                         </div>
