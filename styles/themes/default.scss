@@ -45,7 +45,8 @@
     --theme-heading-link-visited-color: var(--theme-heading-link-color);
     --theme-info-link-color: var(--theme-info-color); // links that read as small info, e.g. tags, commit hashes
     --theme-info-link-visited-color: var(--theme-info-link-color);
-    --theme-post-link-color: #c0c0c0; // links inside post bodies; their underline is --theme-post-link-border
+    --theme-post-link-color: #999; // links inside post bodies; their underline is --theme-post-link-border
+    --theme-post-link-hover-color: #fff;
     --theme-post-link-visited-color: var(--theme-post-link-color);
     --theme-radius: 0; // every rectangular corner
     --theme-track-title-color: #fff; // the Listening section's track titles
@@ -55,7 +56,8 @@
     --theme-link-color: var(--theme-color-pop);
     --theme-link-visited-color: var(--theme-link-color);
     --theme-link-decoration: none;
-    --theme-post-link-border: 1px solid #33ff33; // post body links' underline
+    --theme-post-link-border: 1px solid #999; // post body links' underline
+    --theme-post-link-hover-border: 1px solid #33ff33;
     --theme-quiet-link-color: #c0c0c0; // links that read as plain text, e.g. commit messages
     --theme-quiet-link-visited-color: var(--theme-quiet-link-color);
 

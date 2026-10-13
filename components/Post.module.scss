@@ -23,7 +23,8 @@
 }
 
 /* PostTitle sits inside the post link; the title's own border-bottom is the underline. */
-.entry a:has(> .title) {
+.entry a:has(> .title),
+.entry a:has(> .title):hover {
     border: none;
 }
 
@@ -34,6 +35,11 @@
 
 .entry a:visited {
     color: var(--theme-post-link-visited-color);
+}
+
+.entry a:hover {
+    color: var(--theme-post-link-hover-color);
+    border-bottom: var(--theme-post-link-hover-border);
 }
 
 .entrymetainfo, .entryfooter {
