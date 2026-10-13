@@ -58,7 +58,7 @@
             .date {
                 @include monoChrome();
                 font-size: 0.8em;
-                color: var(--theme-info-color);
+                color: var(--theme-text-subtle);
             }
 
             .link {

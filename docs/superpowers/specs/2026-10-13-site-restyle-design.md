@@ -106,6 +106,9 @@ flat. Search variables keep their values (they already are the search look).
   post title blue, its metadata green).
 - Repo names → `var(--theme-heading-color)`. Section titles (PageSection's
   vertical labels) → `var(--theme-text-subtle)`, an understated grey (Chris's call).
+- Preview-card metadata (date • read time on "Previously", archive and
+  next/previous cards) → `var(--theme-text-subtle)`; the "continue" link stays
+  info-coloured.
 - Dates, read time, tags, commit hashes, "continue"/"more", hero byline meta →
   `var(--theme-info-color)` (hero meta keeps `--theme-hero-card-meta-text`),
   mono.

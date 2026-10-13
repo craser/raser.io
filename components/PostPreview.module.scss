@@ -42,7 +42,7 @@
         .date {
             font-size: 0.8em;
             @include monoChrome();
-            color: var(--theme-info-color);
+            color: var(--theme-text-subtle);
         }
 
         .link {
