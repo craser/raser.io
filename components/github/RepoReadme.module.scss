@@ -20,8 +20,19 @@
     max-width: 100%;
 
     h1, h2, h3 {
-        color: var(--theme-readme-text);
         border-bottom: solid 1px var(--theme-readme-text);
+    }
+
+    h1 {
+        color: var(--theme-title-color);
+    }
+
+    h2 {
+        color: var(--theme-heading-color);
+    }
+
+    h3 {
+        color: var(--theme-info-color);
     }
 
     div[class="markdown-heading"] {
