@@ -38,7 +38,7 @@
 
 .entrymetainfo, .entryfooter {
     font-size: 0.8em;
-    color: var(--theme-info-color);
+    color: var(--theme-text-subtle); // the "Posted" and "tags:" labels; the date and tags themselves are info-coloured
     display: block;
     padding-top: 2px;
     font-family: var(--font-monospace);
@@ -67,7 +67,6 @@
 .tagslist li {
     display: inline;
     margin-left: 0.3em;
-    color: var(--theme-color-pop);
 }
 
 .entry img, .entry a.maplink {
