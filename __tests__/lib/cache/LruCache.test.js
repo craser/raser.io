@@ -149,6 +149,72 @@ test('should save to & restore from local storage', () => {
 
 
 
+test('restoring from localStorage keeps no more entries than the capacity', () => {
+    const stored = JSON.stringify(['one', 'two', 'three', 'four', 'five'].map((key, i) => (
+        { key, value: i + 1, meta: {}, created: Date.now() }
+    )));
+    global.window = {
+        localStorage: {
+            setItem: () => {},
+            getItem: () => stored
+        },
+        requestIdleCallback(callback) {
+            callback();
+        }
+    };
+
+    let restored = new LruCache(3);
+    expect(restored.size()).toBe(3);
+    expect(restored.countEntries()).toBe(3);
+    expect(restored.get('one')).toBe(1);
+    expect(restored.get('three')).toBe(3);
+    expect(restored.get('four')).toBeNull();
+    expect(restored.get('five')).toBeNull();
+})
+
+test('a failed localStorage write does not shrink the capacity of the cache', () => {
+    jest.useFakeTimers();
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const MAX_STORED_ENTRIES = 2;
+    let storedCache = null;
+    global.window = {
+        localStorage: {
+            setItem: (key, value) => {
+                if (JSON.parse(value).length > MAX_STORED_ENTRIES) {
+                    throw new Error('DUMMY_QUOTA_EXCEEDED');
+                }
+                storedCache = value;
+            },
+            getItem: () => null
+        },
+        requestIdleCallback(callback) {
+            callback();
+        }
+    };
+
+    try {
+        let cache = new LruCache(3);
+        cache.put('one', 1);
+        cache.put('two', 2);
+        cache.put('three', 3);
+        jest.runAllTimers();
+
+        expect(warn).toHaveBeenCalled();
+        expect(JSON.parse(storedCache).map(e => e.key)).toEqual(['three', 'two']);
+        expect(cache.getCapacity()).toBe(3);
+
+        cache.put('four', 4);
+        jest.runAllTimers();
+        expect(cache.size()).toBe(3);
+        expect(cache.get('two')).toBe(2);
+        expect(cache.get('three')).toBe(3);
+        expect(cache.get('four')).toBe(4);
+    } finally {
+        warn.mockRestore();
+        jest.useRealTimers();
+    }
+})
+
 test('putting a key that is already cached replaces its entry rather than adding a second one', () => {
     let cache = new LruCache(5);
     cache.put('one', 1);

@@ -2,9 +2,6 @@
 // ABOUTME: The neighbours are looked up in the browser through the caching post DAO.
 
 import { Fragment, useEffect, useState } from "react";
-import PostDao from '/model/PostDao';
-import { Post } from "@/components/Post";
-import NextPrevPostLinks from "@/components/NextPrevPostLinks";
 import StandardLayout from "@/components/templates/StandardLayout";
 import ReadPostView from "@/components/ReadPostView";
 import { useDataContext } from "@/components/api/DataProvider";

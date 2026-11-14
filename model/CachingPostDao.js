@@ -25,6 +25,17 @@ export default class CachingPostDao {
         console.debug(`Cache MISS for ${id}`);
     }
 
+    /**
+     * Caches a post handed in from elsewhere (such as one loaded on the server) so that its
+     * next/prev relations can be recorded. A post that is already cached keeps its entry, and
+     * with it the relations already recorded for it.
+     */
+    #cacheIfAbsent(post) {
+        if (!this.#cache.get(post.entryId)) {
+            this.#cache.put(post.entryId, post);
+        }
+    }
+
     async getLatestPost() {
         let post = await this.#dao.getLatestPost();
         this.#cache.put(post.entryId, post);
@@ -45,12 +56,12 @@ export default class CachingPostDao {
 
     async getNextPost(prev) {
         let meta = this.#cache.getMeta(prev.entryId);
-        console.log({ prev, meta });
         if (meta.next) {
             return await this.getPostById(meta.next);
         } else {
             let next = await this.#dao.getNextPost(prev);
             if (next) {
+                this.#cacheIfAbsent(prev);
                 this.#cache.put(next.entryId, next);
                 this.#cache.setMeta(next.entryId, { prev: prev.entryId });
                 this.#cache.setMeta(prev.entryId, { next: next.entryId });
@@ -66,6 +77,7 @@ export default class CachingPostDao {
         } else {
             let prev = await this.#dao.getPrevPost(next);
             if (prev) {
+                this.#cacheIfAbsent(next);
                 this.#cache.put(prev.entryId, prev);
                 this.#cache.setMeta(next.entryId, { prev: prev.entryId });
                 this.#cache.setMeta(prev.entryId, { next: next.entryId });
