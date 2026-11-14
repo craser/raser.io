@@ -148,3 +148,26 @@ test('should save to & restore from local storage', () => {
 
 
 
+
+test('putting a key that is already cached replaces its entry rather than adding a second one', () => {
+    let cache = new LruCache(5);
+    cache.put('one', 1);
+    cache.put('two', 2);
+    cache.put('one', 'uno');
+
+    expect(cache.size()).toBe(2);
+    expect(cache.countEntries()).toBe(2);
+    expect(cache.get('one')).toBe('uno');
+    expect(cache.getMruValue()).toBe('uno');
+    expect(cache.getLruValue()).toBe(2);
+})
+
+test('re-putting a cached key does not push other entries out of a full cache', () => {
+    let cache = new LruCache(2);
+    cache.put('one', 1);
+    cache.put('two', 2);
+    cache.put('two', 'dos');
+
+    expect(cache.get('one')).toBe(1);
+    expect(cache.get('two')).toBe('dos');
+})
