@@ -13,14 +13,6 @@ jest.mock('@/components/ReadPostView', () => {
     };
 });
 
-// SinglePostPage's pre-existing unused `Post` and `NextPrevPostLinks` imports (left alone per
-// the task brief) pull in Post.module.scss and PostPreview.module.scss via the "@/" alias. Those
-// aliased imports bypass the CSS mock and are compiled by real Sass, which cannot resolve the
-// "@/" alias inside a stylesheet's own @import, so they must be mocked directly (see
-// NextPrevPostLinks.test.js).
-jest.mock('@/components/Post.module.scss', () => ({}));
-jest.mock('@/components/PostPreview.module.scss', () => ({}));
-
 jest.mock('@/components/templates/StandardLayout', () => {
     return function MockStandardLayout({ content }) {
         return <div data-testid="mock-standard-layout">{content}</div>;

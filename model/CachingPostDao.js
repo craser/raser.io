@@ -56,7 +56,6 @@ export default class CachingPostDao {
 
     async getNextPost(prev) {
         let meta = this.#cache.getMeta(prev.entryId);
-        console.log({ prev, meta });
         if (meta.next) {
             return await this.getPostById(meta.next);
         } else {
