@@ -1,6 +1,5 @@
 import { useDataContext } from "@/components/api/DataProvider";
 import { useEffect, useState } from "react";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { PostedDate } from "@/components/frontpage/PostedDate";
 import { EstimatedMinutesToRead } from "@/components/frontpage/EstimatedMinutesToRead";
 import { PostBriefIntro } from "@/components/frontpage/PostBriefIntro";
@@ -21,7 +20,7 @@ export default function LatestPostSection({ initialPost = null }) {
 
     if (!post) {
         return (
-            <LoadingSpinner/>
+            <LatestPostSkeleton/>
         );
     } else {
         return (
@@ -45,3 +44,28 @@ export default function LatestPostSection({ initialPost = null }) {
     }
 }
 
+/**
+ * Stand-in for the hero while the post loads. It uses the same .latestPost and
+ * .postInfo boxes as the real thing, so the splash area holds its size and
+ * nothing below it jumps when the post arrives.
+ */
+function LatestPostSkeleton() {
+    return (
+        <div className={`${styles.latestPost} ${styles.skeleton}`} data-testid="latest-post-skeleton"
+             aria-busy="true" aria-label="Loading latest post">
+            <div className={styles.postInfo} aria-hidden="true">
+                <div className={`${styles.bone} ${styles.boneTitle}`}/>
+                <div className={`${styles.bone} ${styles.boneTitle} ${styles.boneShort}`}/>
+                <div className={`${styles.bone} ${styles.boneText}`}/>
+                <div className={`${styles.bone} ${styles.boneText} ${styles.boneShort}`}/>
+                <div className={styles.byLine}>
+                    <div className={`${styles.bone} ${styles.boneAvatar}`}/>
+                    <div className={styles.boneByLineText}>
+                        <div className={`${styles.bone} ${styles.boneMeta}`}/>
+                        <div className={`${styles.bone} ${styles.boneMeta} ${styles.boneShort}`}/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
