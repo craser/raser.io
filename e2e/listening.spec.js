@@ -1,5 +1,5 @@
 // ABOUTME: End-to-end test of the front page Listening section against real Spotify data and real LaunchDarkly flags.
-// ABOUTME: Checks that tracks render and that the section sits between GitHub and Previously (desktop) or above them (mobile).
+// ABOUTME: Checks that tracks render and that the section sits between GitHub and Previously (desktop) or below them both (mobile).
 
 const { test, expect } = require('@playwright/test');
 
@@ -45,7 +45,8 @@ test('the Listening section is placed for the viewport', async ({ page }, testIn
         expect(Math.abs(l.height - g.height)).toBeLessThanOrEqual(1);
         expect(Math.abs(l.height - p.height)).toBeLessThanOrEqual(1);
     } else {
-        expect(l.y).toBeLessThan(p.y);
-        expect(l.y).toBeLessThan(g.y);
+        // Mobile stacks Previously, then GitHub, then Listening last.
+        expect(p.y).toBeLessThan(g.y);
+        expect(g.y).toBeLessThan(l.y);
     }
 });
