@@ -1,3 +1,6 @@
+// ABOUTME: Renders a post's intro and body as page-ready HTML, making relative href/src URLs root-relative.
+// ABOUTME: Components should read post HTML through this class rather than the post's raw fields.
+
 /**
  * Renders a Post's content as HTML that's ready to drop into the page.
  *

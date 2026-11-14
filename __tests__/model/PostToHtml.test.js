@@ -1,3 +1,6 @@
+// ABOUTME: Tests PostToHtml: relative href/src URLs in post HTML become root-relative, and every
+// ABOUTME: URL that already resolves the same from any page (schemes, root, #, ?) is left alone.
+
 import PostToHtml from '@/model/PostToHtml';
 
 describe('PostToHtml', () => {
