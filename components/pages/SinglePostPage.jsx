@@ -1,6 +1,8 @@
+// ABOUTME: Renders one post, handed in already loaded from the server, with its next/prev neighbours.
+// ABOUTME: The neighbours are looked up in the browser through the caching post DAO.
+
 import { Fragment, useEffect, useState } from "react";
 import PostDao from '/model/PostDao';
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { Post } from "@/components/Post";
 import NextPrevPostLinks from "@/components/NextPrevPostLinks";
 import StandardLayout from "@/components/templates/StandardLayout";
@@ -10,12 +12,12 @@ import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 import SingleSectionContent from '@/components/templates/SingleSectionContent';
 import PostBackground from "@/components/PostBackground";
 
-export default function SinglePostPage({ postId }) {
+export default function SinglePostPage({ post }) {
     const analytics = useAnalytics();
-    const dataContext = useDataContext();
-    const [post, setPost] = useState(null);
+    const postDao = useDataContext().getPostDao();
     const [next, setNext] = useState(null);
     const [prev, setPrev] = useState(null);
+    const postId = String(post.entryId);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -25,38 +27,25 @@ export default function SinglePostPage({ postId }) {
     }, [postId, analytics]);
 
     useEffect(() => {
-        console.debug(`Fetching entry for ${postId}`);
-        const postDao = dataContext.getPostDao();
-        postDao.getPostById(postId)
-            .then(post => {
-                setPost(post);
-                return post;
-            })
-            .then(post => {
-                    postDao.getNextPost(post).then(setNext);
-                    postDao.getPrevPost(post).then(setPrev);
-            })
-            .catch((e) => {
-                console.error(e);
-                setPost(null)
-            });
+        // A slower lookup for the previous post must not overwrite this post's neighbours.
+        let current = true;
+        setNext(null);
+        setPrev(null);
+        postDao.getNextPost(post).then(next => current && setNext(next));
+        postDao.getPrevPost(post).then(prev => current && setPrev(prev));
+        return () => {
+            current = false;
+        };
+    }, [post, postDao]);
 
-    }, [postId, dataContext]);
-
-    if (!post) {
-        return (
-            <StandardLayout content={<LoadingSpinner/>}/>
-        );
-    } else {
-        return (
-            <>
-                <PostBackground post={post}/>
-                <StandardLayout content={
-                    <SingleSectionContent content={
-                        <ReadPostView post={post} showBody={true} next={next} prev={prev} showNextPrev={true}/>
-                    }/>
+    return (
+        <>
+            <PostBackground post={post}/>
+            <StandardLayout content={
+                <SingleSectionContent content={
+                    <ReadPostView post={post} showBody={true} next={next} prev={prev} showNextPrev={true}/>
                 }/>
-            </>
-        );
-    }
+            }/>
+        </>
+    );
 }
