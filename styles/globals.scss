@@ -1,5 +1,5 @@
-/* blog titles/entries */
-@import url('https://fonts.googleapis.com/css?family=Lato|Merriweather');
+/* blog entries */
+@import url('https://fonts.googleapis.com/css?family=Lato');
 
 /* for the readmes from github */
 @import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
@@ -10,10 +10,8 @@
 
 
 :root {
-    --font-title: 'Merriweather';
     --font-monospace: 'JetBrains Mono', 'IBM Plex Mono', monospace;
     --font-main: 'Lato';
-    --theme-border-radius-large: 7px;
     --theme-container-padding-lg: 15px;
     --theme-container-padding-s: 7px;
     --theme-container-padding-xs: 3px;

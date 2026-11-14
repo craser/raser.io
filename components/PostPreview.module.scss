@@ -2,7 +2,7 @@
 
 .post {
     border: 1px solid transparent;
-    border-radius: 5px;
+    border-radius: var(--theme-radius);
     overflow: hidden;
     height: 100%;
     width: 100%;
@@ -19,7 +19,7 @@
     .image {
         width: 100%; //calc(100% - $fauxPadding);
         float: left;
-        border-radius: 5px;
+        border-radius: var(--theme-radius);
         margin: 0 0 0.2em 0;
     }
 
@@ -27,9 +27,9 @@
         display: inline-block;
         font-size: 1.2em;
         line-height: 1.2em;
-        font-weight: 600;
         margin: 0.2em 0 0 0;
-        @include poptextYellow;
+        @include monoChrome();
+        color: var(--theme-heading-color);
     }
 
     .footer {
@@ -41,6 +41,7 @@
 
         .date {
             font-size: 0.8em;
+            @include monoChrome();
             color: var(--theme-text-subtle);
         }
 
@@ -50,7 +51,7 @@
             flex-direction: row;
             align-items: center;
             font-size: 0.8em;
-            color: var(--theme-color-text);
+            color: var(--theme-info-color);
 
             .continueIcon {
                 width: 2em;

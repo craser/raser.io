@@ -1,5 +1,5 @@
 // ABOUTME: Guards the props SinglePostPage hands to ReadPostView for a single post.
-// ABOUTME: A single post must render its full body with next/prev navigation.
+// ABOUTME: It renders the post it is given (never a cached copy) with its full body and next/prev navigation.
 import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SinglePostPage from '@/components/pages/SinglePostPage';
@@ -12,14 +12,6 @@ jest.mock('@/components/ReadPostView', () => {
         return <div data-testid="mock-read-post-view"/>;
     };
 });
-
-// SinglePostPage's pre-existing unused `Post` and `NextPrevPostLinks` imports (left alone per
-// the task brief) pull in Post.module.scss and PostPreview.module.scss via the "@/" alias. Those
-// aliased imports bypass the CSS mock and are compiled by real Sass, which cannot resolve the
-// "@/" alias inside a stylesheet's own @import, so they must be mocked directly (see
-// NextPrevPostLinks.test.js).
-jest.mock('@/components/Post.module.scss', () => ({}));
-jest.mock('@/components/PostPreview.module.scss', () => ({}));
 
 jest.mock('@/components/templates/StandardLayout', () => {
     return function MockStandardLayout({ content }) {
@@ -42,41 +34,88 @@ jest.mock('@/components/PostBackground', () => {
     };
 });
 
+const mockAnalytics = { firePageView: jest.fn(), fireReferrer: jest.fn() };
+
 jest.mock('@/components/analytics/AnalyticsProvider', () => ({
-    useAnalytics: () => ({ firePageView: jest.fn(), fireReferrer: jest.fn() })
+    useAnalytics: () => mockAnalytics
 }));
+
+const mockPostDao = {
+    getPostById: jest.fn(),
+    getNextPost: jest.fn(),
+    getPrevPost: jest.fn()
+};
 
 jest.mock('@/components/api/DataProvider', () => ({
     useDataContext: () => ({
-        getPostDao: () => ({
-            getPostById: jest.fn().mockResolvedValue({ entryId: 'DUMMY_ENTRY_ID', title: 'DUMMY_TITLE' }),
-            getNextPost: jest.fn().mockResolvedValue(null),
-            getPrevPost: jest.fn().mockResolvedValue(null)
-        })
+        getPostDao: () => mockPostDao
     })
 }));
+
+const POST = { entryId: 3421, title: 'DUMMY_TITLE' };
+const NEXT = { entryId: 3422, title: 'DUMMY_NEXT' };
+const PREV = { entryId: 3420, title: 'DUMMY_PREV' };
 
 describe('SinglePostPage', () => {
     beforeEach(() => {
         mockReadPostViewProps.length = 0;
         mockPostBackgroundProps.length = 0;
+        Object.values(mockAnalytics).forEach(f => f.mockReset());
+        mockPostDao.getPostById.mockReset();
+        mockPostDao.getNextPost.mockReset().mockResolvedValue(NEXT);
+        mockPostDao.getPrevPost.mockReset().mockResolvedValue(PREV);
     });
 
-    it('renders the post once it loads', async () => {
-        const { getByTestId } = render(<SinglePostPage postId="DUMMY_ENTRY_ID"/>);
-        await waitFor(() => expect(getByTestId('mock-read-post-view')).toBeInTheDocument());
+    it('renders the post it is given straight away', () => {
+        const { getByTestId } = render(<SinglePostPage post={POST}/>);
+        expect(getByTestId('mock-read-post-view')).toBeInTheDocument();
+        expect(mockReadPostViewProps[0].post).toBe(POST);
     });
 
-    it('renders the full body with next/prev navigation', async () => {
-        const { getByTestId } = render(<SinglePostPage postId="DUMMY_ENTRY_ID"/>);
-        await waitFor(() => expect(getByTestId('mock-read-post-view')).toBeInTheDocument());
+    it('never looks the post up through the client-side DAO', async () => {
+        render(<SinglePostPage post={POST}/>);
+        await waitFor(() => expect(mockPostDao.getPrevPost).toHaveBeenCalled());
+        expect(mockPostDao.getPostById).not.toHaveBeenCalled();
+    });
+
+    it('renders the full body with next/prev navigation', () => {
+        render(<SinglePostPage post={POST}/>);
         expect(mockReadPostViewProps[0].showBody).toBe(true);
         expect(mockReadPostViewProps[0].showNextPrev).toBe(true);
     });
 
-    it('puts the post\'s hero image behind the page', async () => {
-        const { getByTestId } = render(<SinglePostPage postId="DUMMY_ENTRY_ID"/>);
-        await waitFor(() => expect(getByTestId('mock-post-background')).toBeInTheDocument());
-        expect(mockPostBackgroundProps[0].post.entryId).toBe('DUMMY_ENTRY_ID');
+    it('loads the next and previous posts for the post it is given', async () => {
+        render(<SinglePostPage post={POST}/>);
+        await waitFor(() => {
+            const props = mockReadPostViewProps[mockReadPostViewProps.length - 1];
+            expect(props.next).toBe(NEXT);
+            expect(props.prev).toBe(PREV);
+        });
+        expect(mockPostDao.getNextPost).toHaveBeenCalledWith(POST);
+        expect(mockPostDao.getPrevPost).toHaveBeenCalledWith(POST);
+    });
+
+    it('shows the new post and its neighbours when it is given a different post', async () => {
+        const other = { entryId: 17, title: 'DUMMY_OTHER' };
+        const { rerender } = render(<SinglePostPage post={POST}/>);
+        await waitFor(() => expect(mockReadPostViewProps[mockReadPostViewProps.length - 1].next).toBe(NEXT));
+        mockPostDao.getNextPost.mockResolvedValue(null);
+        mockPostDao.getPrevPost.mockResolvedValue(null);
+
+        rerender(<SinglePostPage post={other}/>);
+        expect(mockReadPostViewProps[mockReadPostViewProps.length - 1].post).toBe(other);
+        expect(mockReadPostViewProps[mockReadPostViewProps.length - 1].next).toBeNull();
+        await waitFor(() => expect(mockPostDao.getNextPost).toHaveBeenCalledWith(other));
+    });
+
+    it('records a page view for the post', () => {
+        render(<SinglePostPage post={POST}/>);
+        expect(mockAnalytics.firePageView).toHaveBeenCalledWith('3421');
+    });
+
+    it('puts the post\'s hero image behind the page', () => {
+        const { getByTestId } = render(<SinglePostPage post={POST}/>);
+        expect(getByTestId('mock-post-background')).toBeInTheDocument();
+        expect(mockPostBackgroundProps[0].post).toBe(POST);
     });
 });

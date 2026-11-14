@@ -13,7 +13,7 @@
 
         padding: $fauxPadding;
         border: 1px solid transparent;
-        border-radius: 5px;
+        border-radius: var(--theme-radius);
         margin: -$fauxPadding;
 
         position: relative;
@@ -32,14 +32,15 @@
         .image {
             width: 38.2%;
             float: left;
-            border-radius: 5px;
+            border-radius: var(--theme-radius);
             margin: 0 0.5em 0.5em 0;
         }
 
         .title {
-            font-size: 1.2em;
-            font-weight: 600;
-            @include poptextYellow;
+            @include monoChrome();
+            color: var(--theme-heading-color);
+            font-size: 1.1em;
+            line-height: 1.3em;
         }
 
         .brief {
@@ -55,6 +56,7 @@
             clear: both;
 
             .date {
+                @include monoChrome();
                 font-size: 0.8em;
                 color: var(--theme-text-subtle);
             }
@@ -64,8 +66,9 @@
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+                @include monoChrome();
                 font-size: 0.8em;
-                color: var(--theme-color-text);
+                color: var(--theme-info-color);
 
                 .continueIcon {
                     width: 2em;
@@ -79,14 +82,19 @@
 }
 
 .archiveLink {
-    @include poptextYellow;
+    @include monoChrome();
+    color: var(--theme-info-link-color);
     display: flex;
     justify-content: flex-end;
+
+    &:visited {
+        color: var(--theme-info-link-visited-color);
+    }
     align-items: center;
     padding: 2em 0;
 
     svg {
-        color: var(--theme-color-pop);
+        color: var(--theme-info-color);
     }
 }
 

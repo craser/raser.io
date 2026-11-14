@@ -1,7 +1,11 @@
+// ABOUTME: Wraps a PostDao with a localStorage-backed LRU cache of posts and their next/prev relations.
+// ABOUTME: Cached posts expire after the site's revalidate interval, so edits reach readers on the same schedule as ISR pages.
+
 /**
  * Wrapper around a (Raw)PostDao that uses localStorage as a cache.
  */
 import LruCache from '@/lib/cache/LruCache'
+import SiteConfig from '@/lib/SiteConfig'
 
 export default class CachingPostDao {
     #dao = null;
@@ -9,7 +13,8 @@ export default class CachingPostDao {
 
     constructor(dao) {
         this.#dao = dao;
-        this.#cache = new LruCache(100); // TODO: replace this with some reasoned-out number/logic
+        const maxAgeMs = new SiteConfig().getValue('staticGeneration.prerender.revalidateSeconds') * 1000;
+        this.#cache = new LruCache(100, { maxAgeMs }); // TODO: replace this capacity with some reasoned-out number/logic
     }
 
     #hit(id) {
@@ -18,6 +23,17 @@ export default class CachingPostDao {
 
     #miss(id) {
         console.debug(`Cache MISS for ${id}`);
+    }
+
+    /**
+     * Caches a post handed in from elsewhere (such as one loaded on the server) so that its
+     * next/prev relations can be recorded. A post that is already cached keeps its entry, and
+     * with it the relations already recorded for it.
+     */
+    #cacheIfAbsent(post) {
+        if (!this.#cache.get(post.entryId)) {
+            this.#cache.put(post.entryId, post);
+        }
     }
 
     async getLatestPost() {
@@ -40,12 +56,12 @@ export default class CachingPostDao {
 
     async getNextPost(prev) {
         let meta = this.#cache.getMeta(prev.entryId);
-        console.log({ prev, meta });
         if (meta.next) {
             return await this.getPostById(meta.next);
         } else {
             let next = await this.#dao.getNextPost(prev);
             if (next) {
+                this.#cacheIfAbsent(prev);
                 this.#cache.put(next.entryId, next);
                 this.#cache.setMeta(next.entryId, { prev: prev.entryId });
                 this.#cache.setMeta(prev.entryId, { next: next.entryId });
@@ -61,6 +77,7 @@ export default class CachingPostDao {
         } else {
             let prev = await this.#dao.getPrevPost(next);
             if (prev) {
+                this.#cacheIfAbsent(next);
                 this.#cache.put(prev.entryId, prev);
                 this.#cache.setMeta(next.entryId, { prev: prev.entryId });
                 this.#cache.setMeta(prev.entryId, { next: next.entryId });

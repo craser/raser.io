@@ -6,17 +6,46 @@ import React, { useState, useEffect, useRef } from 'react';
 // Characters used during the scramble effect - mix of letters, numbers, and block chars
 const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789█▓░│─┌┐└┘';
 
+function prefersReducedMotion() {
+    return typeof window !== 'undefined'
+        && typeof window.matchMedia === 'function'
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 /**
  * Displays text with a scramble animation effect.
- * When the text prop changes, characters scramble then resolve to the new value.
+ *
+ * trigger="change" (default): characters scramble then resolve whenever the text prop changes.
+ * trigger="visible": the text renders as-is until the element first scrolls into view, then
+ * scrambles and resolves once. Without IntersectionObserver support it never animates.
+ *
+ * No animation runs when the user prefers reduced motion.
  *
  * @param {string} text - The final text to display
  * @param {number} duration - Animation duration in ms (default 1000)
+ * @param {'change'|'visible'} trigger - What starts the animation (default 'change')
  */
-export default function ScrambleText({ text, duration = 1000 }) {
+export default function ScrambleText({ text, duration = 1000, trigger = 'change' }) {
     const [displayText, setDisplayText] = useState(text);
+    const [hasBeenSeen, setHasBeenSeen] = useState(false);
+    const elementRef = useRef(null);
     const animationRef = useRef(null);
     const startTimeRef = useRef(null);
+
+    // In visible mode, wait for the first time the element enters the viewport.
+    useEffect(() => {
+        if (trigger !== 'visible' || typeof window.IntersectionObserver === 'undefined') {
+            return;
+        }
+        const observer = new window.IntersectionObserver((entries) => {
+            if (entries.some(entry => entry.isIntersecting)) {
+                observer.disconnect();
+                setHasBeenSeen(true);
+            }
+        });
+        observer.observe(elementRef.current);
+        return () => observer.disconnect();
+    }, [trigger]);
 
     useEffect(() => {
         // Cancel any existing animation
@@ -27,6 +56,11 @@ export default function ScrambleText({ text, duration = 1000 }) {
         // Handle empty string
         if (!text) {
             setDisplayText('');
+            return;
+        }
+
+        if ((trigger === 'visible' && !hasBeenSeen) || prefersReducedMotion()) {
+            setDisplayText(text);
             return;
         }
 
@@ -74,9 +108,9 @@ export default function ScrambleText({ text, duration = 1000 }) {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [text, duration]);
+    }, [text, duration, trigger, hasBeenSeen]);
 
     return (
-        <span data-testid="scramble-text">{displayText}</span>
+        <span ref={elementRef} data-testid="scramble-text">{displayText}</span>
     );
 }

@@ -12,7 +12,7 @@
     }
 
     position: relative;
-    @include backgroundCrossFade();
+    @include panel();
     display: flex;
     flex-direction: row;
     padding: 0;
@@ -38,11 +38,13 @@
         font-size: var(--title-font-size);
         line-height: var(--title-font-size);
 
-        font-weight: 600;
+        font-weight: normal;
+        font-family: var(--font-monospace);
+        letter-spacing: 0.05em;
         white-space: nowrap;
 
         .sectionTitle {
-            color: var(--theme-color-text);
+            color: var(--theme-text-subtle);
             width: fit-content;
 
             position: sticky;
@@ -56,8 +58,6 @@
             transform:
                 rotate(-90deg)
                 translateX(-100%);
-
-            @include poptextSectionHeader;
 
             z-index: 2;
         }

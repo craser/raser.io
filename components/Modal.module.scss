@@ -16,7 +16,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        border-radius: 11px;
+        border-radius: var(--theme-radius);
         max-height: 96vh;
         max-width: 96vw;
         overflow-y: hidden;

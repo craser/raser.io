@@ -7,16 +7,16 @@ button.navButton {
     justify-content: center;
     align-items: center;
     text-transform: lowercase;
-    border-radius: 5px;
+    border-radius: var(--theme-radius);
     padding: 5px;
     transition: all 200ms;
     color: var(--theme-nav-button-text);
     background-color: var(--theme-nav-button-bg);
     border: var(--theme-nav-button-border);
-    @include poptextYellow();
+    font-family: var(--font-monospace);
 
     &:hover {
-        @include unPop(var(--theme-nav-button-hover-text));
+        color: var(--theme-nav-button-hover-text);
         background: var(--theme-nav-button-hover-bg);
     }
 

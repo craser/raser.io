@@ -5,52 +5,64 @@
     clear: left;
     text-align: justify;
     margin-bottom: 2em;
-    background-color: var(--theme-color-content-text-bg);
-    border-radius: 0;
     padding: 15px;
 
-    @include backgroundCrossFade();
+    @include panel();
+    font-family: var(--font-main), sans-serif;
     color: var(--theme-color-text);
-
-    @include large() {
-        border-radius: var(--theme-border-radius-large);
-    }
 }
 
 .entry .title {
-    font-family: var(--font-title);
     font-size: 24px;
-    font-weight: 400;
+    line-height: 1.3em;
     border-bottom: 1px solid var(--theme-color-border);
     margin: 0;
     text-align: left;
-    @include poptextYellow();
+    @include monoChrome();
+    color: var(--theme-heading-color);
 }
 
-.entry .title a {
+/* PostTitle sits inside the post link; the title's own border-bottom is the underline. */
+.entry a:has(> .title),
+.entry a:has(> .title):hover {
     border: none;
 }
 
-/* Link colours come from the global link rule in globals.scss. */
 .entry a {
+    color: var(--theme-post-link-color);
     border-bottom: var(--theme-post-link-border);
+}
+
+.entry a:visited {
+    color: var(--theme-post-link-visited-color);
+}
+
+.entry a:hover {
+    color: var(--theme-post-link-hover-color);
+    border-bottom: var(--theme-post-link-hover-border);
 }
 
 .entrymetainfo, .entryfooter {
     font-size: 0.8em;
-    color: var(--theme-color-subtext);
+    color: var(--theme-text-subtle); // the "Posted" and "tags:" labels; the date and tags themselves are info-coloured
     display: block;
     padding-top: 2px;
-    font-family: sans-serif;
+    font-family: var(--font-monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     margin-bottom: 0.5em;
 }
 
 .entrymetainfo a {
+    color: var(--theme-info-link-color);
     border: 0;
 }
 
+.entrymetainfo a:visited {
+    color: var(--theme-info-link-visited-color);
+}
+
 .tagslist {
-    font-variant-caps: small-caps;
     float: right;
 }
 
@@ -61,7 +73,6 @@
 .tagslist li {
     display: inline;
     margin-left: 0.3em;
-    color: var(--theme-color-pop);
 }
 
 .entry img, .entry a.maplink {
@@ -100,11 +111,18 @@
 
 .entry h2 {
     overflow: hidden;
+    @include monoChrome();
+    color: var(--theme-heading-color);
 
     textarea {
         width: 100%;
         max-width: calc(100% - 26px);
     }
+}
+
+.entry h3 {
+    @include monoChrome();
+    color: var(--theme-info-color);
 }
 
 .entry textarea {
@@ -120,7 +138,7 @@
 
 .entryfooter {
     text-align: center;
-    color: var(--theme-highlight-text);
+    color: var(--theme-info-color);
 }
 
 .entryfooter button {
@@ -129,8 +147,9 @@
     background-color: var(--theme-button-bg);
     color: var(--theme-button-text);
     padding: 10px;
-    font-weight: bold;
-    border-radius: 10px;
+    font-family: var(--font-monospace);
+    border: 1px solid var(--theme-button-text);
+    border-radius: var(--theme-radius);
 }
 
 
@@ -159,14 +178,5 @@
         grid-column: 2;
     }
 
-    border-radius: var(--theme-border-radius-large);
-    @include small {
-        &.prevLink {
-            border-radius: var(--theme-border-radius-large) 0 0 var(--theme-border-radius-large);
-        }
-
-        &.nextLink {
-            border-radius: 0 var(--theme-border-radius-large) var(--theme-border-radius-large) 0;
-        }
-    }
+    border-radius: var(--theme-radius);
 }

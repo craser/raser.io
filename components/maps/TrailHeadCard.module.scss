@@ -1,7 +1,8 @@
 .card {
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 15px;
+    background-color: var(--theme-panel-bg);
+    border: 1px solid var(--theme-color-border);
+    border-radius: var(--theme-radius);
+    color: var(--theme-content-text);
     padding: 3rem;
     margin-bottom: 1rem;
 }

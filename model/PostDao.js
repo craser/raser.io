@@ -1,3 +1,6 @@
+// ABOUTME: Fetches posts from the site's /api/entries endpoints for browser components.
+// ABOUTME: Requests reject with the underlying error; next/prev resolve to null when there is no neighbour.
+
 import SiteConfig from "@/lib/SiteConfig";
 import CachingPostDao from "@/model/CachingPostDao";
 import EdgeConfigPostDao from "@/model/EdgeConfigPostDao";
@@ -22,17 +25,33 @@ export default class PostDao {
     constructor() {
     }
 
-    #cleanFetch(...args) {
-        return fetch(...args)
+    /**
+     * Fetches the given URL, rejecting with an Error carrying the HTTP status if the response is not ok.
+     */
+    #cleanFetch(url) {
+        return fetch(url)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const error = new Error(`HTTP error! status: ${response.status} fetching ${url}`);
+                    error.status = response.status;
+                    throw error;
                 } else {
                     return response;
                 }
-            })
+            });
+    }
+
+    /**
+     * Fetches a post that may legitimately not exist: resolves to null on a 404, rejects on any other failure.
+     */
+    #fetchPostOrNull(url) {
+        return this.#cleanFetch(url)
+            .then(response => response.json())
             .catch(e => {
-                console.error({ e, arguments });
+                if (e.status === 404) {
+                    return null;
+                }
+                throw e;
             });
     }
 
@@ -55,18 +74,14 @@ export default class PostDao {
         let id = p.entryId || p;
         id = encodeURIComponent(id);
         let url = this.#config.getEndpoint('entries.next', { id });
-        return this.#cleanFetch(url)
-            .then(response => response.json())
-            .catch(() => null);
+        return this.#fetchPostOrNull(url);
     }
 
     async getPrevPost(p) {
         let id = p.entryId || p;
         id = encodeURIComponent(id);
         let url = this.#config.getEndpoint('entries.previous', { id });
-        return this.#cleanFetch(url)
-            .then(response => response.json())
-            .catch(() => null);
+        return this.#fetchPostOrNull(url);
     }
 
     /**
