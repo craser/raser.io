@@ -171,3 +171,78 @@ test('re-putting a cached key does not push other entries out of a full cache', 
     expect(cache.get('one')).toBe(1);
     expect(cache.get('two')).toBe('dos');
 })
+
+describe('entry expiry', () => {
+    const HOUR = 60 * 60 * 1000;
+    const START = new Date('2026-11-14T12:00:00Z').getTime();
+
+    beforeEach(() => {
+        jest.useFakeTimers({ now: START });
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
+    test('serves an entry until it is older than maxAgeMs', () => {
+        let cache = new LruCache(5, { useLocalStorage: false, maxAgeMs: HOUR });
+        cache.put('one', 1);
+        jest.setSystemTime(START + HOUR);
+        expect(cache.get('one')).toBe(1);
+    })
+
+    test('treats an entry older than maxAgeMs as not cached', () => {
+        let cache = new LruCache(5, { useLocalStorage: false, maxAgeMs: HOUR });
+        cache.put('one', 1);
+        jest.setSystemTime(START + HOUR + 1);
+        expect(cache.get('one')).toBeNull();
+        expect(cache.size()).toBe(0);
+    })
+
+    test('drops the metadata of an expired entry', () => {
+        let cache = new LruCache(5, { useLocalStorage: false, maxAgeMs: HOUR });
+        cache.put('one', 1);
+        cache.setMeta('one', { next: 'two' });
+        jest.setSystemTime(START + HOUR + 1);
+        expect(cache.getMeta('one')).toEqual({});
+    })
+
+    test('putting a key again restarts its age', () => {
+        let cache = new LruCache(5, { useLocalStorage: false, maxAgeMs: HOUR });
+        cache.put('one', 1);
+        jest.setSystemTime(START + HOUR);
+        cache.put('one', 'uno');
+        jest.setSystemTime(START + HOUR + HOUR);
+        expect(cache.get('one')).toBe('uno');
+    })
+
+    test('never expires entries when no maxAgeMs is given', () => {
+        let cache = new LruCache(5, { useLocalStorage: false });
+        cache.put('one', 1);
+        jest.setSystemTime(START + 1000 * HOUR);
+        expect(cache.get('one')).toBe(1);
+    })
+
+    test('does not restore entries from localStorage that have expired or carry no timestamp', () => {
+        const stored = JSON.stringify([
+            { key: 'fresh', value: 1, meta: {}, created: START - HOUR },
+            { key: 'expired', value: 2, meta: {}, created: START - HOUR - 1 },
+            { key: 'untimed', value: 3, meta: {} }
+        ]);
+        global.window = {
+            localStorage: {
+                setItem: () => {},
+                getItem: () => stored
+            },
+            requestIdleCallback(callback) {
+                callback();
+            }
+        };
+
+        let restored = new LruCache(5, { maxAgeMs: HOUR });
+        expect(restored.size()).toBe(1);
+        expect(restored.get('fresh')).toBe(1);
+        expect(restored.get('expired')).toBeNull();
+        expect(restored.get('untimed')).toBeNull();
+    })
+});

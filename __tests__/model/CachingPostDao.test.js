@@ -1,5 +1,6 @@
 import CachingPostDao from "@/model/CachingPostDao";
 import PostDao from "@/model/PostDao";
+import SiteConfig from "@/lib/SiteConfig";
 
 test('Should cache after retrieving a post by ID', async () => {
     const mockDao = {
@@ -89,3 +90,42 @@ test('Should not record next/prev relations between posts loaded by tag', async 
     expect(mockDao.getNextPost).toHaveBeenCalledTimes(1);
     expect(mockDao.getPrevPost).toHaveBeenCalledTimes(1);
 })
+
+describe('cached post expiry', () => {
+    const revalidateMs = new SiteConfig().getValue('staticGeneration.prerender.revalidateSeconds') * 1000;
+    const START = new Date('2026-11-14T12:00:00Z').getTime();
+
+    beforeEach(() => {
+        jest.useFakeTimers({ now: START });
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
+    test('Should serve a cached post from the cache within the site revalidate interval', async () => {
+        const mockDao = {
+            getPostById: jest.fn(async () => ({ entryId: 3421, lastUpdated: 'first' }))
+        };
+        const dao = new CachingPostDao(mockDao);
+        await dao.getPostById(3421);
+        jest.setSystemTime(START + revalidateMs);
+
+        expect((await dao.getPostById(3421)).lastUpdated).toBe('first');
+        expect(mockDao.getPostById).toHaveBeenCalledTimes(1);
+    })
+
+    test('Should fetch a post again once its cached copy is older than the site revalidate interval', async () => {
+        const mockDao = {
+            getPostById: jest.fn()
+                .mockResolvedValueOnce({ entryId: 3421, lastUpdated: 'first' })
+                .mockResolvedValueOnce({ entryId: 3421, lastUpdated: 'edited' })
+        };
+        const dao = new CachingPostDao(mockDao);
+        await dao.getPostById(3421);
+        jest.setSystemTime(START + revalidateMs + 1);
+
+        expect((await dao.getPostById(3421)).lastUpdated).toBe('edited');
+        expect(mockDao.getPostById).toHaveBeenCalledTimes(2);
+    })
+});

@@ -1,7 +1,11 @@
+// ABOUTME: Wraps a PostDao with a localStorage-backed LRU cache of posts and their next/prev relations.
+// ABOUTME: Cached posts expire after the site's revalidate interval, so edits reach readers on the same schedule as ISR pages.
+
 /**
  * Wrapper around a (Raw)PostDao that uses localStorage as a cache.
  */
 import LruCache from '@/lib/cache/LruCache'
+import SiteConfig from '@/lib/SiteConfig'
 
 export default class CachingPostDao {
     #dao = null;
@@ -9,7 +13,8 @@ export default class CachingPostDao {
 
     constructor(dao) {
         this.#dao = dao;
-        this.#cache = new LruCache(100); // TODO: replace this with some reasoned-out number/logic
+        const maxAgeMs = new SiteConfig().getValue('staticGeneration.prerender.revalidateSeconds') * 1000;
+        this.#cache = new LruCache(100, { maxAgeMs }); // TODO: replace this capacity with some reasoned-out number/logic
     }
 
     #hit(id) {
