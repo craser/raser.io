@@ -1,6 +1,7 @@
 import CachingPostDao from "@/model/CachingPostDao";
 import PostDao from "@/model/PostDao";
 import SiteConfig from "@/lib/SiteConfig";
+import { MockLocalStorage } from "../mocks/LocalStorage";
 
 test('Should cache after retrieving a post by ID', async () => {
     const mockDao = {
@@ -127,5 +128,77 @@ describe('cached post expiry', () => {
 
         expect((await dao.getPostById(3421)).lastUpdated).toBe('edited');
         expect(mockDao.getPostById).toHaveBeenCalledTimes(2);
+    })
+});
+
+describe('next/prev relations of a post loaded elsewhere', () => {
+    // Single-post pages hand CachingPostDao a post loaded on the server, so the post has
+    // never been through this cache when its neighbours are looked up.
+    const revalidateMs = new SiteConfig().getValue('staticGeneration.prerender.revalidateSeconds') * 1000;
+    const START = new Date('2026-11-14T12:00:00Z').getTime();
+
+    beforeEach(() => {
+        jest.useFakeTimers({ now: START });
+        global.window = {
+            localStorage: MockLocalStorage(),
+            requestIdleCallback(callback) {
+                callback();
+            }
+        };
+    });
+
+    afterEach(() => {
+        delete global.window;
+        jest.useRealTimers();
+    });
+
+    function mockNeighbourDao() {
+        return {
+            getPostById: jest.fn(async id => ({ entryId: id })),
+            getNextPost: jest.fn(async post => ({ entryId: post.entryId + 1 })),
+            getPrevPost: jest.fn(async post => ({ entryId: post.entryId - 1 }))
+        };
+    }
+
+    test('Should remember the next post of a post it did not load', async () => {
+        const mockDao = mockNeighbourDao();
+        const dao = new CachingPostDao(mockDao);
+        await dao.getNextPost({ entryId: 3421 });
+
+        expect((await dao.getNextPost({ entryId: 3421 })).entryId).toBe(3422);
+        expect(mockDao.getNextPost).toHaveBeenCalledTimes(1);
+        expect(mockDao.getPostById).not.toHaveBeenCalled();
+    })
+
+    test('Should remember the previous post of a post it did not load', async () => {
+        const mockDao = mockNeighbourDao();
+        const dao = new CachingPostDao(mockDao);
+        await dao.getPrevPost({ entryId: 3421 });
+
+        expect((await dao.getPrevPost({ entryId: 3421 })).entryId).toBe(3420);
+        expect(mockDao.getPrevPost).toHaveBeenCalledTimes(1);
+        expect(mockDao.getPostById).not.toHaveBeenCalled();
+    })
+
+    test('Should remember both neighbours of a post it did not load', async () => {
+        const mockDao = mockNeighbourDao();
+        const dao = new CachingPostDao(mockDao);
+        await dao.getNextPost({ entryId: 3421 });
+        await dao.getPrevPost({ entryId: 3421 });
+
+        expect((await dao.getNextPost({ entryId: 3421 })).entryId).toBe(3422);
+        expect((await dao.getPrevPost({ entryId: 3421 })).entryId).toBe(3420);
+        expect(mockDao.getNextPost).toHaveBeenCalledTimes(1);
+        expect(mockDao.getPrevPost).toHaveBeenCalledTimes(1);
+    })
+
+    test('Should look the neighbours up again once the site revalidate interval has passed', async () => {
+        const mockDao = mockNeighbourDao();
+        const dao = new CachingPostDao(mockDao);
+        await dao.getNextPost({ entryId: 3421 });
+        jest.setSystemTime(START + revalidateMs + 1);
+
+        expect((await dao.getNextPost({ entryId: 3421 })).entryId).toBe(3422);
+        expect(mockDao.getNextPost).toHaveBeenCalledTimes(2);
     })
 });
