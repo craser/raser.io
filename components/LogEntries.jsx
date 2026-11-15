@@ -1,3 +1,5 @@
+// ABOUTME: Infinite-scrolling list of posts, newest first, optionally limited to one tag.
+// ABOUTME: An IntersectionObserver on the list's bottom loads the next page from the post DAO.
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './LogEntries.module.scss';
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -14,9 +16,11 @@ export default function LogEntries({ initialPage = 0, pageSize, initialEntries, 
     const analytics = useAnalytics();
     const dataContext = useDataContext();
     const [entries, setEntries] = useState(initialEntries || []);
-    const [intersectionObserver, setIntersectionObserver] = useState(null);
     const [isLoading, setIsLoading] = useState(false); // for now, only controls spinner
     const pageBottomRef = useRef();
+    // Kept in refs so a re-created observer carries on from the right page.
+    const nextPageRef = useRef(initialPage);
+    const loadingRef = useRef(false);
     const isCsr = `${typeof window}` !== 'undefined';
 
     useEffect(() => {
@@ -42,31 +46,18 @@ export default function LogEntries({ initialPage = 0, pageSize, initialEntries, 
     }, [setEntries, setIsLoading, dataContext, pageSize, tag]);
 
     useEffect(() => {
-        if (!isCsr || intersectionObserver) return;
-        let pageNumber = initialPage;
-        let loading = false;
+        if (!isCsr || !pageBottomRef.current) return;
         const observer = new IntersectionObserver((entries) => {
             if (entries.some(entry => entry.isIntersecting)) {
-                // TODO: this is going to find the same value for pageNumber every time,
-                // since it's a closure over the initial value of pageNumber. Need to fix this.
-                if (!loading) {
-                    loading = true;
-                    loadPage(pageNumber++).then(() => loading = false);
+                if (!loadingRef.current) {
+                    loadingRef.current = true;
+                    loadPage(nextPageRef.current++).then(() => loadingRef.current = false);
                 }
             }
         }, { threshold: 0.5 });
-        setIntersectionObserver(observer);
+        observer.observe(pageBottomRef.current);
         return () => observer.disconnect(); // cleanup
-    }, [isCsr, initialPage, intersectionObserver, loadPage]);
-
-
-    useEffect(() => {
-        if (pageBottomRef?.current && intersectionObserver) {
-            const observer = intersectionObserver;
-            observer.observe(pageBottomRef.current);
-            return () => observer.disconnect();
-        }
-    }, [intersectionObserver]);
+    }, [isCsr, loadPage]);
 
     return (
         <Fragment>
