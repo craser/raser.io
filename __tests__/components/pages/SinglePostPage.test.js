@@ -1,6 +1,6 @@
 // ABOUTME: Guards the props SinglePostPage hands to ReadPostView for a single post.
 // ABOUTME: It renders the post it is given (never a cached copy) with its full body and next/prev navigation.
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SinglePostPage from '@/components/pages/SinglePostPage';
 
@@ -106,6 +106,27 @@ describe('SinglePostPage', () => {
         expect(mockReadPostViewProps[mockReadPostViewProps.length - 1].post).toBe(other);
         expect(mockReadPostViewProps[mockReadPostViewProps.length - 1].next).toBeNull();
         await waitFor(() => expect(mockPostDao.getNextPost).toHaveBeenCalledWith(other));
+    });
+
+    it('ignores a slow neighbour lookup for a post it is no longer showing', async () => {
+        const other = { entryId: 17, title: 'DUMMY_OTHER' };
+        const otherNext = { entryId: 18, title: 'DUMMY_OTHER_NEXT' };
+        const otherPrev = { entryId: 16, title: 'DUMMY_OTHER_PREV' };
+        let resolveSlowNext;
+        mockPostDao.getNextPost.mockImplementation((post) => (post === POST
+            ? new Promise((resolve) => { resolveSlowNext = resolve; })
+            : Promise.resolve(otherNext)));
+        mockPostDao.getPrevPost.mockImplementation((post) => Promise.resolve(post === POST ? PREV : otherPrev));
+
+        const { rerender } = render(<SinglePostPage post={POST}/>);
+        rerender(<SinglePostPage post={other}/>);
+        await waitFor(() => expect(mockReadPostViewProps[mockReadPostViewProps.length - 1].next).toBe(otherNext));
+
+        await act(async () => resolveSlowNext(NEXT));
+        const props = mockReadPostViewProps[mockReadPostViewProps.length - 1];
+        expect(props.post).toBe(other);
+        expect(props.next).toBe(otherNext);
+        expect(props.prev).toBe(otherPrev);
     });
 
     it('records a page view for the post', () => {
