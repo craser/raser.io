@@ -1,5 +1,7 @@
+// ABOUTME: Nav button that opens the search UI.
+// ABOUTME: Renders nothing while the search context says search is unavailable.
+
 import { useSearchContext } from "@/components/search/SearchProvider";
-import { useEffect, useState } from "react";
 import { Search } from 'lucide-react';
 import { NavButton } from "@/components/navigation/NavButton";
 
@@ -9,12 +11,7 @@ import { NavButton } from "@/components/navigation/NavButton";
 // TODO: add /Users/craser/dev/cjr/wk/raser.io/public/icons/search-circle-fill.svg as icon
 export default function SearchButton({ className }) {
     const searchContext = useSearchContext();
-    const contextSearchAvailable = searchContext.isSearchAvailable();
-    const [isSearchAvailable, setIsSearchAvailable] = useState(contextSearchAvailable);
-
-    useEffect(() => {
-        setIsSearchAvailable(searchContext.isSearchAvailable());
-    }, [contextSearchAvailable]);
+    const isSearchAvailable = searchContext.isSearchAvailable();
 
     const showSearchUi = (e) => {
         e.preventDefault();
