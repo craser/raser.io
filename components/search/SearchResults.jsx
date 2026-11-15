@@ -27,11 +27,13 @@ export default function SearchResults() {
     const selectedIndex = searchContext.getSelectedResult();
     const containerRef = useRef();
     const [hasHover, setHasHover] = useState(false);
+    const [hoverTerms, setHoverTerms] = useState(terms);
 
-    useEffect(() => {
-        console.log(`keyboard input... removing hover`);
+    // Keyboard input changes the terms, which removes the hover.
+    if (terms !== hoverTerms) {
+        setHoverTerms(terms);
         setHasHover(false);
-    }, [terms]);
+    }
 
     useEffect(() => {
         console.log(`selecting item #${selectedIndex}`);
