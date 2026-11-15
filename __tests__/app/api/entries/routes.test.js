@@ -9,6 +9,7 @@
  */
 
 import { loadDatabaseEnv } from '../../../support/database-env';
+import { routeContext } from '../../../support/route-context';
 
 loadDatabaseEnv();
 
@@ -34,7 +35,7 @@ afterAll(async () => {
 
 describe('GET /api/entries/[id]', () => {
     it('returns the requested post as JSON', async () => {
-        const response = await getEntry(request(), { params: { id: '4' } });
+        const response = await getEntry(request(), routeContext({ id: '4' }));
         expect(response.status).toBe(200);
         const post = await response.json();
         expect(post.entryId).toBe(4);
@@ -42,26 +43,26 @@ describe('GET /api/entries/[id]', () => {
     });
 
     it('includes nested attachments', async () => {
-        const response = await getEntry(request(), { params: { id: '4' } });
+        const response = await getEntry(request(), routeContext({ id: '4' }));
         const post = await response.json();
         expect(post.attachments.length).toBeGreaterThan(0);
         expect(post.attachments[0]).toHaveProperty('fileName');
     });
 
     it('responds 404 for a post that does not exist', async () => {
-        const response = await getEntry(request(), { params: { id: '99999999' } });
+        const response = await getEntry(request(), routeContext({ id: '99999999' }));
         expect(response.status).toBe(404);
     });
 
     it('responds 404 for a non-numeric id rather than failing', async () => {
-        const response = await getEntry(request(), { params: { id: 'bogus' } });
+        const response = await getEntry(request(), routeContext({ id: 'bogus' }));
         expect(response.status).toBe(404);
     });
 });
 
 describe('GET /api/entries/latest/[page]', () => {
     it('returns an array of posts', async () => {
-        const response = await getLatest(request(), { params: { page: '0' } });
+        const response = await getLatest(request(), routeContext({ page: '0' }));
         expect(response.status).toBe(200);
         const posts = await response.json();
         expect(Array.isArray(posts)).toBe(true);
@@ -71,7 +72,7 @@ describe('GET /api/entries/latest/[page]', () => {
     it('honours the pageSize query parameter', async () => {
         const response = await getLatest(
             request('http://localhost/api/entries/latest/0?pageSize=3'),
-            { params: { page: '0' } }
+            routeContext({ page: '0' })
         );
         const posts = await response.json();
         expect(posts).toHaveLength(3);
@@ -80,7 +81,7 @@ describe('GET /api/entries/latest/[page]', () => {
     it('supports pageSize=1, which is how getLatestPost reads the newest post', async () => {
         const response = await getLatest(
             request('http://localhost/api/entries/latest/0?pageSize=1'),
-            { params: { page: '0' } }
+            routeContext({ page: '0' })
         );
         const posts = await response.json();
         expect(posts).toHaveLength(1);
@@ -89,24 +90,24 @@ describe('GET /api/entries/latest/[page]', () => {
 
     it('returns distinct posts for successive pages', async () => {
         const first = await (await getLatest(
-            request('http://localhost/api/entries/latest/0?pageSize=5'), { params: { page: '0' } }
+            request('http://localhost/api/entries/latest/0?pageSize=5'), routeContext({ page: '0' })
         )).json();
         const second = await (await getLatest(
-            request('http://localhost/api/entries/latest/1?pageSize=5'), { params: { page: '1' } }
+            request('http://localhost/api/entries/latest/1?pageSize=5'), routeContext({ page: '1' })
         )).json();
         const overlap = first.map(p => p.entryId).filter(id => second.some(p => p.entryId === id));
         expect(overlap).toEqual([]);
     });
 
     it('falls back to page zero when the page is not a number', async () => {
-        const response = await getLatest(request(), { params: { page: 'bogus' } });
+        const response = await getLatest(request(), routeContext({ page: 'bogus' }));
         const posts = await response.json();
-        const firstPage = await (await getLatest(request(), { params: { page: '0' } })).json();
+        const firstPage = await (await getLatest(request(), routeContext({ page: '0' }))).json();
         expect(posts.map(p => p.entryId)).toEqual(firstPage.map(p => p.entryId));
     });
 
     it('returns an empty array past the end of the data', async () => {
-        const response = await getLatest(request(), { params: { page: '100000' } });
+        const response = await getLatest(request(), routeContext({ page: '100000' }));
         expect(response.status).toBe(200);
         expect(await response.json()).toEqual([]);
     });
@@ -114,7 +115,7 @@ describe('GET /api/entries/latest/[page]', () => {
 
 describe('GET /api/entries/[id]/next', () => {
     it('returns the chronologically newer post', async () => {
-        const response = await getNext(request(), { params: { id: '4' } });
+        const response = await getNext(request(), routeContext({ id: '4' }));
         expect(response.status).toBe(200);
         const post = await response.json();
         expect(post.entryId).toBeGreaterThan(0);
@@ -123,48 +124,48 @@ describe('GET /api/entries/[id]/next', () => {
 
     it('responds 404 at the newest post', async () => {
         const [newest] = await (await getLatest(
-            request('http://localhost/api/entries/latest/0?pageSize=1'), { params: { page: '0' } }
+            request('http://localhost/api/entries/latest/0?pageSize=1'), routeContext({ page: '0' })
         )).json();
-        const response = await getNext(request(), { params: { id: String(newest.entryId) } });
+        const response = await getNext(request(), routeContext({ id: String(newest.entryId) }));
         expect(response.status).toBe(404);
     });
 
     it('responds 404 for an unknown id', async () => {
-        const response = await getNext(request(), { params: { id: '99999999' } });
+        const response = await getNext(request(), routeContext({ id: '99999999' }));
         expect(response.status).toBe(404);
     });
 });
 
 describe('GET /api/entries/[id]/prev', () => {
     it('returns the chronologically older post', async () => {
-        const response = await getPrev(request(), { params: { id: '5' } });
+        const response = await getPrev(request(), routeContext({ id: '5' }));
         expect(response.status).toBe(200);
         const post = await response.json();
         expect(post).toHaveProperty('entryId');
     });
 
     it('round-trips with next', async () => {
-        const prev = await (await getPrev(request(), { params: { id: '5' } })).json();
-        const back = await (await getNext(request(), { params: { id: String(prev.entryId) } })).json();
+        const prev = await (await getPrev(request(), routeContext({ id: '5' }))).json();
+        const back = await (await getNext(request(), routeContext({ id: String(prev.entryId) }))).json();
         expect(back.entryId).toBe(5);
     });
 
     it('responds 404 for an unknown id', async () => {
-        const response = await getPrev(request(), { params: { id: '99999999' } });
+        const response = await getPrev(request(), routeContext({ id: '99999999' }));
         expect(response.status).toBe(404);
     });
 });
 
 describe('GET /api/entries/search/[numEntries]', () => {
     it('returns the requested number of stubs', async () => {
-        const response = await getSearch(request(), { params: { numEntries: '25' } });
+        const response = await getSearch(request(), routeContext({ numEntries: '25' }));
         expect(response.status).toBe(200);
         const stubs = await response.json();
         expect(stubs).toHaveLength(25);
     });
 
     it('returns stubs carrying the fields the search index reads', async () => {
-        const stubs = await (await getSearch(request(), { params: { numEntries: '1' } })).json();
+        const stubs = await (await getSearch(request(), routeContext({ numEntries: '1' }))).json();
         expect(stubs[0]).toHaveProperty('entryId');
         expect(stubs[0]).toHaveProperty('title');
         expect(stubs[0]).toHaveProperty('intro');
@@ -172,7 +173,7 @@ describe('GET /api/entries/search/[numEntries]', () => {
     });
 
     it('falls back to a default count when the parameter is not a number', async () => {
-        const response = await getSearch(request(), { params: { numEntries: 'bogus' } });
+        const response = await getSearch(request(), routeContext({ numEntries: 'bogus' }));
         expect(response.status).toBe(200);
         expect((await response.json()).length).toBeGreaterThan(0);
     });
@@ -180,7 +181,7 @@ describe('GET /api/entries/search/[numEntries]', () => {
 
 describe('GET /api/entries/tagged/[tag]/[page]', () => {
     it('returns the posts with that tag, newest first', async () => {
-        const response = await getTagged(request(), { params: { tag: 'joshuatree', page: '0' } });
+        const response = await getTagged(request(), routeContext({ tag: 'joshuatree', page: '0' }));
         expect(response.status).toBe(200);
         const posts = await response.json();
         expect(posts.map(p => p.entryId)).toEqual([1439, 1438, 4]);
@@ -189,34 +190,34 @@ describe('GET /api/entries/tagged/[tag]/[page]', () => {
     it('honours the pageSize query parameter', async () => {
         const response = await getTagged(
             request('http://localhost/api/entries/tagged/joshuatree/1?pageSize=2'),
-            { params: { tag: 'joshuatree', page: '1' } }
+            routeContext({ tag: 'joshuatree', page: '1' })
         );
         const posts = await response.json();
         expect(posts.map(p => p.entryId)).toEqual([4]);
     });
 
     it('decodes a URL-encoded tag', async () => {
-        const response = await getTagged(request(), { params: { tag: encodeURIComponent('at&t'), page: '0' } });
+        const response = await getTagged(request(), routeContext({ tag: encodeURIComponent('at&t'), page: '0' }));
         const posts = await response.json();
         expect(posts).toHaveLength(1);
         expect(posts[0].tags).toContain('at&t');
     });
 
     it('decodes an encoded slash in a tag', async () => {
-        const response = await getTagged(request(), { params: { tag: encodeURIComponent('9/11'), page: '0' } });
+        const response = await getTagged(request(), routeContext({ tag: encodeURIComponent('9/11'), page: '0' }));
         const posts = await response.json();
         expect(posts).toHaveLength(1);
         expect(posts[0].tags).toContain('9/11');
     });
 
     it('falls back to page zero when the page is not a number', async () => {
-        const response = await getTagged(request(), { params: { tag: 'joshuatree', page: 'bogus' } });
+        const response = await getTagged(request(), routeContext({ tag: 'joshuatree', page: 'bogus' }));
         const posts = await response.json();
         expect(posts[0].entryId).toBe(1439);
     });
 
     it('returns an empty array for a tag nobody uses', async () => {
-        const response = await getTagged(request(), { params: { tag: 'no-such-tag-anywhere', page: '0' } });
+        const response = await getTagged(request(), routeContext({ tag: 'no-such-tag-anywhere', page: '0' }));
         expect(response.status).toBe(200);
         expect(await response.json()).toEqual([]);
     });

@@ -6,7 +6,8 @@ import PostRepository from '@/lib/data/PostRepository';
 
 const DEFAULT_NUM_ENTRIES = 1000;
 
-export async function GET(request, { params }) {
+export async function GET(request, props) {
+    const params = await props.params;
     const parsed = parseInt(params.numEntries, 10);
     const numEntries = isNaN(parsed) ? DEFAULT_NUM_ENTRIES : parsed;
     const stubs = await PostRepository.getInstance().getSearchStubs(numEntries);

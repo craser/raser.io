@@ -89,7 +89,8 @@ async function fetchImage(mapUrl) {
     return new Uint8Array(await response.arrayBuffer());
 }
 
-export async function GET(request, { params }) {
+export async function GET(request, props) {
+    const params = await props.params;
     const { fileName } = params;
     if (!STORABLE_NAME.test(fileName)) {
         console.error(`Refusing to handle map image name: ${fileName}`);
