@@ -118,6 +118,21 @@ describe('ScrambleText', () => {
         expect(element.textContent).toBe('');
     });
 
+    test('Should clear straight away when the text becomes empty mid-animation', () => {
+        const result = render(<ScrambleText text="HELLO" duration={1000} />);
+        act(() => {
+            jest.advanceTimersByTime(100);
+        });
+
+        result.rerender(<ScrambleText text="" duration={1000} />);
+        expect(result.getByTestId('scramble-text').textContent).toBe('');
+
+        act(() => {
+            jest.advanceTimersByTime(1100);
+        });
+        expect(result.getByTestId('scramble-text').textContent).toBe('');
+    });
+
     test('Should preserve spaces during scramble', async () => {
         const text = "NO MATCHES FOUND";
         const result = render(<ScrambleText text={text} duration={100} />);
@@ -228,6 +243,15 @@ describe('ScrambleText', () => {
 
             expect(result.getByTestId('scramble-text').textContent).toBe('HELLO WORLD');
         });
+    });
+
+    test('Should show changed text straight away when reduced motion is preferred', () => {
+        setReducedMotion(true);
+        const result = render(<ScrambleText text="FIRST" duration={1000} />);
+
+        result.rerender(<ScrambleText text="SECOND" duration={1000} />);
+
+        expect(result.getByTestId('scramble-text').textContent).toBe('SECOND');
     });
 
     test('Should not animate in change mode when reduced motion is preferred', () => {
