@@ -9,7 +9,7 @@
     "build:dev": "next build",
     "build:prod": "cross-env NODE_ENV=production next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint pages app components lib",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:coverage:open": "open coverage/lcov-report/index.html",
