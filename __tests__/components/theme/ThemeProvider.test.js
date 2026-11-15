@@ -2,6 +2,8 @@
 // ABOUTME: Uses jsdom's real localStorage and <html> element.
 import '@testing-library/jest-dom';
 import { act, render, screen } from '@testing-library/react';
+import { renderToString } from 'react-dom/server.node';
+import { hydrateRoot } from 'react-dom/client';
 import ThemeProvider, { useTheme } from '@/components/theme/ThemeProvider';
 import { THEMES, THEME_STORAGE_KEY } from '@/lib/theme/themes';
 
@@ -51,6 +53,47 @@ describe('ThemeProvider', () => {
         act(() => screen.getByText('default').click());
         expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
         expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+    });
+
+    it('renders the default theme on the server even when a theme is stored', () => {
+        window.localStorage.setItem(THEME_STORAGE_KEY, THEMES.HIGH_CONTRAST_DARK);
+        const container = document.createElement('div');
+        container.innerHTML = renderToString(<ThemeProvider><ThemeProbe/></ThemeProvider>);
+        expect(container.querySelector('[data-testid="theme"]')).toHaveTextContent(THEMES.DEFAULT);
+    });
+
+    it('hydrates server markup without a mismatch, then shows the stored theme', () => {
+        window.localStorage.setItem(THEME_STORAGE_KEY, THEMES.HIGH_CONTRAST_DARK);
+        const container = document.createElement('div');
+        container.innerHTML = renderToString(<ThemeProvider><ThemeProbe/></ThemeProvider>);
+        document.body.appendChild(container);
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        let root;
+        try {
+            act(() => {
+                root = hydrateRoot(container, <ThemeProvider><ThemeProbe/></ThemeProvider>);
+            });
+            expect(consoleError).not.toHaveBeenCalled();
+            expect(container.querySelector('[data-testid="theme"]')).toHaveTextContent(THEMES.HIGH_CONTRAST_DARK);
+        } finally {
+            consoleError.mockRestore();
+            act(() => root.unmount());
+            container.remove();
+        }
+    });
+
+    it('still applies a new theme when storage refuses to remember it', () => {
+        const setItem = jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+            throw new Error('storage blocked');
+        });
+        try {
+            renderProbe();
+            act(() => screen.getByText('hc').click());
+            expect(screen.getByTestId('theme')).toHaveTextContent(THEMES.HIGH_CONTRAST_DARK);
+            expect(document.documentElement.getAttribute('data-theme')).toBe(THEMES.HIGH_CONTRAST_DARK);
+        } finally {
+            setItem.mockRestore();
+        }
     });
 
     it('gives a harmless default context outside a provider', () => {
