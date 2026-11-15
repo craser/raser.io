@@ -25,6 +25,23 @@ export default function SearchProvider({ children }) {
     const [completion, setCompletion] = useState('');
     const [searchImpl, setSearchImpl] = useState(null);
     const [selectedResult, setSelectedResult] = useState(null); // index of currently selected search result
+    const [searchedTerms, setSearchedTerms] = useState(null); // the terms the current results are for
+
+    // New terms replace the results and clear the selection. Terms typed before the search index
+    // has loaded find nothing until the next change.
+    if (searchTerms !== searchedTerms) {
+        setSearchedTerms(searchTerms);
+        if (!searchTerms || searchTerms.length < MIN_SEARCH_TERM_LENGTH) {
+            setSearchResults([]);
+            setCompletion('');
+            setSelectedResult(-1);
+        } else if (searchImpl) {
+            const results = searchImpl.search(searchTerms);
+            setSearchResults(results.results);
+            setCompletion(results.completion);
+            setSelectedResult(-1);
+        }
+    }
 
     function range(v) {
         let result = v;
@@ -103,21 +120,6 @@ export default function SearchProvider({ children }) {
                 setIsUiVisible(false);
             });
     }, []);
-
-    useEffect(() => {
-        if (!searchTerms || searchTerms.length < MIN_SEARCH_TERM_LENGTH) {
-            setSearchResults([]);
-            setCompletion('');
-            setSelectedResult(-1);
-        } else if (!searchImpl) {
-            return; // no point
-        } else if (searchTerms) {
-            const results = searchImpl.search(searchTerms);
-            setSearchResults(results.results);
-            setCompletion(results.completion);
-            setSelectedResult(-1);
-        }
-    }, [searchTerms]);
 
 
     return (
