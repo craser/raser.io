@@ -12,8 +12,12 @@ import PostBackground from "@/components/PostBackground";
 export default function SinglePostPage({ post }) {
     const analytics = useAnalytics();
     const postDao = useDataContext().getPostDao();
-    const [next, setNext] = useState(null);
-    const [prev, setPrev] = useState(null);
+    // Each neighbour is stored with the post it was looked up for, so a different post shows
+    // no neighbours until its own lookups finish.
+    const [nextLookup, setNextLookup] = useState({ post: null, neighbour: null });
+    const [prevLookup, setPrevLookup] = useState({ post: null, neighbour: null });
+    const next = nextLookup.post === post ? nextLookup.neighbour : null;
+    const prev = prevLookup.post === post ? prevLookup.neighbour : null;
     const postId = String(post.entryId);
 
     useEffect(() => {
@@ -26,10 +30,8 @@ export default function SinglePostPage({ post }) {
     useEffect(() => {
         // A slower lookup for the previous post must not overwrite this post's neighbours.
         let current = true;
-        setNext(null);
-        setPrev(null);
-        postDao.getNextPost(post).then(next => current && setNext(next));
-        postDao.getPrevPost(post).then(prev => current && setPrev(prev));
+        postDao.getNextPost(post).then(next => current && setNextLookup({ post, neighbour: next }));
+        postDao.getPrevPost(post).then(prev => current && setPrevLookup({ post, neighbour: prev }));
         return () => {
             current = false;
         };

@@ -1,6 +1,6 @@
-// ABOUTME: Guards the props LogEntries hands to ReadPostView for each list entry.
-// ABOUTME: List entries must render without next/prev navigation.
-import { render, waitFor } from '@testing-library/react';
+// ABOUTME: Guards the props LogEntries hands to ReadPostView for each list entry, and its page loading.
+// ABOUTME: List entries render without next/prev navigation; reaching the bottom loads the next page.
+import { act, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import LogEntries from '@/components/LogEntries';
 
@@ -53,6 +53,71 @@ describe('LogEntries', () => {
             disconnect() {}
         };
     }
+
+    /** An IntersectionObserver the test triggers by hand; returns the instances it creates. */
+    function controllableObserver() {
+        const instances = [];
+        global.IntersectionObserver = class {
+            constructor(callback) {
+                this.callback = callback;
+                this.observed = [];
+                this.disconnected = false;
+                instances.push(this);
+            }
+            observe(element) {
+                this.observed.push(element);
+                this.disconnected = false;
+            }
+            disconnect() {
+                this.disconnected = true;
+            }
+            reachBottom() {
+                this.callback([{ isIntersecting: true }]);
+            }
+        };
+        return instances;
+    }
+
+    function liveObserver(instances) {
+        return instances.filter(o => !o.disconnected && o.observed.length > 0).pop();
+    }
+
+    it('loads the next page each time the reader reaches the bottom', async () => {
+        const observers = controllableObserver();
+        mockPostDao.getEntries
+            .mockResolvedValueOnce([{ entryId: 'PAGE_0' }])
+            .mockResolvedValueOnce([{ entryId: 'PAGE_1' }]);
+        const { findByTestId } = render(<LogEntries initialPage={0} pageSize={30}/>);
+
+        await act(async () => liveObserver(observers).reachBottom());
+        expect(await findByTestId('mock-read-post-view-PAGE_0')).toBeInTheDocument();
+        await act(async () => liveObserver(observers).reachBottom());
+        expect(await findByTestId('mock-read-post-view-PAGE_1')).toBeInTheDocument();
+
+        expect(mockPostDao.getEntries.mock.calls).toEqual([[0, 30], [1, 30]]);
+    });
+
+    it('does not request another page while one is still loading', async () => {
+        const observers = controllableObserver();
+        let finishLoading;
+        mockPostDao.getEntries.mockReturnValueOnce(new Promise(resolve => { finishLoading = resolve; }));
+        render(<LogEntries initialPage={0} pageSize={30}/>);
+
+        await act(async () => liveObserver(observers).reachBottom());
+        await act(async () => liveObserver(observers).reachBottom());
+        expect(mockPostDao.getEntries).toHaveBeenCalledTimes(1);
+
+        await act(async () => finishLoading([]));
+    });
+
+    it('observes the bottom of the list, and stops when unmounted', () => {
+        const observers = controllableObserver();
+        const { unmount } = render(<LogEntries initialPage={0} pageSize={30}/>);
+        expect(liveObserver(observers)).toBeDefined();
+
+        unmount();
+        expect(observers.every(o => o.disconnected)).toBe(true);
+    });
 
     it('renders a ReadPostView for each entry', () => {
         const { getByTestId } = render(<LogEntries initialEntries={mockEntries} pageSize={10}/>);

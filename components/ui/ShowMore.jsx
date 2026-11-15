@@ -1,3 +1,5 @@
+// ABOUTME: Hides its children behind a "more" button and reveals them by animating the container's height.
+// ABOUTME: Collapsing sets the height back to zero.
 // FIXME: Replace with MUI asap.
 import styles from './ShowMore.module.scss';
 import { useRef, useState, useEffect } from 'react';
@@ -8,26 +10,30 @@ export default function ShowMore({ children }) {
     const contentContainerRef = useRef(null);
     const contentRef = useRef(null);
 
+    const setContainerHeight = (height) => {
+        contentContainerRef.current.style.height = height;
+    }
     const expand = () => {
-        contentContainerRef.current.style.height = contentRef.current.clientHeight + 'px';
+        setContainerHeight(contentRef.current.clientHeight + 'px');
         setExpanded(true);
     }
     const collapse = () => {
-        contentContainerRef.current.style.height = 0;
+        setContainerHeight(0);
         setExpanded(false);
     }
 
-    useEffect(collapse, []);
+    // Start collapsed. expanded already starts false, so only the container needs sizing.
+    useEffect(() => setContainerHeight(0), []);
 
     return (
         <>
-            {!expanded && <button className={styles.showMore} onClick={expand}><span>more</span><ChevronDown/></button>}
-            <div ref={contentContainerRef} className={styles.content}>
+            {!expanded && <button data-testid="show-more" className={styles.showMore} onClick={expand}><span>more</span><ChevronDown/></button>}
+            <div ref={contentContainerRef} data-testid="show-more-content" className={styles.content}>
                 <div ref={contentRef}>
                     {children}
                 </div>
             </div>
-            {expanded && <button className={styles.showLess} onClick={collapse}><span>less</span><ChevronUp/></button>}
+            {expanded && <button data-testid="show-less" className={styles.showLess} onClick={collapse}><span>less</span><ChevronUp/></button>}
         </>
     );
 }

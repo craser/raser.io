@@ -18,7 +18,8 @@ function decodeTag(tag) {
     }
 }
 
-export async function GET(request, { params }) {
+export async function GET(request, props) {
+    const params = await props.params;
     const parsedPage = parseInt(params.page, 10);
     const page = isNaN(parsedPage) ? 0 : parsedPage;
     const pageSize = parseInt(new URL(request.url).searchParams.get('pageSize'), 10) || DEFAULT_PAGE_SIZE;

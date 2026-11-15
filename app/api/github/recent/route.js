@@ -1,6 +1,12 @@
+// ABOUTME: GET /api/github/recent - lists the site owner's recently updated GitHub repos and their latest commits.
+// ABOUTME: Reads from the GitHub API through Octokit and returns JSON with a long CDN cache lifetime.
+
 import { NextResponse, NextRequest } from "next/server";
 import { Octokit } from "octokit";
 import SiteConfig from "@/lib/SiteConfig";
+
+// Generate this route once at build time, as a static file, rather than on every request.
+export const dynamic = 'force-static';
 
 export class RepoInfo {
     name;

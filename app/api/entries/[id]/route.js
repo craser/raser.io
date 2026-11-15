@@ -4,7 +4,8 @@
 import { NextResponse } from 'next/server';
 import PostRepository from '@/lib/data/PostRepository';
 
-export async function GET(request, { params }) {
+export async function GET(request, props) {
+    const params = await props.params;
     const post = await PostRepository.getInstance().getPostById(params.id);
     if (!post) {
         return new NextResponse(null, { status: 404 });

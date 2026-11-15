@@ -1,3 +1,2 @@
 # Gitignored files that Claude Code copies into each new worktree.
-# They must be copies, not symlinks: Next.js 13.4 builds symlinked root files as pages.
 .env.local

@@ -11,6 +11,7 @@
 import fs from 'fs';
 import path from 'path';
 import { GET } from '@/app/api/maps/mapimageuri/[fileName]/route';
+import { routeContext } from '../../../support/route-context';
 
 const FIXTURE = fs.readFileSync(
     path.join(__dirname, '../../../lib/maps/fixtures/track.gpx'), 'utf8'
@@ -46,7 +47,7 @@ function calls(fragment) {
 
 function get(fileName = FILE_NAME) {
     const request = new Request(`http://localhost/api/maps/mapimageuri/${fileName}`);
-    return GET(request, { params: { fileName } });
+    return GET(request, routeContext({ fileName }));
 }
 
 beforeEach(() => {

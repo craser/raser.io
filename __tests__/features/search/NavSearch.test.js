@@ -135,6 +135,21 @@ describe('Navigation Search', () => {
         expect(input.value).toBe('lorem');
     });
 
+    test('The typeahead shows the typed terms, then the completed terms after TAB', async () => {
+        const result = await renderScaffold();
+        const button = await result.findByTestId('search-button');
+        await act(async () => {
+            await userEvent.click(button);
+        });
+        const input = await result.findByTestId('search-input');
+        await userEvent.click(input);
+        await userEvent.type(input, 'lor');
+        await waitFor(() => expect(result.getByTestId('search-existing-query').textContent).toBe('lor'));
+
+        await userEvent.tab();
+        await waitFor(() => expect(result.getByTestId('search-existing-query').textContent).toBe('lorem'));
+    });
+
     test('Typing into the search input, then hitting the UP/DOWN keys should update the selected result', async () => {
         const result = await renderScaffold();
         const button = await result.findByTestId('search-button');

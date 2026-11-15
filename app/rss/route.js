@@ -7,6 +7,9 @@ import PostRepository from "@/lib/data/PostRepository";
 import SiteConfig from "@/lib/SiteConfig";
 import { getAbsoluteUrl, getPostLink } from "@/lib/util/Links";
 
+// Generate this route once at build time, as a static file, rather than on every request.
+export const dynamic = 'force-static';
+
 /**
  *
  * @param request {NextRequest}

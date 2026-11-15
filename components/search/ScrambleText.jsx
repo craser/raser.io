@@ -26,7 +26,8 @@ function prefersReducedMotion() {
  * @param {'change'|'visible'} trigger - What starts the animation (default 'change')
  */
 export default function ScrambleText({ text, duration = 1000, trigger = 'change' }) {
-    const [displayText, setDisplayText] = useState(text);
+    // The latest animation frame, tagged with the text it is scrambling.
+    const [frame, setFrame] = useState(null);
     const [hasBeenSeen, setHasBeenSeen] = useState(false);
     const elementRef = useRef(null);
     const animationRef = useRef(null);
@@ -47,20 +48,18 @@ export default function ScrambleText({ text, duration = 1000, trigger = 'change'
         return () => observer.disconnect();
     }, [trigger]);
 
+    // Empty text has nothing to scramble; otherwise animate unless still waiting to be seen
+    // or the user prefers reduced motion.
+    const animates = Boolean(text) && !(trigger === 'visible' && !hasBeenSeen) && !prefersReducedMotion();
+    const displayText = animates && frame?.text === text ? frame.value : text;
+
     useEffect(() => {
         // Cancel any existing animation
         if (animationRef.current) {
             cancelAnimationFrame(animationRef.current);
         }
 
-        // Handle empty string
-        if (!text) {
-            setDisplayText('');
-            return;
-        }
-
-        if ((trigger === 'visible' && !hasBeenSeen) || prefersReducedMotion()) {
-            setDisplayText(text);
+        if (!animates) {
             return;
         }
 
@@ -72,7 +71,7 @@ export default function ScrambleText({ text, duration = 1000, trigger = 'change'
 
             if (progress >= 1) {
                 // Animation complete - show final text
-                setDisplayText(text);
+                setFrame({ text, value: text });
                 return;
             }
 
@@ -97,7 +96,7 @@ export default function ScrambleText({ text, duration = 1000, trigger = 'change'
                 return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
             });
 
-            setDisplayText(chars.join(''));
+            setFrame({ text, value: chars.join('') });
             animationRef.current = requestAnimationFrame(animate);
         };
 
@@ -108,7 +107,7 @@ export default function ScrambleText({ text, duration = 1000, trigger = 'change'
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, [text, duration, trigger, hasBeenSeen]);
+    }, [text, duration, animates]);
 
     return (
         <span ref={elementRef} data-testid="scramble-text">{displayText}</span>
