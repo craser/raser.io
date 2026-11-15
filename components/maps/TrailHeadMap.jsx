@@ -1,6 +1,8 @@
+// ABOUTME: Google map of trailheads: a marker per trail, and a card for each marker the reader clicks.
+// ABOUTME: Trail locations come from TrailMapLocations.json; DmgMap wraps the Google Maps API.
 import GoogleMapReact from 'google-map-react';
 import styles from './TrailHeadMap.module.scss'
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import TrailHeadCard from "@/components/maps/TrailHeadCard";
 
 const DmgMap = require('/blog/maps/map');
@@ -20,7 +22,8 @@ export default function TrailHeadMap() {
     let [mapApiLoaded, setMapApiLoaded] = useState(false);
     let [dmgMap, setDmgMap] = useState(null);
     let [expandedTrails, setExpandedTrails] = useState([]);
-    let [marks, setMarks] = useState([]);
+    // The map's markers are Google Maps objects, not rendered output, so they live in a ref.
+    const marksRef = useRef([]);
     console.log('RENDERING', { expandedTrails });
 
     function showTrailCard(t) {
@@ -48,11 +51,11 @@ export default function TrailHeadMap() {
             mark.dmgOnClick = showTrailCard; // init
             return mark;
         });
-        setMarks(marks);
+        marksRef.current = marks;
     }
 
     function assignMarkClickHandlers() {
-        marks.forEach(m => m.dmgOnClick = showTrailCard);
+        marksRef.current.forEach(m => m.dmgOnClick = showTrailCard);
     }
 
     function checkDataAndApiLoaded() {
@@ -71,7 +74,6 @@ export default function TrailHeadMap() {
     }
 
     useEffect(() => {
-        setDataLoaded(false);
         setTimeout(() => {
             console.log({ center: getCenter(JSON_DATA.bounds) });
             setBounds(JSON_DATA.bounds);
@@ -82,7 +84,7 @@ export default function TrailHeadMap() {
 
     useEffect(checkDataAndApiLoaded, [mapApiLoaded, dataLoaded]);
 
-    assignMarkClickHandlers(); // keep things up-to-date
+    useEffect(assignMarkClickHandlers); // keep things up-to-date after every render
 
     return (
         <Fragment>
