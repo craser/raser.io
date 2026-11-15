@@ -47,7 +47,7 @@ export default function SearchInput(props) {
     return (
         <div className={styles.searchInput}>
             <div className={styles.typeAhead}>
-                <span className={styles.existingQuery}>{inputRef.current?.value || searchTerms}</span>
+                <span data-testid="search-existing-query" className={styles.existingQuery}>{searchTerms}</span>
                 <span data-testid="search-completion" className={styles.suggestedCompletion}>{completion}</span>
             </div>
             <input type="search" data-testid="search-input" ref={inputRef} placeholder={'ENTER QUERY_'} onKeyUp={onKeyUp} onKeyDown={onKeyDown} />
