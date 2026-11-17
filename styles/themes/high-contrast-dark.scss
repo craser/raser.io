@@ -35,6 +35,10 @@
     --theme-color-pop: currentColor;
     --theme-accent-hover: currentColor;
     --theme-highlight-text: currentColor;
+    --theme-quote-bg: #000;
+    --theme-quote-border: 4px solid #fff;
+    --theme-quote-text: currentColor;
+    --theme-quote-attribution-color: currentColor;
 
     /* The heading hierarchy: all inherit, like the rest of this theme's text */
     --theme-title-color: currentColor;
