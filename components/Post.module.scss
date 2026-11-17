@@ -153,6 +153,27 @@
     p:last-child {
         margin-bottom: 0;
     }
+
+    /*
+     * Older posts credit the quote with <span class="attribution"> or <p class="attribution">
+     * as the blockquote's last child (sometimes the span sits inside a <p>). Set it on its own
+     * line, right-aligned and upright, so it reads as a byline rather than part of the quote.
+     */
+    :global(.attribution) {
+        display: block;
+        margin-top: 0.5em;
+        text-align: right;
+        font-style: normal;
+        font-size: 0.9em;
+        color: var(--theme-quote-attribution-color);
+    }
+
+    /* Code samples quoted as blockquotes in very old posts: keep them upright and monospaced. */
+    &:global(.code) {
+        font-style: normal;
+        font-family: var(--font-monospace);
+        white-space: pre-wrap;
+    }
 }
 
 .entryfooter {
