@@ -179,4 +179,19 @@
     }
 
     border-radius: var(--theme-radius);
+    cursor: pointer;
+
+    /*
+     * Stretched link: the post link only wraps the preview content, leaving the rotated
+     * "next"/"previous" title column and the section padding dead. Its ::after fills the
+     * whole section (the nearest positioned ancestor) and sits above the sticky title, so
+     * the entire card navigates. Hovering the overlay still counts as hovering the preview.
+     */
+    a::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border-radius: inherit;
+    }
 }
