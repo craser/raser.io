@@ -36,6 +36,9 @@
     --theme-color-pop: #5cc8ff;
     --theme-accent-hover: #5cc8ff;
     --theme-highlight-text: #ffd84d;
+    --theme-quote-bg: #222; // blockquotes in post bodies
+    --theme-quote-border: 3px solid #5cc8ff;
+    --theme-quote-text: #d8d8d8;
 
     /* The heading hierarchy: titles, then headings, then small supporting info */
     --theme-title-color: #ffd84d;

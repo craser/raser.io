@@ -136,6 +136,25 @@
     line-height: 1.5em;
 }
 
+/* Extended quotations: inset from the text, set off by a rule and a slightly lighter slab. */
+.entry blockquote {
+    margin: 1em 0 1.5em 1em;
+    padding: 0.5em 1em;
+    border-left: var(--theme-quote-border);
+    background: var(--theme-quote-bg);
+    color: var(--theme-quote-text);
+    font-style: italic;
+    line-height: 1.5em;
+
+    p:first-child {
+        margin-top: 0;
+    }
+
+    p:last-child {
+        margin-bottom: 0;
+    }
+}
+
 .entryfooter {
     text-align: center;
     color: var(--theme-info-color);
