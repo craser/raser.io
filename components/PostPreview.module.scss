@@ -7,6 +7,12 @@
     height: 100%;
     width: 100%;
 
+    /* The link fills the preview, so space added by a stretched card is clickable too. */
+    > a {
+        display: block;
+        height: 100%;
+    }
+
     &:hover {
         border-color: var(--theme-hover-border);
         background-color: var(--theme-hover-bg);
