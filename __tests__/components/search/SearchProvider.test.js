@@ -31,8 +31,10 @@ function ContextProbe() {
     return <span data-testid="result-count">{context.getSearchResults().length}</span>;
 }
 
+/** Renders the provider and opens search, which loads the index. */
 async function renderProvider() {
     const rendered = render(<SearchProvider><ContextProbe/></SearchProvider>);
+    act(() => context.showSearchUi(true));
     await waitFor(() => expect(mockPostDao.getSearchStubs).toHaveBeenCalled());
     // Let the stubs promise settle so the search index exists.
     await act(async () => {});
@@ -47,6 +49,59 @@ describe('SearchProvider', () => {
 
     afterEach(() => {
         console.log.mockRestore();
+    });
+
+    it('does not load the search index until search is opened', async () => {
+        render(<SearchProvider><ContextProbe/></SearchProvider>);
+        await act(async () => {});
+        expect(mockPostDao.getSearchStubs).not.toHaveBeenCalled();
+    });
+
+    it('loads the search index when search is first opened', async () => {
+        render(<SearchProvider><ContextProbe/></SearchProvider>);
+        act(() => context.showSearchUi(true));
+        await act(async () => {});
+        expect(mockPostDao.getSearchStubs).toHaveBeenCalledTimes(1);
+    });
+
+    it('loads the search index when / is pressed', async () => {
+        render(<SearchProvider><ContextProbe/></SearchProvider>);
+        act(() => document.dispatchEvent(new KeyboardEvent('keyup', { key: '/' })));
+        await act(async () => {});
+        expect(mockPostDao.getSearchStubs).toHaveBeenCalledTimes(1);
+        expect(context.isUiVisible()).toBe(true);
+    });
+
+    it('loads the search index only once, however often search is opened', async () => {
+        await renderProvider();
+        act(() => context.showSearchUi(false));
+        act(() => context.showSearchUi(true));
+        await act(async () => {});
+        expect(mockPostDao.getSearchStubs).toHaveBeenCalledTimes(1);
+    });
+
+    it('searches terms typed before the index has loaded once it arrives', async () => {
+        let resolveStubs;
+        mockPostDao.getSearchStubs.mockReturnValue(new Promise(resolve => { resolveStubs = resolve; }));
+        render(<SearchProvider><ContextProbe/></SearchProvider>);
+        act(() => context.showSearchUi(true));
+        act(() => context.setSearchTerms('faucib'));
+        expect(context.getSearchResults()).toEqual([]);
+
+        await act(async () => resolveStubs(STUBS));
+        expect(context.getSearchResults()).toHaveLength(2);
+        expect(context.getCompletion()).toBe('us');
+    });
+
+    it('closes search and hides it when the index fails to load', async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+        mockPostDao.getSearchStubs.mockRejectedValue(new Error('offline'));
+        render(<SearchProvider><ContextProbe/></SearchProvider>);
+        act(() => context.showSearchUi(true));
+        await act(async () => {});
+        expect(context.isSearchAvailable()).toBe(false);
+        expect(context.isUiVisible()).toBe(false);
+        console.error.mockRestore();
     });
 
     it('starts with no terms, results or selection', async () => {

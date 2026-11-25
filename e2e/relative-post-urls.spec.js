@@ -6,7 +6,7 @@ const { test, expect } = require('@playwright/test');
 const RELATIVE_ARCHIVE_LINK = /href=["']archive\/(\d+)["']/;
 
 async function postWithRelativeLink(request) {
-    const response = await request.get('/api/entries/search/1000');
+    const response = await request.get('/api/entries/latest/0?pageSize=1000');
     expect(response.ok()).toBe(true);
     const posts = await response.json();
     const post = posts.find(p => RELATIVE_ARCHIVE_LINK.test(p.intro ?? ''));

@@ -164,12 +164,14 @@ describe('GET /api/entries/search/[numEntries]', () => {
         expect(stubs).toHaveLength(25);
     });
 
-    it('returns stubs carrying the fields the search index reads', async () => {
+    it('returns compact stubs: the fields search results show, plus the searchable words', async () => {
         const stubs = await (await getSearch(request(), routeContext({ numEntries: '1' }))).json();
-        expect(stubs[0]).toHaveProperty('entryId');
-        expect(stubs[0]).toHaveProperty('title');
-        expect(stubs[0]).toHaveProperty('intro');
-        expect(stubs[0]).toHaveProperty('body');
+        expect(Object.keys(stubs[0]).sort()).toEqual(['datePosted', 'entryId', 'text', 'title']);
+    });
+
+    it('lets the CDN cache the stubs', async () => {
+        const response = await getSearch(request(), routeContext({ numEntries: '1' }));
+        expect(response.headers.get('Cache-Control')).toBe('public, s-maxage=3600, stale-while-revalidate=86400');
     });
 
     it('falls back to a default count when the parameter is not a number', async () => {
