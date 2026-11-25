@@ -30,8 +30,8 @@
             animation: slowZoom 10s ease-in-out forwards;
         }
 
-        .continueLink {
-            height: calc(1em + 10px);
+        .continueIcon {
+            transform: translateX(0.25em);
         }
     }
 
@@ -77,6 +77,31 @@
             @include monoChrome();
             color: var(--theme-hero-card-meta-text);
             font-size: 0.75em;
+            white-space: nowrap;
+        }
+
+        /* Always visible (unlike the hover-only "continue" on previous posts) so it's obvious there's more to read. */
+        .continueLink {
+            @include monoChrome();
+            flex-shrink: 0;
+            white-space: nowrap;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: 0.85em;
+            color: var(--theme-info-color);
+            align-self: flex-end; /* right edge of the card, between the brief and the byline */
+            margin: -0.75em 0 1em 0; /* tuck up under the brief's bottom margin */
+
+            .continueIcon {
+                width: 1.6em;
+                height: 1.6em;
+                transition: transform 200ms ease-out;
+
+                @media (prefers-reduced-motion: reduce) {
+                    transition: none;
+                }
+            }
         }
 
         .byLine {

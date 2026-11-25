@@ -7,6 +7,8 @@ import LatestPostSection from '@/components/frontpage/LatestPost';
 
 jest.mock('@/components/frontpage/LatestPost.module.scss', () => new Proxy({}, { get: (_, key) => key }));
 
+jest.mock('lucide-react', () => ({ ChevronRight: () => <svg/> }));
+
 jest.mock('@/components/PostLink', () => ({
     PostLink: ({ children }) => <a data-testid="post-link">{children}</a>
 }));
@@ -43,5 +45,13 @@ describe('LatestPostSection', () => {
         render(<LatestPostSection/>);
         await waitFor(() => expect(screen.getByText('Hello')).toBeInTheDocument());
         expect(screen.queryByTestId('latest-post-skeleton')).toBeNull();
+    });
+
+    it('shows a "continue" cue inside the hero link so it is clear there is more to read', async () => {
+        mockGetLatestPost.mockResolvedValue({ entryId: 1, title: 'Hello' });
+        render(<LatestPostSection/>);
+        const cue = await screen.findByTestId('hero-continue');
+        expect(cue).toHaveTextContent('continue');
+        expect(screen.getByTestId('post-link')).toContainElement(cue);
     });
 });
