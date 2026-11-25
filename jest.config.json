@@ -37,6 +37,7 @@
     "<rootDir>"
   ],
   "moduleNameMapper": {
+    "^next/font/google$": "<rootDir>/__mocks__/nextFontGoogle.js",
     "@/(.*)$": "<rootDir>/$1",
     "^/(.*)$": "<rootDir>/$1",
     "\\.(css|scss)$": "identity-obj-proxy"
