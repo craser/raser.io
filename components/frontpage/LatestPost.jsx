@@ -7,6 +7,7 @@ import styles from './LatestPost.module.scss';
 import { PostLink } from "@/components/PostLink";
 import PostTitle from "@/components/PostTitle";
 import { getFrontPageTitleImageUrl } from "@/components/frontpage/PreviewTitleImage";
+import { ChevronRight } from "lucide-react";
 
 export default function LatestPostSection({ initialPost = null }) {
     const postDao = useDataContext().getPostDao();
@@ -29,6 +30,10 @@ export default function LatestPostSection({ initialPost = null }) {
                     <div className={styles.postInfo}>
                         <PostTitle post={post} as="h3" className={styles.postTitle}/>
                         <PostBriefIntro maxLength={60} post={post} className={styles.brief}/>
+                        {/* A span, not a link: the whole hero is already one PostLink. */}
+                        <span className={styles.continueLink} data-testid="hero-continue">
+                            continue <ChevronRight className={styles.continueIcon} aria-hidden="true"/>
+                        </span>
                         <div className={styles.byLine}>
                             <img className={styles.bylineIcon} src="/img/chris-social-avatar.png" alt="Chris Raser"/>
                             <div>
