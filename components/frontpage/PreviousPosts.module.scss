@@ -30,10 +30,10 @@
         }
 
         .image {
-            width: 38.2%;
-            float: left;
+            display: block;
+            width: 100%;
             border-radius: var(--theme-radius);
-            margin: 0 0.5em 0.5em 0;
+            margin: 0 0 0.5em 0;
         }
 
         .title {
@@ -53,15 +53,41 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            clear: both;
+            gap: 0.5em;
 
+            /* Date and read time each stay on one line; if they don't fit
+             * side by side, the read time drops below the date. The bullet
+             * separator hangs in the column gap and is clipped by overflow
+             * when an item starts a new line, so stacked lines have no
+             * leading bullet. */
             .date {
+                $sep: 1.5em;
+
                 @include monoChrome();
                 font-size: 0.8em;
                 color: var(--theme-text-subtle);
+                display: flex;
+                flex-wrap: wrap;
+                column-gap: $sep;
+                min-width: 0;
+                overflow: hidden;
+
+                > span {
+                    white-space: nowrap;
+                }
+
+                > span + span::before {
+                    content: '•';
+                    display: inline-block;
+                    width: $sep;
+                    margin-left: -$sep;
+                    text-align: center;
+                }
             }
 
             .link {
+                flex-shrink: 0;
+                white-space: nowrap;
                 opacity: var(--theme-reveal-opacity); /* flips to 1 on hover */
                 display: flex;
                 flex-direction: row;
