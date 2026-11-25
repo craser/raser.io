@@ -124,6 +124,12 @@ describe('LogEntries', () => {
         expect(getByTestId('mock-read-post-view-DUMMY_ENTRY_ID')).toBeInTheDocument();
     });
 
+    it('marks the bottom of the list, which it watches to load the next page', () => {
+        const observers = controllableObserver();
+        const { getByTestId } = render(<LogEntries initialEntries={mockEntries} pageSize={10}/>);
+        expect(liveObserver(observers).observed).toContain(getByTestId('listing-bottom'));
+    });
+
     it('renders list entries without next/prev navigation', () => {
         render(<LogEntries initialEntries={mockEntries} pageSize={10}/>);
         expect(mockReadPostViewProps[0].showNextPrev).toBe(false);

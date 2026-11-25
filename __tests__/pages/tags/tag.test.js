@@ -1,16 +1,21 @@
-// ABOUTME: Tests that the tag listing page lists a tag's posts the way the archive lists all posts.
-// ABOUTME: Resolves the tag from the router alone, with no build-time props.
+// ABOUTME: Tests that the tag listing page lists a tag's posts the way the archive lists all posts:
+// ABOUTME: getStaticPaths/getStaticProps read the tag's first page from the database with ISR, rendered on first request.
 
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import TagPage from '@/pages/tags/[tag]';
+import TagPage, { getStaticPaths, getStaticProps } from '@/pages/tags/[tag]';
+import PostRepository from '@/lib/data/PostRepository';
+import SiteConfig from '@/lib/SiteConfig';
 
 const captured = {};
-let mockRouter = {};
 
-jest.mock('next/router', () => ({
-    useRouter: () => mockRouter
-}));
+jest.mock('@/lib/data/PostRepository', () => {
+    const repository = { getEntriesByTag: jest.fn() };
+    return {
+        __esModule: true,
+        default: { getInstance: () => repository }
+    };
+});
 
 jest.mock('@/components/templates/StandardLayout', () => ({
     __esModule: true,
@@ -36,45 +41,92 @@ jest.mock('next/head', () => ({
     default: ({ children }) => <div data-testid="head">{children}</div>
 }));
 
-jest.mock('@/components/LoadingSpinner', () => ({
-    __esModule: true,
-    default: () => <div data-testid="loading-spinner"/>
-}));
+const post = (entryId) => ({ entryId, title: `Post ${entryId}`, body: null });
+const config = new SiteConfig();
+const pageSize = config.getValue('staticGeneration.prerender.archiveEntries');
 
 describe('Tag listing page', () => {
+    const repository = PostRepository.getInstance();
+
     beforeEach(() => {
-        mockRouter = { isReady: true, query: { tag: 'joshuatree' } };
         Object.keys(captured).forEach(k => delete captured[k]);
+        repository.getEntriesByTag.mockReset();
     });
 
-    it('does not export getStaticProps or getStaticPaths', () => {
+    describe('rendering', () => {
+        it('lists the tag\'s posts with the archive\'s layout and page size', () => {
+            const { getByTestId } = render(<TagPage tag="joshuatree" initialEntries={[post(1)]}/>);
+            expect(getByTestId('standard-layout')).toContainElement(getByTestId('log-entries'));
+            expect(captured.logEntries.tag).toBe('joshuatree');
+            expect(captured.logEntries.pageSize).toBe(pageSize);
+        });
+
+        it('hands the prerendered posts to LogEntries, which loads from the second page', () => {
+            const initialEntries = [post(2), post(1)];
+            render(<TagPage tag="joshuatree" initialEntries={initialEntries}/>);
+            expect(captured.logEntries.initialEntries).toEqual(initialEntries);
+            expect(captured.logEntries.initialPage).toBe(1);
+        });
+
+        it('names the tag in a heading above the list', () => {
+            const { getByRole } = render(<TagPage tag="joshuatree" initialEntries={[]}/>);
+            expect(getByRole('heading', { name: 'Posts tagged joshuatree' })).toBeInTheDocument();
+        });
+
+        it('names the tag in the page title', () => {
+            const { getByTestId } = render(<TagPage tag="joshuatree" initialEntries={[]}/>);
+            expect(getByTestId('head').querySelector('title').textContent).toBe('Posts tagged joshuatree - DeathB4Decaf');
+        });
+    });
+
+    describe('getStaticPaths', () => {
+        it('prerenders no tags at build time', async () => {
+            const { paths } = await getStaticPaths();
+            expect(paths).toEqual([]);
+        });
+
+        it('renders each tag on its first request, without a loading state', async () => {
+            const { fallback } = await getStaticPaths();
+            expect(fallback).toBe('blocking');
+        });
+    });
+
+    describe('getStaticProps', () => {
+        it('reads the first page of the tag\'s posts from the database', async () => {
+            repository.getEntriesByTag.mockResolvedValue([]);
+            await getStaticProps({ params: { tag: 'joshuatree' } });
+            expect(repository.getEntriesByTag).toHaveBeenCalledWith('joshuatree', 0, pageSize);
+        });
+
+        it('passes the tag and its posts to the page', async () => {
+            const entries = [post(2), post(1)];
+            repository.getEntriesByTag.mockResolvedValue(entries);
+            const { props } = await getStaticProps({ params: { tag: 'joshuatree' } });
+            expect(props.tag).toBe('joshuatree');
+            expect(props.initialEntries).toEqual(entries);
+        });
+
+        it('leaves the bodies out of the posts, since the listing shows only intros', async () => {
+            repository.getEntriesByTag.mockResolvedValue([{ ...post(2), body: 'BODY' }]);
+            const { props } = await getStaticProps({ params: { tag: 'joshuatree' } });
+            expect(props.initialEntries).toEqual([{ ...post(2), body: null }]);
+        });
+
+        it('revalidates on the configured interval', async () => {
+            repository.getEntriesByTag.mockResolvedValue([]);
+            const { revalidate } = await getStaticProps({ params: { tag: 'joshuatree' } });
+            expect(revalidate).toBe(config.getValue('staticGeneration.prerender.revalidateSeconds'));
+            expect(revalidate).toBeGreaterThan(0);
+        });
+
+        it('lets a database failure propagate, so ISR keeps serving the last good page', async () => {
+            repository.getEntriesByTag.mockRejectedValue(new Error('database down'));
+            await expect(getStaticProps({ params: { tag: 'joshuatree' } })).rejects.toThrow('database down');
+        });
+    });
+
+    it('does not export getServerSideProps', () => {
         const page = require('@/pages/tags/[tag]');
-        expect(page.getStaticProps).toBeUndefined();
-        expect(page.getStaticPaths).toBeUndefined();
-    });
-
-    it('lists the tag\'s posts with the archive\'s layout and page size', () => {
-        const { getByTestId } = render(<TagPage/>);
-        expect(getByTestId('standard-layout')).toContainElement(getByTestId('log-entries'));
-        expect(captured.logEntries.tag).toBe('joshuatree');
-        expect(captured.logEntries.initialPage).toBe(0);
-        expect(captured.logEntries.pageSize).toBe(30);
-    });
-
-    it('shows a spinner until the router knows the tag', () => {
-        mockRouter = { isReady: false, query: {} };
-        const { getByTestId, queryByTestId } = render(<TagPage/>);
-        expect(getByTestId('loading-spinner')).not.toBeNull();
-        expect(queryByTestId('log-entries')).toBeNull();
-    });
-
-    it('names the tag in a heading above the list', () => {
-        const { getByRole } = render(<TagPage/>);
-        expect(getByRole('heading', { name: 'Posts tagged joshuatree' })).toBeInTheDocument();
-    });
-
-    it('names the tag in the page title', () => {
-        const { getByTestId } = render(<TagPage/>);
-        expect(getByTestId('head').querySelector('title').textContent).toBe('Posts tagged joshuatree - DeathB4Decaf');
+        expect(page.getServerSideProps).toBeUndefined();
     });
 });

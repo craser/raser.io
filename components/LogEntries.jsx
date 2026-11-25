@@ -62,7 +62,7 @@ export default function LogEntries({ initialPage = 0, pageSize, initialEntries, 
     return (
         <Fragment>
             {entries.map(e => <ReadPostView key={e.entryId} post={e} showNextPrev={false}/>)}
-            <div ref={pageBottomRef} className={styles.listingBottom}>{isLoading ? <LoadingSpinner/> : '• • •'}</div>
+            <div ref={pageBottomRef} className={styles.listingBottom} data-testid="listing-bottom">{isLoading ? <LoadingSpinner/> : '• • •'}</div>
         </Fragment>
     );
 }
