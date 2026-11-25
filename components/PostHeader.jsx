@@ -15,7 +15,9 @@ export function PostHeader({ post, ...props }) {
                 <PostTitle post={post} className={styles.title} {...props} />
                 <PostBriefIntro className={styles.brief} post={post} maxLength={20} />
                 <div className={styles.footer}>
-                    <div className={styles.date}><PostedDate post={post} /> • <EstimatedMinutesToRead post={post} />
+                    <div className={styles.date}>
+                        <span><PostedDate post={post} /></span>
+                        <span><EstimatedMinutesToRead post={post} /></span>
                     </div>
                     <div className={styles.link}><span>continue</span> <ChevronRight className={styles.continueIcon} />
                     </div>
