@@ -92,6 +92,13 @@ describe('App Component', () => {
         expect(link).toHaveAttribute('href', '/rss');
     });
 
+    it('exposes the next/font families as :root CSS variables', () => {
+        const { container } = renderScaffold();
+        const css = [...container.ownerDocument.querySelectorAll('style')].map(s => s.textContent).join('\n');
+        expect(css).toContain("--font-jetbrains-mono: 'JetBrains Mono'");
+        expect(css).toContain("--font-lato: 'Lato'");
+    });
+
     it('should render the component passed as a prop', () => {
         const { getByTestId } = renderScaffold();
         expect(getByTestId('mock-page-component')).toBeInTheDocument();
