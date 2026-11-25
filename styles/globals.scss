@@ -1,17 +1,12 @@
-/* blog entries */
-@import url('https://fonts.googleapis.com/css?family=Lato');
-
-/* for the readmes from github */
-@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
 :root {
-    --font-monospace: 'JetBrains Mono', 'IBM Plex Mono', monospace;
-    --font-main: 'Lato';
+    /* --font-jetbrains-mono and --font-lato are set by next/font in pages/_app.js. */
+    --font-monospace: var(--font-jetbrains-mono), monospace;
+    --font-main: var(--font-lato);
     --theme-container-padding-lg: 15px;
     --theme-container-padding-s: 7px;
     --theme-container-padding-xs: 3px;
