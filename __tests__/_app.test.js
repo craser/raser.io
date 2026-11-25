@@ -49,6 +49,12 @@ jest.mock('@/components/theme/ThemeProvider', () => {
     };
 });
 
+jest.mock('@vercel/speed-insights/next', () => ({
+    SpeedInsights: function MockSpeedInsights() {
+        return <div data-testid="mock-SpeedInsights"/>;
+    },
+}));
+
 // Mock the CSS import
 jest.mock('@/styles/globals.scss', () => {
     return {};
@@ -97,6 +103,11 @@ describe('App Component', () => {
         const css = [...container.ownerDocument.querySelectorAll('style')].map(s => s.textContent).join('\n');
         expect(css).toContain("--font-jetbrains-mono: 'JetBrains Mono'");
         expect(css).toContain("--font-lato: 'Lato'");
+    });
+
+    it('renders Vercel Speed Insights to report Core Web Vitals', () => {
+        const { getByTestId } = renderScaffold();
+        expect(getByTestId('mock-SpeedInsights')).toBeInTheDocument();
     });
 
     it('should render the component passed as a prop', () => {

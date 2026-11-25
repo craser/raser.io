@@ -7,6 +7,7 @@ import ModalProvider from "@/components/modal/ModalProvider";
 import ThemeProvider from "@/components/theme/ThemeProvider";
 import Head from 'next/head';
 import { JetBrains_Mono, Lato } from 'next/font/google';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // Self-hosted by next/font: no requests to Google, preloaded, size-adjusted fallbacks.
 // JetBrains Mono is a variable font, so one file covers every weight.
@@ -32,6 +33,8 @@ export default function App({ Component, pageProps }) {
                                     <link rel="alternate" type="application/rss+xml" href="/rss"/>
                                 </Head>
                                 <Component {...pageProps} />
+                                {/* Real-user Core Web Vitals per route; only reports on Vercel deployments. */}
+                                <SpeedInsights />
                             </SearchProvider>
                         </DataProvider>
                     </ModalProvider>
