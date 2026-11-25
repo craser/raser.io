@@ -43,6 +43,9 @@ test('the archive arrives with its first page of posts already in its HTML', asy
     expect(response.ok()).toBe(true);
     const served = servedPageProps(await response.text()).initialEntries;
     expect(served.map(p => p.entryId)).toEqual(posts.map(p => p.entryId));
+    expect(served.map(p => p.intro)).toEqual(posts.map(p => p.intro));
+    // The archive shows only intros, so its page data leaves the bodies out.
+    expect(served.every(p => p.body === null)).toBe(true);
 });
 
 test('a tag page arrives with the tag\'s first page of posts already in its HTML', async ({ request }) => {
@@ -60,8 +63,11 @@ test('scrolling the archive loads the second page, not the first again', async (
     await page.goto('/archive');
     await expect(page.getByTestId('post-title').first()).toBeVisible({ timeout: 30000 });
 
-    const secondPage = page.waitForRequest(/\/api\/entries\/latest\/1\b/, { timeout: 30000 });
-    await page.mouse.wheel(0, 1000000);
-    await secondPage;
+    // The prerendered list is visible before the page hydrates, and images loading below the fold keep
+    // pushing the bottom further down, so keep bringing the bottom into view until the next page loads.
+    await expect(async () => {
+        await page.getByTestId('listing-bottom').scrollIntoViewIfNeeded();
+        expect(entryRequests.some(url => /\/api\/entries\/latest\/1\b/.test(url))).toBe(true);
+    }).toPass({ timeout: 30000 });
     expect(entryRequests.filter(url => /\/api\/entries\/latest\/0\b/.test(url))).toEqual([]);
 });

@@ -34,7 +34,7 @@ jest.mock('@/components/LogEntries', () => ({
     }
 }));
 
-const post = (entryId) => ({ entryId, title: `Post ${entryId}` });
+const post = (entryId) => ({ entryId, title: `Post ${entryId}`, body: null });
 const config = new SiteConfig();
 const pageSize = config.getValue('staticGeneration.prerender.archiveEntries');
 
@@ -81,6 +81,12 @@ describe('Archive index page', () => {
             repository.getEntries.mockResolvedValue(entries);
             const { props } = await getStaticProps();
             expect(props.initialEntries).toEqual(entries);
+        });
+
+        it('leaves the bodies out of the posts, since the archive shows only intros', async () => {
+            repository.getEntries.mockResolvedValue([{ ...post(2), body: 'BODY' }, { ...post(1), body: 'BODY' }]);
+            const { props } = await getStaticProps();
+            expect(props.initialEntries).toEqual([{ ...post(2), body: null }, { ...post(1), body: null }]);
         });
 
         it('revalidates on the configured interval', async () => {

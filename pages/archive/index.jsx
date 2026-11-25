@@ -6,6 +6,7 @@ import StandardLayout from "../../components/templates/StandardLayout";
 import SingleSectionContent from '@/components/templates/SingleSectionContent';
 import PostRepository from "@/lib/data/PostRepository";
 import SiteConfig from "@/lib/SiteConfig";
+import { toListedPost } from "@/lib/data/PostListings";
 
 export default function Home({ initialEntries }) {
     const pageSize = new SiteConfig().getValue('staticGeneration.prerender.archiveEntries');
@@ -26,7 +27,8 @@ export default function Home({ initialEntries }) {
 export async function getStaticProps() {
     const config = new SiteConfig();
     const pageSize = config.getValue('staticGeneration.prerender.archiveEntries');
-    const initialEntries = await PostRepository.getInstance().getEntries(0, pageSize);
+    const posts = await PostRepository.getInstance().getEntries(0, pageSize);
+    const initialEntries = posts.map(toListedPost);
     return {
         props: { initialEntries },
         revalidate: config.getValue('staticGeneration.prerender.revalidateSeconds')

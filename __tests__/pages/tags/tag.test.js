@@ -41,7 +41,7 @@ jest.mock('next/head', () => ({
     default: ({ children }) => <div data-testid="head">{children}</div>
 }));
 
-const post = (entryId) => ({ entryId, title: `Post ${entryId}` });
+const post = (entryId) => ({ entryId, title: `Post ${entryId}`, body: null });
 const config = new SiteConfig();
 const pageSize = config.getValue('staticGeneration.prerender.archiveEntries');
 
@@ -104,6 +104,12 @@ describe('Tag listing page', () => {
             const { props } = await getStaticProps({ params: { tag: 'joshuatree' } });
             expect(props.tag).toBe('joshuatree');
             expect(props.initialEntries).toEqual(entries);
+        });
+
+        it('leaves the bodies out of the posts, since the listing shows only intros', async () => {
+            repository.getEntriesByTag.mockResolvedValue([{ ...post(2), body: 'BODY' }]);
+            const { props } = await getStaticProps({ params: { tag: 'joshuatree' } });
+            expect(props.initialEntries).toEqual([{ ...post(2), body: null }]);
         });
 
         it('revalidates on the configured interval', async () => {

@@ -7,6 +7,7 @@ import StandardLayout from "@/components/templates/StandardLayout";
 import SingleSectionContent from '@/components/templates/SingleSectionContent';
 import PostRepository from "@/lib/data/PostRepository";
 import SiteConfig from "@/lib/SiteConfig";
+import { toListedPost } from "@/lib/data/PostListings";
 import styles from './TagPage.module.scss';
 
 /**
@@ -51,7 +52,8 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
     const config = new SiteConfig();
     const pageSize = config.getValue('staticGeneration.prerender.archiveEntries');
-    const initialEntries = await PostRepository.getInstance().getEntriesByTag(params.tag, 0, pageSize);
+    const posts = await PostRepository.getInstance().getEntriesByTag(params.tag, 0, pageSize);
+    const initialEntries = posts.map(toListedPost);
     return {
         props: { tag: params.tag, initialEntries },
         revalidate: config.getValue('staticGeneration.prerender.revalidateSeconds')
