@@ -206,12 +206,20 @@ describe('Navigation Search', () => {
         expect(searchResults[1].classList.contains('selectedResult')).toBeFalsy();
     })
 
-    test('If search stubs cannot be retrieved, do not show search button or UI.', async () => {
-        useDataContext().getPostDao().getSearchStubs.mockReturnValueOnce(new Promise(function () {
-            throw new Error('nope!');
-        }));
+    test('A plain page view does not fetch the search stubs.', async () => {
+        await renderScaffold();
+        await act(async () => {});
+        expect(useDataContext().getPostDao().getSearchStubs).not.toHaveBeenCalled();
+    });
+
+    test('If search stubs cannot be retrieved when search opens, hide the search button and UI.', async () => {
+        useDataContext().getPostDao().getSearchStubs.mockRejectedValueOnce(new Error('nope!'));
+        jest.spyOn(console, 'error').mockImplementation(() => {});
 
         const result = await renderScaffold();
+        await act(async () => {
+            await userEvent.click(await result.findByTestId('search-button'));
+        });
         // WARNING! When debugging, be aware that waitFor has a default timeout of 1000ms.
         // It'll fail to work properly if you hit breakpoints while it's looping.
         await waitFor(async () => {
@@ -222,6 +230,7 @@ describe('Navigation Search', () => {
         let ui = await result.queryByTestId('search-ui');
         expect(button).not.toBeTruthy();
         expect(ui).not.toBeTruthy();
+        console.error.mockRestore();
     });
 
     test('Should not show recommended completion when token is empty', async () => {

@@ -21,6 +21,7 @@ jest.setTimeout(30000);
 
 import PostRepository from '@/lib/data/PostRepository';
 import Database from '@/lib/data/Database';
+import { toSearchStub } from '@/lib/search/SearchStub';
 
 /**
  * data/posts.json is the reference for the shape the API returns, but two fields in it
@@ -286,14 +287,22 @@ describe('PostRepository', () => {
             expect(stubs.map(p => p.entryId)).toEqual(referenceOrder.slice(0, 25).map(p => p.entryId));
         });
 
-        it('carries the fields the search index reads', async () => {
+        it('carries only the fields search results show, plus the searchable words', async () => {
             const [stub] = await repository.getSearchStubs(1);
-            expect(stub).toEqual(expect.objectContaining({
-                entryId: expect.any(Number),
-                title: expect.any(String),
-            }));
-            expect(stub).toHaveProperty('intro');
-            expect(stub).toHaveProperty('body');
+            expect(Object.keys(stub).sort()).toEqual(['datePosted', 'entryId', 'text', 'title']);
+            expect(stub).toEqual({
+                entryId: referenceOrder[0].entryId,
+                title: referenceOrder[0].title,
+                datePosted: referenceOrder[0].datePosted,
+                text: expect.any(String),
+            });
+            expect(stub.text.length).toBeGreaterThan(0);
+        });
+
+        it('builds each stub from the stored post', async () => {
+            const [stub] = await repository.getSearchStubs(1);
+            const post = await repository.getPostById(stub.entryId);
+            expect(stub).toEqual(toSearchStub(post));
         });
 
         it('returns every post when asked for more than exist', async () => {

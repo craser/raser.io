@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import Search from '@/lib/search/SearchImplementation';
 import { useRouter } from "next/router";
 import { useDataContext } from "@/components/api/DataProvider";
@@ -26,11 +26,14 @@ export default function SearchProvider({ children }) {
     const [searchImpl, setSearchImpl] = useState(null);
     const [selectedResult, setSelectedResult] = useState(null); // index of currently selected search result
     const [searchedTerms, setSearchedTerms] = useState(null); // the terms the current results are for
+    const [searchedImpl, setSearchedImpl] = useState(null); // the index the current results came from
+    const indexRequested = useRef(false);
 
-    // New terms replace the results and clear the selection. Terms typed before the search index
-    // has loaded find nothing until the next change.
-    if (searchTerms !== searchedTerms) {
+    // New terms, or the index arriving, replace the results and clear the selection. Terms typed
+    // before the index has loaded find nothing until it arrives, then are searched.
+    if (searchTerms !== searchedTerms || searchImpl !== searchedImpl) {
         setSearchedTerms(searchTerms);
+        setSearchedImpl(searchImpl);
         if (!searchTerms || searchTerms.length < MIN_SEARCH_TERM_LENGTH) {
             setSearchResults([]);
             setCompletion('');
@@ -68,12 +71,37 @@ export default function SearchProvider({ children }) {
         router.push(getPostLink(post));
     }
 
+    /**
+     * Fetches the stubs and builds the index, the first time search is opened. Most page views
+     * never search, so they never download the index.
+     */
+    function loadSearchIndex() {
+        if (indexRequested.current) {
+            return;
+        }
+        indexRequested.current = true;
+        const start = new Date().getTime();
+        dataContext.getPostDao().getSearchStubs()
+            .then(stubs => {
+                console.log(`fetched ${stubs.length} search stubs in ${new Date().getTime() - start}ms`);
+                setSearchImpl(new Search(stubs));
+            })
+            .catch((e) => {
+                console.error('error fetching search stubs', e);
+                setIsSearchAvailable(false);
+                setIsUiVisible(false);
+            });
+    }
+
     const context = {
         minSearchTermLength: MIN_SEARCH_TERM_LENGTH,
         isSearchAvailable: () => isSearchAvailable,
         showSearchUi: (show) => {
             console.log(`showSearchUi(${show})`);
             analytics.fireUiEngagement('search', 'open');
+            if (show) {
+                loadSearchIndex();
+            }
             setIsUiVisible(show);
         },
         isUiVisible: () => isUiVisible,
@@ -103,23 +131,8 @@ export default function SearchProvider({ children }) {
     useEffect(() => {
         console.log('SearchContext: binding global key listener');
         document.addEventListener('keyup', onKeyUp);
+        return () => document.removeEventListener('keyup', onKeyUp);
     }, [])
-
-    useEffect(() => {
-        const start = new Date().getTime();
-        dataContext.getPostDao().getSearchStubs()
-            .then(stubs => {
-                console.log(`fetched search stubs in ${new Date().getTime() - start}ms`)
-                console.log({ stubs: stubs });
-                return stubs;
-            })
-            .then(stubs => setSearchImpl(new Search(stubs)))
-            .catch((e) => {
-                console.error('error fetching search stubs', e);
-                setIsSearchAvailable(false);
-                setIsUiVisible(false);
-            });
-    }, []);
 
 
     return (

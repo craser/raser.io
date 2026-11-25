@@ -18,7 +18,7 @@ async function newestPosts(request) {
 }
 
 async function newestTaggedPost(request) {
-    const response = await request.get('/api/entries/search/1000');
+    const response = await request.get('/api/entries/latest/0?pageSize=1000');
     expect(response.ok()).toBe(true);
     const posts = await response.json();
     const post = posts.find(p => p.tags.length > 0);
