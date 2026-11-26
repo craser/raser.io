@@ -1,5 +1,5 @@
 // ABOUTME: Renders a post's intro and body as page-ready HTML, making relative href/src URLs root-relative.
-// ABOUTME: Components should read post HTML through this class rather than the post's raw fields.
+// ABOUTME: YouTube embeds become click-to-play thumbnails. Components read post HTML here, not from raw fields.
 
 /**
  * Renders a Post's content as HTML that's ready to drop into the page.
@@ -10,7 +10,12 @@
  * Relative URLs (e.g. href="archive/2692") are made root-relative
  * (href="/archive/2692"), because otherwise the browser resolves them
  * against whatever page the post happens to be shown on.
+ *
+ * YouTube iframes become click-to-play thumbnails (see YouTubeFacade), so a
+ * post with a video doesn't load YouTube's player until someone wants to watch.
  */
+import { YouTubeFacade } from "@/lib/html/YouTubeFacade";
+
 export default class PostToHtml {
     // Matches an href or src attribute value, quoted with either ' or ".
     static #URL_ATTR = /(\s(?:href|src)\s*=\s*)(["'])(.*?)\2/gi;
@@ -38,10 +43,11 @@ export default class PostToHtml {
         if (!html) {
             return html;
         }
-        return html.replace(PostToHtml.#URL_ATTR, (attr, prefix, quote, url) => {
+        const rooted = html.replace(PostToHtml.#URL_ATTR, (attr, prefix, quote, url) => {
             return (url && !PostToHtml.#NOT_RELATIVE.test(url))
                 ? `${prefix}${quote}/${url}${quote}`
                 : attr;
         });
+        return YouTubeFacade.replaceEmbeds(rooted);
     }
 }
