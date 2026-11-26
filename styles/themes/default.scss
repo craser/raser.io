@@ -42,8 +42,8 @@
     --theme-quote-attribution-color: #a0a0a0; // the "- Author, Source" line under a quote
 
     /* The heading hierarchy: titles, then headings, then small supporting info */
-    --theme-title-color: #ffd84d;
-    --theme-heading-color: #5cc8ff;
+    --theme-title-color: var(--theme-info-color); // one colour for every title and heading
+    --theme-heading-color: var(--theme-info-color);
     --theme-info-color: #33ff33;
     --theme-heading-link-color: var(--theme-heading-color); // links that read as headings, e.g. repo names
     --theme-heading-link-visited-color: var(--theme-heading-link-color);
@@ -86,7 +86,7 @@
     --theme-header-stuck-bg: var(--theme-panel-bg); // once the page scrolls under it
     --theme-header-text: #fff;
     --theme-header-border: none;
-    --theme-header-title-color: #ffd84d;
+    --theme-header-title-color: var(--theme-info-color); // the site title, same green as other titles
     --theme-header-title-hover-decoration: none;
 
     /* The latest post's hero on the homepage */
