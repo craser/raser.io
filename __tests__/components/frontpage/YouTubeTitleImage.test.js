@@ -70,5 +70,11 @@ describe('YouTubeTitleImage', () => {
         const img = await result.findByTestId('youtube-title-image');
         expect(img.src).toBe('https://i.ytimg.com/vi/WPjJW0afKuw/hqdefault.jpg');
     });
-});
 
+    it('should reserve the same fixed 3:2 box as other title images', async () => {
+        const result = await renderScaffold({ post: { intro: EXAMPLE_POST_INTRO_WITH_VIDEO } });
+        const img = await result.findByTestId('youtube-title-image');
+        expect(img.getAttribute('width')).toBe('1500');
+        expect(img.getAttribute('height')).toBe('1000');
+    });
+});

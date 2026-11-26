@@ -47,6 +47,15 @@ test('passes the class name through', async () => {
     expect(screen.getByTestId('map-image')).toHaveClass('titleimage');
 });
 
+test('reserves the same fixed 3:2 box as other title images', async () => {
+    render(<MapImage fileName="ride.gpx" className="titleimage"/>);
+
+    const img = screen.getByTestId('map-image');
+    expect(img).toHaveAttribute('width', '1500');
+    expect(img).toHaveAttribute('height', '1000');
+    expect(img).toHaveClass('titleimage');
+});
+
 test('shows no image when the endpoint reports a failure', async () => {
     endpointReturns({ ok: false, status: 404, text: () => Promise.resolve('Not Found') });
 

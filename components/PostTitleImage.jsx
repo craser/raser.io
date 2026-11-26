@@ -1,7 +1,7 @@
 import SiteConfig from "@/lib/SiteConfig";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 import { MapImage } from "@/components/maps/MapImage";
-import Image from "next/image";
+import { titleImageSizeProps } from "@/components/TitleImageSize";
 
 
 export function getTitleImageUrl(post) {
@@ -43,7 +43,7 @@ export default function PostTitleImage({ post, className }) {
     } else if (hasTitleImage(post)) {
         let src = getTitleImageUrl(post);
         return (
-            <img src={src} className={className || 'titleimage'}
+            <img src={src} {...titleImageSizeProps(className || 'titleimage')}
                      onError={() => notifyAnalytics(src)}
             />
         );

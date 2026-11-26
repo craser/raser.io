@@ -40,4 +40,14 @@ describe('PostTitleImage', () => {
         img.dispatchEvent(new Event('error'));
         expect(useAnalytics().fireImgFail).toHaveBeenCalled();
     });
+
+    it('should reserve a fixed 3:2 box, so the page does not shift when the image loads', async () => {
+        const { container } = await render(<PostTitleImage post={{
+            imageFileName: 'test.jpg',
+            imageFileType: 'image'
+        }}/>);
+        const img = container.querySelector('img');
+        expect(img.getAttribute('width')).toEqual('1500');
+        expect(img.getAttribute('height')).toEqual('1000');
+    });
 });
