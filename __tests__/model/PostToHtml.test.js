@@ -1,5 +1,5 @@
 // ABOUTME: Tests PostToHtml: relative href/src URLs in post HTML become root-relative, and every
-// ABOUTME: URL that already resolves the same from any page (schemes, root, #, ?) is left alone.
+// ABOUTME: URL that already resolves the same from any page (schemes, root, #, ?) is left alone; YouTube embeds become thumbnails.
 
 import PostToHtml from '@/model/PostToHtml';
 
@@ -50,6 +50,13 @@ describe('PostToHtml', () => {
     it('does not touch text that merely looks like an attribute', () => {
         const markup = '<p>set data-href="archive/1" here</p>';
         expect(html(markup).getBody()).toBe(markup);
+    });
+
+    it('turns YouTube embeds into click-to-play thumbnails, in the intro and the body', () => {
+        const embed = '<iframe src="https://www.youtube.com/embed/abc123" title="YouTube video player"></iframe>';
+        expect(html(embed).getIntro()).toContain('data-youtube-src="https://www.youtube.com/embed/abc123"');
+        expect(html(embed).getBody()).toContain('data-youtube-src="https://www.youtube.com/embed/abc123"');
+        expect(html(embed).getBody()).not.toContain('<iframe');
     });
 
     it('passes missing intro and body through unchanged', () => {

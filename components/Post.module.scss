@@ -99,6 +99,72 @@
 }
 
 /**
+ * YouTube embeds are drawn as click-to-play thumbnails (lib/html/YouTubeFacade.js), and a
+ * clicked one is swapped for the player. Both fill the post's width at 16:9, so the player
+ * replaces its thumbnail without moving anything, and the scaling hack above isn't needed.
+ */
+.entry :global(.youtube-facade),
+.entry iframe:global(.youtube-embed) {
+    position: relative;
+    left: -15px;
+    display: block;
+    width: calc(100% + 30px); /* full-width, like images */
+    height: auto;
+    aspect-ratio: 16 / 9;
+    margin: 0;
+    border: 0;
+    transform: none;
+}
+
+.entry :global(.youtube-facade) {
+    padding: 0;
+    overflow: hidden;
+    background-color: #000;
+    cursor: pointer;
+
+    /* Undoes the full-width rule for post images: the thumbnail just fills its button. */
+    img {
+        position: absolute;
+        inset: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        object-fit: cover; /* the thumbnail is 4:3 with black bars; cover crops them off */
+    }
+
+    /* A play button: a dark rounded box with a white triangle in it. */
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 1; /* above the thumbnail */
+        transform: translate(-50%, -50%);
+    }
+
+    &::before {
+        width: 68px;
+        height: 48px;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.75);
+    }
+
+    &::after {
+        margin-left: 3px; /* the triangle's visual centre sits right of its box's centre */
+        border-style: solid;
+        border-width: 11px 0 11px 19px;
+        border-color: transparent transparent transparent #fff;
+    }
+
+    &:hover::before,
+    &:focus-visible::before {
+        background: #c00;
+    }
+}
+
+/**
  * Older posts embed media with fixed pixel widths (e.g. 425px Flash-era YouTube embeds).
  * Wider than a phone screen, they make the browser zoom out the whole page.
  */

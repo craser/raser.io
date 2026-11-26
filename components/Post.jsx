@@ -1,3 +1,6 @@
+// ABOUTME: Renders one post: title, meta info, title image, intro and (optionally) body.
+// ABOUTME: Video thumbnails in the post HTML start their video when clicked.
+
 import styles from './Post.module.scss';
 import { PostLink } from "@/components/PostLink";
 import PostMetaInfo from "@/components/PostMetaInfo";
@@ -5,8 +8,9 @@ import PostTitleImage from "@/components/PostTitleImage";
 import PostTitle from "@/components/PostTitle";
 import PostToHtml from "@/model/PostToHtml";
 import { useEffect, useRef } from "react";
+import { YouTubeFacade } from "@/lib/html/YouTubeFacade";
 
-export const Post = ({ post, showBody }) => {
+export const Post = ({ post, showBody, prioritizeTitleImage }) => {
     const topRef = useRef(null);
     const postHtml = new PostToHtml(post);
 
@@ -23,14 +27,15 @@ export const Post = ({ post, showBody }) => {
         };
         setPostWidth();
         window.addEventListener('resize', setPostWidth);
-    });
+        return () => window.removeEventListener('resize', setPostWidth);
+    }, [post, showBody]);
 
 
     return (
-        <div ref={topRef} className={styles.entry}>
+        <div ref={topRef} className={styles.entry} onClick={YouTubeFacade.playClicked}>
             <PostLink post={post}><PostTitle post={post} as="h2" className={styles.title}/></PostLink>
             <PostMetaInfo post={post}/>
-            <PostTitleImage post={post}/>
+            <PostTitleImage post={post} prioritize={prioritizeTitleImage}/>
             <div dangerouslySetInnerHTML={{ __html: postHtml.getIntro() }}/>
             {(showBody)
                 ? <div dangerouslySetInnerHTML={{ __html: postHtml.getBody() }}/>
