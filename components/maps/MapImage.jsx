@@ -1,5 +1,6 @@
 import SiteConfig from "@/lib/SiteConfig";
 import { useEffect, useState } from "react";
+import { titleImageSizeProps } from "@/components/TitleImageSize";
 
 /**
  * Looks up the URL of the map image for a GPX file. Returns undefined until the
@@ -32,5 +33,5 @@ export function useMapImageSrc(fileName) {
 
 export function MapImage({ fileName, className, onError }) {
     const imgSrc = useMapImageSrc(fileName);
-    return <img src={imgSrc ?? undefined} alt={`Map ${fileName}`} className={className} onError={onError} data-testid="map-image" />;
+    return <img src={imgSrc ?? undefined} alt={`Map ${fileName}`} {...titleImageSizeProps(className)} onError={onError} data-testid="map-image" />;
 }

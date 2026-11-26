@@ -1,3 +1,5 @@
+import { titleImageSizeProps } from "@/components/TitleImageSize";
+
 
 export function hasYouTubeEmbed(post) {
     return !!getFirstYouTubeVideoId(post);
@@ -19,10 +21,11 @@ export function getYouTubeTitleImageUrl(post) {
     return url;
 }
 
-export default function YouTubeTitleImage({ post, onError, ...props}) {
+export default function YouTubeTitleImage({ post, onError, className, ...props}) {
     const url = getYouTubeTitleImageUrl(post);
     return <img data-testid="youtube-title-image" src={url}
                 onError={onError}
                 {...props}
+                {...titleImageSizeProps(className)}
     />;
 }

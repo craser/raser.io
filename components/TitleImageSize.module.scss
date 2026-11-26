@@ -1,0 +1,10 @@
+/*
+ * The aspect ratio is set here as well as by the width/height attributes, because with
+ * height: auto the browser switches to the image's own shape once it loads, shifting the page.
+ * Without the `auto` keyword, aspect-ratio holds for the loaded image too.
+ */
+.sized {
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+}
