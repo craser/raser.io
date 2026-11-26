@@ -1,23 +1,24 @@
-@import '@/styles/mixins.scss';
-
 button.navButton {
     display: flex;
-    flex-direction: row;
-    gap: 0.3rem;
     justify-content: center;
     align-items: center;
-    text-transform: lowercase;
     border-radius: var(--theme-radius);
     padding: 5px;
     transition: all 200ms;
     color: var(--theme-nav-button-text);
     background-color: var(--theme-nav-button-bg);
     border: var(--theme-nav-button-border);
-    font-family: var(--font-monospace);
+    cursor: pointer;
 
     &:hover {
         color: var(--theme-nav-button-hover-text);
         background: var(--theme-nav-button-hover-bg);
+        transform: scale(1.1);
+    }
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
     }
 
     .icon {
@@ -25,17 +26,13 @@ button.navButton {
         height: 24px;
     }
 
-    /* Icon-only on phones, to leave the header room; the label stays for screen readers. */
+    /* Icon-only, the same size as the high-contrast toggle beside it; the label stays for screen readers. */
     .label {
-        @include small() {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-            clip: rect(0 0 0 0);
-            white-space: nowrap;
-        }
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
     }
-
-
 }

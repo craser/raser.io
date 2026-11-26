@@ -1,17 +1,16 @@
 /*
- * Plain black and white in every theme: black on white when off, white on black when on.
- * Sized to match the search NavButton beside it, including any border a theme gives it.
+ * Two colours per theme (--theme-toggle-fg on --theme-toggle-bg), swapped when on.
+ * Same padding, border and icon size as the search NavButton beside it, so the two match.
  */
 button.toggle {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 5px;
-    border: var(--theme-nav-button-border-width) solid var(--theme-toggle-border-color);
-    box-shadow: inset 0 0 0 2px #000; // an outline that, unlike a border, adds no height beside the search button
+    border: var(--theme-nav-button-border);
     border-radius: var(--theme-radius);
-    color: #000;
-    background-color: #fff;
+    color: var(--theme-toggle-fg);
+    background-color: var(--theme-toggle-bg);
     cursor: pointer;
     transition: transform 200ms;
 
@@ -21,8 +20,8 @@ button.toggle {
     }
 
     &[aria-checked="true"] {
-        color: #fff;
-        background-color: #000;
+        color: var(--theme-toggle-bg);
+        background-color: var(--theme-toggle-fg);
     }
 
     /* Hover can't use colour; colour is the on/off state. */

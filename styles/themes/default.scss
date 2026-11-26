@@ -73,13 +73,13 @@
     /* Buttons */
     --theme-button-bg: #1a1a1a;
     --theme-button-text: #5cc8ff;
-    --theme-nav-button-bg: #1a1a1a;
-    --theme-nav-button-text: #5cc8ff;
-    --theme-nav-button-border: 1px solid #5cc8ff;
-    --theme-nav-button-border-width: 1px; // the width alone, so the high-contrast toggle can match the search button's size
-    --theme-toggle-border-color: transparent; // the high-contrast toggle's border, there only to match the search button's size
-    --theme-nav-button-hover-bg: #2a2a2a;
-    --theme-nav-button-hover-text: #5cc8ff;
+    --theme-nav-button-bg: #000; // the header's search button and high-contrast toggle: green on black
+    --theme-nav-button-text: var(--theme-title-color);
+    --theme-nav-button-border: 1px solid var(--theme-title-color);
+    --theme-nav-button-hover-bg: #000;
+    --theme-nav-button-hover-text: var(--theme-title-color);
+    --theme-toggle-fg: var(--theme-title-color); // the high-contrast toggle's icon when off; it swaps with the background when on
+    --theme-toggle-bg: #000;
 
     /* Page header */
     --theme-header-bg: transparent;
