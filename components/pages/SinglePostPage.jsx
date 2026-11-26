@@ -42,7 +42,8 @@ export default function SinglePostPage({ post }) {
             <PostBackground post={post}/>
             <StandardLayout content={
                 <SingleSectionContent content={
-                    <ReadPostView post={post} showBody={true} next={next} prev={prev} showNextPrev={true}/>
+                    <ReadPostView post={post} showBody={true} next={next} prev={prev} showNextPrev={true}
+                                  preloadTitleImage={true}/>
                 }/>
             }/>
         </>

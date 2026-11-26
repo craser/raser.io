@@ -1,3 +1,6 @@
+// ABOUTME: Draws a post's title image: its photo, or a map when the hero is a GPX track.
+// ABOUTME: Failed loads are reported to analytics.
+
 import SiteConfig from "@/lib/SiteConfig";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 import { MapImage } from "@/components/maps/MapImage";
@@ -26,10 +29,12 @@ export function hasTitleImage(post) {
  * @param post
  * @param className
  * @param sizes how wide the image is drawn (see TitleImage); defaults to a post's title image
+ * @param preload true when the image is the page's largest content, so it's fetched before anything else;
+ *                map images are looked up in the browser, so they can't be preloaded
  * @returns {JSX.Element|null}
  * @constructor
  */
-export default function PostTitleImage({ post, className, sizes }) {
+export default function PostTitleImage({ post, className, sizes, preload }) {
     const analytics = useAnalytics();
     const notifyAnalytics = (src) => {
         analytics.fireImgFail(src);
@@ -44,7 +49,7 @@ export default function PostTitleImage({ post, className, sizes }) {
     } else if (hasTitleImage(post)) {
         let src = getTitleImageUrl(post);
         return (
-            <TitleImage src={src} className={className || 'titleimage'} sizes={sizes}
+            <TitleImage src={src} className={className || 'titleimage'} sizes={sizes} preload={preload}
                         onError={() => notifyAnalytics(src)}
             />
         );

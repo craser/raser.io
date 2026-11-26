@@ -6,7 +6,11 @@ import { render } from '@testing-library/react';
 
 jest.mock('@/components/PostLink', () => ({ PostLink: ({ children }) => <span>{children}</span> }));
 jest.mock('@/components/PostMetaInfo', () => () => null);
-jest.mock('@/components/PostTitleImage', () => () => null);
+const mockPostTitleImageProps = [];
+jest.mock('@/components/PostTitleImage', () => function MockPostTitleImage(props) {
+    mockPostTitleImageProps.push(props);
+    return null;
+});
 
 const mockPost = {
     title: 'DUMMY_TITLE',
@@ -23,6 +27,16 @@ describe('Post', () => {
     it('renders the body with relative links made root-relative', () => {
         const { getByTestId } = render(<Post post={mockPost} showBody={true}/>);
         expect(getByTestId('body-link').getAttribute('href')).toBe('/archive/2');
+    });
+
+    it('preloads the title image only when asked to', () => {
+        mockPostTitleImageProps.length = 0;
+        render(<Post post={mockPost} showBody={false}/>);
+        expect(mockPostTitleImageProps[0].preload).toBeFalsy();
+
+        mockPostTitleImageProps.length = 0;
+        render(<Post post={mockPost} showBody={false} preloadTitleImage={true}/>);
+        expect(mockPostTitleImageProps[0].preload).toBe(true);
     });
 
     it('omits the body when showBody is false', () => {

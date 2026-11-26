@@ -40,6 +40,22 @@ describe('PostTitleImage', () => {
         expect(container.querySelector('img')).toHaveAttribute('sizes', '30vw');
     });
 
+    it('should load the image lazily by default', async () => {
+        const { container } = await render(<PostTitleImage post={{
+            imageFileName: 'test.jpg',
+            imageFileType: 'image'
+        }}/>);
+        expect(container.querySelector('img')).toHaveAttribute('loading', 'lazy');
+    });
+
+    it('should load the image straight away when asked to preload it', async () => {
+        const { container } = await render(<PostTitleImage preload post={{
+            imageFileName: 'test.jpg',
+            imageFileType: 'image'
+        }}/>);
+        expect(container.querySelector('img')).not.toHaveAttribute('loading');
+    });
+
     it('should signal analytics if the image fails to load', async () => {
         const { container } = await render(<PostTitleImage post={{
             imageFileName: 'test.jpg',

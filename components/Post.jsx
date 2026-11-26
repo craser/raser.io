@@ -6,7 +6,7 @@ import PostTitle from "@/components/PostTitle";
 import PostToHtml from "@/model/PostToHtml";
 import { useEffect, useRef } from "react";
 
-export const Post = ({ post, showBody }) => {
+export const Post = ({ post, showBody, preloadTitleImage }) => {
     const topRef = useRef(null);
     const postHtml = new PostToHtml(post);
 
@@ -30,7 +30,7 @@ export const Post = ({ post, showBody }) => {
         <div ref={topRef} className={styles.entry}>
             <PostLink post={post}><PostTitle post={post} as="h2" className={styles.title}/></PostLink>
             <PostMetaInfo post={post}/>
-            <PostTitleImage post={post}/>
+            <PostTitleImage post={post} preload={preloadTitleImage}/>
             <div dangerouslySetInnerHTML={{ __html: postHtml.getIntro() }}/>
             {(showBody)
                 ? <div dangerouslySetInnerHTML={{ __html: postHtml.getBody() }}/>

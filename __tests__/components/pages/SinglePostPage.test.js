@@ -84,6 +84,11 @@ describe('SinglePostPage', () => {
         expect(mockReadPostViewProps[0].showNextPrev).toBe(true);
     });
 
+    it('preloads the title image, since it is the largest thing on the page', () => {
+        render(<SinglePostPage post={POST}/>);
+        expect(mockReadPostViewProps[0].preloadTitleImage).toBe(true);
+    });
+
     it('loads the next and previous posts for the post it is given', async () => {
         render(<SinglePostPage post={POST}/>);
         await waitFor(() => {
