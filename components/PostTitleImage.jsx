@@ -1,7 +1,7 @@
 import SiteConfig from "@/lib/SiteConfig";
 import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 import { MapImage } from "@/components/maps/MapImage";
-import { titleImageSizeProps } from "@/components/TitleImageSize";
+import TitleImage from "@/components/TitleImage";
 
 
 export function getTitleImageUrl(post) {
@@ -25,10 +25,11 @@ export function hasTitleImage(post) {
  *
  * @param post
  * @param className
+ * @param sizes how wide the image is drawn (see TitleImage); defaults to a post's title image
  * @returns {JSX.Element|null}
  * @constructor
  */
-export default function PostTitleImage({ post, className }) {
+export default function PostTitleImage({ post, className, sizes }) {
     const analytics = useAnalytics();
     const notifyAnalytics = (src) => {
         analytics.fireImgFail(src);
@@ -36,15 +37,15 @@ export default function PostTitleImage({ post, className }) {
 
     if (hasMapTitleImage(post)) {
         return (
-            <MapImage className={className || 'titleimage'}
+            <MapImage className={className || 'titleimage'} sizes={sizes}
                       onError={() => notifyAnalytics(post.imageFileName)} fileName={post.imageFileName}
             />
         );
     } else if (hasTitleImage(post)) {
         let src = getTitleImageUrl(post);
         return (
-            <img src={src} {...titleImageSizeProps(className || 'titleimage')}
-                     onError={() => notifyAnalytics(src)}
+            <TitleImage src={src} className={className || 'titleimage'} sizes={sizes}
+                        onError={() => notifyAnalytics(src)}
             />
         );
     } else {
