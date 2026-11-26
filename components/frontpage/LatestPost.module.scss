@@ -73,11 +73,36 @@
             font-size: 0.85em;
         }
 
+        .byLineText {
+            min-width: 0; /* let the meta line wrap instead of overflowing the card */
+        }
+
+        /* Same as the "Previously" cards: date and read time each stay on one
+         * line; if they don't fit side by side, the read time drops below the
+         * date. The bullet hangs in the column gap and is clipped by overflow
+         * when the read time starts a new line. */
         .byLineMeta {
+            $sep: 1.5em;
+
             @include monoChrome();
             color: var(--theme-hero-card-meta-text);
             font-size: 0.75em;
-            white-space: nowrap;
+            display: flex;
+            flex-wrap: wrap;
+            column-gap: $sep;
+            overflow: hidden;
+
+            > span {
+                white-space: nowrap;
+            }
+
+            > span + span::before {
+                content: '•';
+                display: inline-block;
+                width: $sep;
+                margin-left: -$sep;
+                text-align: center;
+            }
         }
 
         /* Always visible (unlike the hover-only "continue" on previous posts) so it's obvious there's more to read. */
