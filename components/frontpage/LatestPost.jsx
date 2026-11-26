@@ -36,10 +36,12 @@ export default function LatestPostSection({ initialPost = null }) {
                         </span>
                         <div className={styles.byLine}>
                             <img className={styles.bylineIcon} src="/img/chris-social-avatar.png" alt="Chris Raser"/>
-                            <div>
+                            <div className={styles.byLineText}>
                                 <p className={styles.byLineName}>Chris Raser</p>
                                 <p className={styles.byLineMeta}>
-                                    <PostedDate post={post}/> • <EstimatedMinutesToRead post={post}/></p>
+                                    <span><PostedDate post={post}/></span>
+                                    <span><EstimatedMinutesToRead post={post}/></span>
+                                </p>
                             </div>
                         </div>
                     </div>
