@@ -112,6 +112,8 @@
             .bylineIcon {
                 width: 40px;
                 height: 40px;
+                flex-shrink: 0; /* a long date line must not squeeze it into an oval */
+                object-fit: cover;
                 border-radius: 50%;
                 overflow: hidden;
             }
