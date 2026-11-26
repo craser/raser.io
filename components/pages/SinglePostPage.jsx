@@ -43,7 +43,7 @@ export default function SinglePostPage({ post }) {
             <StandardLayout content={
                 <SingleSectionContent content={
                     <ReadPostView post={post} showBody={true} next={next} prev={prev} showNextPrev={true}
-                                  preloadTitleImage={true}/>
+                                  prioritizeTitleImage={true}/>
                 }/>
             }/>
         </>

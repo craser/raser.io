@@ -1,4 +1,4 @@
-// ABOUTME: Tests that ReadPostView hands the post and its title-image preload flag to Post,
+// ABOUTME: Tests that ReadPostView hands the post and its title-image priority flag to Post,
 // ABOUTME: and shows next/prev navigation only when asked to.
 import { render } from '@testing-library/react';
 import ReadPostView from '@/components/ReadPostView';
@@ -22,15 +22,15 @@ beforeEach(() => {
     mockPostProps.length = 0;
 });
 
-test('passes the title-image preload flag through to the post', () => {
-    render(<ReadPostView post={POST} showBody={true} preloadTitleImage={true}/>);
+test('passes the title-image priority flag through to the post', () => {
+    render(<ReadPostView post={POST} showBody={true} prioritizeTitleImage={true}/>);
     expect(mockPostProps[0].post).toBe(POST);
-    expect(mockPostProps[0].preloadTitleImage).toBe(true);
+    expect(mockPostProps[0].prioritizeTitleImage).toBe(true);
 });
 
-test('does not preload the title image unless asked to', () => {
+test('does not prioritize the title image unless asked to', () => {
     render(<ReadPostView post={POST} showBody={true}/>);
-    expect(mockPostProps[0].preloadTitleImage).toBeFalsy();
+    expect(mockPostProps[0].prioritizeTitleImage).toBeFalsy();
 });
 
 test('shows next/prev navigation only when asked to', () => {

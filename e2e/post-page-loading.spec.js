@@ -1,4 +1,4 @@
-// ABOUTME: End-to-end checks of how a single-post page loads: the title image is preloaded, the background
+// ABOUTME: End-to-end checks of how a single-post page loads: the title image is fetched first, the background
 // ABOUTME: is a resized low-priority image, and a YouTube video loads its player only when clicked.
 
 const { test, expect } = require('@playwright/test');
@@ -25,14 +25,14 @@ async function postWithYouTubeVideo(request) {
     return post;
 }
 
-test('the title image is preloaded and loaded straight away', async ({ page, request }) => {
+test('the title image is fetched straight away, at high priority', async ({ page, request }) => {
     const post = await postWithPhoto(request);
     await page.goto(`/archive/${post.entryId}`);
     const titleImage = page.locator('img.titleimage').first();
     await expect(titleImage).toBeVisible({ timeout: 30000 });
 
-    await expect(titleImage).not.toHaveAttribute('loading', 'lazy');
-    await expect(page.locator('head link[rel="preload"][as="image"]')).not.toHaveCount(0);
+    await expect(titleImage).toHaveAttribute('loading', 'eager');
+    await expect(titleImage).toHaveAttribute('fetchpriority', 'high');
 });
 
 test('the background is a resized image, fetched at low priority', async ({ page, request }) => {

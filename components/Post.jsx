@@ -10,7 +10,7 @@ import PostToHtml from "@/model/PostToHtml";
 import { useEffect, useRef } from "react";
 import { YouTubeFacade } from "@/lib/html/YouTubeFacade";
 
-export const Post = ({ post, showBody, preloadTitleImage }) => {
+export const Post = ({ post, showBody, prioritizeTitleImage }) => {
     const topRef = useRef(null);
     const postHtml = new PostToHtml(post);
 
@@ -35,7 +35,7 @@ export const Post = ({ post, showBody, preloadTitleImage }) => {
         <div ref={topRef} className={styles.entry} onClick={YouTubeFacade.playClicked}>
             <PostLink post={post}><PostTitle post={post} as="h2" className={styles.title}/></PostLink>
             <PostMetaInfo post={post}/>
-            <PostTitleImage post={post} preload={preloadTitleImage}/>
+            <PostTitleImage post={post} prioritize={prioritizeTitleImage}/>
             <div dangerouslySetInnerHTML={{ __html: postHtml.getIntro() }}/>
             {(showBody)
                 ? <div dangerouslySetInnerHTML={{ __html: postHtml.getBody() }}/>

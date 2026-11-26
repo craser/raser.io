@@ -24,7 +24,7 @@ describe('YouTubeFacade.replaceEmbeds', () => {
         const facade = container.querySelector('[data-testid="youtube-facade"]');
         expect(facade.tagName).toBe('BUTTON');
         expect(facade.getAttribute('data-youtube-src')).toBe('https://www.youtube-nocookie.com/embed/WPjJW0afKuw');
-        expect(facade.style.backgroundImage).toBe('url(https://i.ytimg.com/vi/WPjJW0afKuw/hqdefault.jpg)');
+        expect(facade.querySelector('img').getAttribute('src')).toBe('https://i.ytimg.com/vi/WPjJW0afKuw/hqdefault.jpg');
         expect(container.querySelectorAll('p')).toHaveLength(2);
     });
 

@@ -29,12 +29,12 @@ export function hasTitleImage(post) {
  * @param post
  * @param className
  * @param sizes how wide the image is drawn (see TitleImage); defaults to a post's title image
- * @param preload true when the image is the page's largest content, so it's fetched before anything else;
- *                map images are looked up in the browser, so they can't be preloaded
+ * @param prioritize true when the image is the page's largest content, so it's fetched straight away and
+ *                   ahead of other images; map images are looked up in the browser, so this doesn't apply
  * @returns {JSX.Element|null}
  * @constructor
  */
-export default function PostTitleImage({ post, className, sizes, preload }) {
+export default function PostTitleImage({ post, className, sizes, prioritize }) {
     const analytics = useAnalytics();
     const notifyAnalytics = (src) => {
         analytics.fireImgFail(src);
@@ -48,8 +48,10 @@ export default function PostTitleImage({ post, className, sizes, preload }) {
         );
     } else if (hasTitleImage(post)) {
         let src = getTitleImageUrl(post);
+        // Not next/image's `preload`: its <link rel="preload"> is fetched at low priority until layout.
+        const priorityProps = prioritize ? { loading: 'eager', fetchPriority: 'high' } : {};
         return (
-            <TitleImage src={src} className={className || 'titleimage'} sizes={sizes} preload={preload}
+            <TitleImage src={src} className={className || 'titleimage'} sizes={sizes} {...priorityProps}
                         onError={() => notifyAnalytics(src)}
             />
         );

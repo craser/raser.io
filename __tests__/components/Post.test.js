@@ -29,14 +29,14 @@ describe('Post', () => {
         expect(getByTestId('body-link').getAttribute('href')).toBe('/archive/2');
     });
 
-    it('preloads the title image only when asked to', () => {
+    it('prioritizes the title image only when asked to', () => {
         mockPostTitleImageProps.length = 0;
         render(<Post post={mockPost} showBody={false}/>);
-        expect(mockPostTitleImageProps[0].preload).toBeFalsy();
+        expect(mockPostTitleImageProps[0].prioritize).toBeFalsy();
 
         mockPostTitleImageProps.length = 0;
-        render(<Post post={mockPost} showBody={false} preloadTitleImage={true}/>);
-        expect(mockPostTitleImageProps[0].preload).toBe(true);
+        render(<Post post={mockPost} showBody={false} prioritizeTitleImage={true}/>);
+        expect(mockPostTitleImageProps[0].prioritize).toBe(true);
     });
 
     it('omits the body when showBody is false', () => {

@@ -48,12 +48,13 @@ describe('PostTitleImage', () => {
         expect(container.querySelector('img')).toHaveAttribute('loading', 'lazy');
     });
 
-    it('should load the image straight away when asked to preload it', async () => {
-        const { container } = await render(<PostTitleImage preload post={{
+    it('should fetch the image straight away, ahead of other images, when asked to prioritize it', async () => {
+        const { container } = await render(<PostTitleImage prioritize post={{
             imageFileName: 'test.jpg',
             imageFileType: 'image'
         }}/>);
-        expect(container.querySelector('img')).not.toHaveAttribute('loading');
+        expect(container.querySelector('img')).toHaveAttribute('loading', 'eager');
+        expect(container.querySelector('img')).toHaveAttribute('fetchpriority', 'high');
     });
 
     it('should signal analytics if the image fails to load', async () => {
