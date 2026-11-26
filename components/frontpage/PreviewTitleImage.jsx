@@ -1,4 +1,5 @@
 import PostTitleImage, { hasMapTitleImage, hasTitleImage, getTitleImageUrl } from "@/components/PostTitleImage";
+import { PREVIEW_SIZES } from "@/components/TitleImage";
 import YouTubeTitleImage, { hasYouTubeEmbed, getYouTubeTitleImageUrl } from "@/components/frontpage/YouTubeTitleImage";
 
 export function getFrontPageTitleImageUrl(post) {
@@ -14,7 +15,7 @@ export function getFrontPageTitleImageUrl(post) {
 
 export default function PreviewTitleImage({ post, ...props }) {
     if (hasTitleImage(post) || hasMapTitleImage(post)) {
-        return <PostTitleImage post={post} {...props}/>;
+        return <PostTitleImage post={post} sizes={PREVIEW_SIZES} {...props}/>;
     } else if (hasYouTubeEmbed(post)) {
         return <YouTubeTitleImage post={post} {...props}/>;
     }

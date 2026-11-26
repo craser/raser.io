@@ -8,6 +8,8 @@ import { PostLink } from "@/components/PostLink";
 import PostTitle from "@/components/PostTitle";
 import { getFrontPageTitleImageUrl } from "@/components/frontpage/PreviewTitleImage";
 import { ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { isOptimizable } from "@/lib/images/OptimizedImageHost";
 
 export default function LatestPostSection({ initialPost = null }) {
     const postDao = useDataContext().getPostDao();
@@ -26,7 +28,8 @@ export default function LatestPostSection({ initialPost = null }) {
     } else {
         return (
             <PostLink post={post} className={styles.latestPostLink}>
-                <div className={styles.latestPost} style={{ '--hero-image': `url(${getFrontPageTitleImageUrl(post)})` }}>
+                <div className={styles.latestPost}>
+                    <HeroImage src={getFrontPageTitleImageUrl(post)}/>
                     <div className={styles.postInfo}>
                         <PostTitle post={post} as="h3" className={styles.postTitle}/>
                         <PostBriefIntro maxLength={60} post={post} className={styles.brief}/>
@@ -49,6 +52,21 @@ export default function LatestPostSection({ initialPost = null }) {
             </PostLink>
         )
     }
+}
+
+/**
+ * The hero's photo, filling the box behind the overlay and the post card. It's the page's
+ * largest image, so it's preloaded and sized to the screen rather than drawn at full size.
+ */
+function HeroImage({ src }) {
+    // Map posts give the GPX file's URL here, which isn't an image; they get no photo.
+    if (!src || /\.gpx$/i.test(src)) {
+        return null;
+    }
+    return (
+        <Image className={styles.heroImage} src={src} alt="" fill preload sizes="100vw"
+               unoptimized={!isOptimizable(src)} data-testid="hero-image"/>
+    );
 }
 
 /**

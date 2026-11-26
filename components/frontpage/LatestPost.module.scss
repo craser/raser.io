@@ -19,11 +19,14 @@
     display: flex;
     flex-direction: row-reverse;
     min-height: 60vh; // fill the "splash" area. need a better way to do this... but time is short today.
+    position: relative; /* the hero image fills this box */
 
-    background-image: var(--hero-image); /* --hero-image set in jsx */
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
+    /* Below the overlay (:after, z-index 2) and the post card (z-index 5). */
+    .heroImage {
+        object-fit: cover;
+        object-position: center;
+        z-index: 0;
+    }
 
     &:hover {
         .titleImage {

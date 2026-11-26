@@ -6,7 +6,7 @@ import { useAnalytics } from "@/components/analytics/AnalyticsProvider";
 jest.mock('@/lib/SiteConfig', () => {
     return class {
         getValue(key, post) {
-            return `proof/of/config/call/${post.imageFileName}`;
+            return `https://raserio.b-cdn.net/proof/of/config/call/${post.imageFileName}`;
         }
     };
 });
@@ -21,14 +21,23 @@ describe('PostTitleImage', () => {
         });
     });
 
-    it('should return an img tag with the expected url', async () => {
+    it('should return an img tag that loads the configured url through the image optimizer', async () => {
         const { container } = await render(<PostTitleImage post={{
             imageFileName: 'test.jpg',
             imageFileType: 'image'
         }}/>);
         const img = container.querySelector('img');
         expect(img).not.toBeNull();
-        expect(img.getAttribute('src')).toEqual('proof/of/config/call/test.jpg');
+        expect(img.getAttribute('src')).toMatch(/\/_next\/image\?url=/);
+        expect(img.getAttribute('src')).toContain(encodeURIComponent('https://raserio.b-cdn.net/proof/of/config/call/test.jpg'));
+    });
+
+    it('should pass the sizes hint through, so previews download a smaller file', async () => {
+        const { container } = await render(<PostTitleImage sizes="30vw" post={{
+            imageFileName: 'test.jpg',
+            imageFileType: 'image'
+        }}/>);
+        expect(container.querySelector('img')).toHaveAttribute('sizes', '30vw');
     });
 
     it('should signal analytics if the image fails to load', async () => {
